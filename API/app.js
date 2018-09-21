@@ -1,18 +1,13 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const headerMiddleware = require('./middlewares/HeaderMiddleware');
 
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-	res.setHeader(
-		'Access-Control-Allow-Headers',
-		'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With'
-	);
+app.use(headerMiddleware);
 
-	next();
-});
+const port = process.env.port || 5050
 
-app.listen(5000, () => {
+app.listen(port, () => {
 	console.log('Connected');
 });
