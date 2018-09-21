@@ -1,10 +1,10 @@
-const BasicValidators = require('./BasicValidators');
+const validateObject = require('./ValidateObject');
 const ValidatorsEnum = require('./ValidatorsEnum');
 
 module.exports = {
 	registerValidation: user => {
-		if (user) {
-			return BasicValidators.validateObject([
+		if (user && typeof user === 'object') {
+			return validateObject([
 				{
 					value: user.Nickname,
 					validators: [
@@ -26,7 +26,7 @@ module.exports = {
 					value: user.Firstname,
 					validators: [
 						{
-							validator: ValidatorsEnum.ALPA_CHARACTERS
+							validator: ValidatorsEnum.ALPHA_CHARACTERS
 						},
 						{
 							validator: ValidatorsEnum.RANGE,
@@ -42,7 +42,7 @@ module.exports = {
 					value: user.Lastname,
 					validators: [
 						{
-							validator: ValidatorsEnum.ALPA_CHARACTERS
+							validator: ValidatorsEnum.ALPHA_CHARACTERS
 						},
 						{
 							validator: ValidatorsEnum.RANGE,
@@ -101,6 +101,44 @@ module.exports = {
 	},
 
 	loginValidation: login => {
-		return true;
+		if (login && typeof login === 'object') {
+			return validateObject([
+				{
+					value: login.Nickname,
+					validators: [
+						// TODO $,_- apod
+						{
+							validator: ValidatorsEnum.ALPHANUMERIC
+						},
+						{
+							validator: ValidatorsEnum.RANGE,
+							options: {
+								min: 4,
+								max: 45
+							}
+						}
+					],
+					required: true
+				},
+				{
+					value: login.Password,
+					validators: [
+						{
+							validator: ValidatorsEnum.ALPHANUMERIC
+						},
+						{
+							validator: ValidatorsEnum.MIN_LENGTH,
+							options: {
+								min: 6
+							}
+						}
+					],
+
+					required: true
+				}
+			]);
+		} else {
+			return false;
+		}
 	}
 };

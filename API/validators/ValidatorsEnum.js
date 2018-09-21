@@ -4,7 +4,7 @@ module.exports = Object.freeze({
 	RANGE: 2,
 	ALPHANUMERIC: 3,
 	EQUAL_VALUE: 4,
-	ALPA_CHARACTERS: 5,
+	ALPHA_CHARACTERS: 5,
 	PHONE: 6,
 	EMAIL: 7
 });
