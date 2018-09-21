@@ -15,6 +15,10 @@ module.exports = Object.freeze({
 		code: 204,
 		message: 'No Content'
 	},
+	SEE_OTHER: {
+		code: 303,
+		message: 'See Other'
+	},
 	BAD_REQUEST: {
 		code: 400,
 		message: 'Bad Request'
