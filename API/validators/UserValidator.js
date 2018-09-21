@@ -61,7 +61,7 @@ module.exports = {
 							validator: ValidatorsEnum.ALPHANUMERIC
 						},
 						{
-							validator: ValidatorsEnum.MIN_LENGTH,
+							validator: ValidatorsEnum.MIN,
 							options: {
 								min: 6
 							}
@@ -127,7 +127,7 @@ module.exports = {
 							validator: ValidatorsEnum.ALPHANUMERIC
 						},
 						{
-							validator: ValidatorsEnum.MIN_LENGTH,
+							validator: ValidatorsEnum.MIN,
 							options: {
 								min: 6
 							}

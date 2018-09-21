@@ -1,6 +1,6 @@
 const ValidatorsEnum = require('./ValidatorsEnum');
-const minLengthValidator = require('./Basic/MinLengthValidator');
-const maxLengthValidator = require('./Basic/MaxLengthValidator');
+const minValidatorr = require('./Basic/MinValidator');
+const maxValidator = require('./Basic/MaxValidator');
 const rangeValidator = require('./Basic/RangeValidator');
 const alphaNumericValidator = require('./Basic/AlphaNumericValidator');
 const equalValueValidator = require('./Basic/EqualValueValidator');
@@ -19,13 +19,13 @@ module.exports = obj => {
 						var validator = validators[i];
 
 						switch (validator.validator) {
-							case ValidatorsEnum.MIN_LENGTH:
-								if (!minLengthValidator(element.value, validator.options)) {
+							case ValidatorsEnum.MIN:
+								if (!minValidator(element.value, validator.options)) {
 									valid = false;
 								}
 								break;
-							case ValidatorsEnum.MAX_LENGTH:
-								if (!maxLengthValidator(element.value, validator.options)) {
+							case ValidatorsEnum.MAX:
+								if (!maxValidator(element.value, validator.options)) {
 									valid = false;
 								}
 								break;

@@ -1,6 +1,6 @@
 module.exports = Object.freeze({
-	MIN_LENGTH: 0,
-	MAX_LENGTH: 1,
+	MIN: 0,
+	MAX: 1,
 	RANGE: 2,
 	ALPHANUMERIC: 3,
 	EQUAL_VALUE: 4,
