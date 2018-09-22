@@ -31,7 +31,7 @@
   }
 
 
-  .favorite__col-2 > .favorite__col--item{
+.favorite__col-2 > .favorite__col--item{
 	margin-left:1px;
 }
 
@@ -39,6 +39,17 @@
 	margin-left:1px;
 }
 
+.favorite__game-wrapper{
+	margin-top:15px;
+	background-color: rgb(184, 250, 255);
+	border: 1px solid aqua;
+	padding-bottom: 15px;
+}
+
+.favorite__title{
+	font-size: 34px;
+	padding-bottom: 10px;
+}
 
 @media only screen and (max-width: 1199px){
 	.favorite__picture--type-1, .favorite__col-1{
@@ -71,7 +82,4 @@
 		margin-top: 1px;
 		margin-bottom: 1px;
 	}
-
-
-
 }
