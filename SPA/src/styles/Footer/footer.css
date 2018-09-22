@@ -1,0 +1,17 @@
+.footer__row{
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+
+.footer__col{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+}
+
+.footer__link{
+	color:white;
+	margin-right: 20px;
+}
