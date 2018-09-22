@@ -1,12 +1,24 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch ,Route } from "react-router-dom";
+import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch, Route } from "react-router-dom";
 
 import LandingPage from "./LandingPage/LandingPage.js";
 
-
-const Game = params => {
-	return <h2>Hra {params.gametitle}</h2>;
-};
+class Game extends Component {
+	constructor(props) {
+		super();
+	}
+	componentWillMount() {
+		console.log(this.props);
+		console.log("Game PAGE MOUNT WILL");
+	}
+	componentDidMount() {
+		console.log(this.props);
+		console.log("Game PAGE MOUNT DID");
+	}
+	render() {
+		return <h2>Hra {this.props.gametitle}</h2>;
+	}
+}
 
 const GameList = () => {
 	return <h2>Seznam her</h2>;
@@ -44,18 +56,30 @@ const Tournament = params => {
 	return <h2>Turnaj {params.tournamentname} </h2>;
 };
 
-const Match = params => {
-	return (
-		<h2>
-			Zapas {params.matchname} v turnaji {params.tournamentname}
-		</h2>
-	);
-};
+class Match extends Component {
+	constructor(props) {
+		super(props);
+	}
+	componentWillMount() {
+		console.log(this.props);
+		console.log("Game PAGE MOUNT WILL");
+	}
+	componentDidMount() {
+		console.log(this.props);
+		console.log("Game PAGE MOUNT DID");
+	}
+	render() {
+		return (
+			<h2>
+				Zapas {this.props.matchname} v turnaji {this.props.tournamentname}
+			</h2>
+		);
+	}
+}
 
 const RegistrationPage = () => {
 	return <h2>Registrace</h2>;
 };
-
 
 const AllRoutes = () => {
 	return (
