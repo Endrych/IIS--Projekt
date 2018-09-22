@@ -4,8 +4,10 @@ import "bootstrap/dist/css/bootstrap.css";
 import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch } from "react-router-dom";
 import { Row, Col, Container } from "reactstrap";
 import Route from "react-router-dom/Route";
+
 import AllRoutes from "./AllRoutes.js";
 import Header from "./Header//Header.js";
+import FooterComponent from "./Footer/FooterComponent.js";
 // const App = () => {
 // 	return (
 // 		<Container className="bg-info clearfix">
@@ -13,15 +15,6 @@ import Header from "./Header//Header.js";
 // 		</Container>
 // 	)
 // }
-
-const User = params => {
-	return <h1>Welcome User {params.username}</h1>;
-};
-
-
-const Footer = () => {
-	return <h1>Footer</h1>;
-};
 
 class App extends Component {
 	state = {
@@ -35,8 +28,9 @@ class App extends Component {
 	render() {
 		return (
 			<Router>
-				<Container className="App">
-					{/* <NavLink to="/" style={{ marginRight: 10 }} activeStyle={{ color: "green" }} exact>
+				<div>
+					<Container className="App">
+						{/* <NavLink to="/" style={{ marginRight: 10 }} activeStyle={{ color: "green" }} exact>
 						Home
 					</NavLink>
 					<NavLink to="/about" style={{ marginRight: 10 }} activeStyle={{ color: "green" }} exact>
@@ -61,11 +55,17 @@ class App extends Component {
 						value={this.state.loggedIn ? "log out" : "log in"}
 						onClick={this.loginHandle.bind(this)}
 					/> */}
-					<Header/>
-
-					<AllRoutes />
-					<Footer />
-				</Container>
+						<div className="main-body">
+							<Header />
+							<AllRoutes />
+						</div>
+					</Container>
+					<Container fluid={true} className="container-fluid__no-padding">
+						<div className="footer">
+							<FooterComponent />
+						</div>
+					</Container >
+				</div>
 			</Router>
 		);
 	}
