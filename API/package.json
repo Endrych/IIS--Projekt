@@ -8,13 +8,19 @@
   },
   "scripts": {
     "watch": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "nyc mocha --recursive tests"
   },
   "author": "David Endrych, Marek Kukučka",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
+    "email-validator": "^2.0.4",
     "express": "^4.16.3",
-    "nodemon": "^1.18.4"
+    "mocha": "^5.2.0",
+    "mysql": "^2.16.0",
+    "nodemon": "^1.18.4",
+    "nyc": "^13.0.1"
   }
 }
