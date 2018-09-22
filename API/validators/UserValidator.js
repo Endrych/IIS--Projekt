@@ -8,9 +8,11 @@ module.exports = {
 				{
 					value: user.Nickname,
 					validators: [
-						// TODO $,_- apod
 						{
-							validator: ValidatorsEnum.ALPHANUMERIC
+							validator: ValidatorsEnum.ALPHANUMERIC,
+							options: {
+								specialCharacters: ['_', '-', '$', '@', '.', "'"]
+							}
 						},
 						{
 							validator: ValidatorsEnum.RANGE,
@@ -106,9 +108,11 @@ module.exports = {
 				{
 					value: login.Nickname,
 					validators: [
-						// TODO $,_- apod
 						{
-							validator: ValidatorsEnum.ALPHANUMERIC
+							validator: ValidatorsEnum.ALPHANUMERIC,
+							options: {
+								specialCharacters: ['_', '-', '$', '@', '.', "'"]
+							}
 						},
 						{
 							validator: ValidatorsEnum.RANGE,

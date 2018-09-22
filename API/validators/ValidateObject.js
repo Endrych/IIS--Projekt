@@ -1,12 +1,12 @@
 const ValidatorsEnum = require('./ValidatorsEnum');
-const minValidatorr = require('./Basic/MinValidator');
+const minValidator = require('./Basic/MinValidator');
 const maxValidator = require('./Basic/MaxValidator');
 const rangeValidator = require('./Basic/RangeValidator');
 const alphaNumericValidator = require('./Basic/AlphaNumericValidator');
 const equalValueValidator = require('./Basic/EqualValueValidator');
 const alphaCharactersValidator = require('./Basic/AlphaCharactersValidator');
 const phoneValidator = require('./Basic/PhoneValidator');
-const emailValidator = require('./Basic/EmailValidator');
+const emailValidator = require('email-validator');
 
 module.exports = obj => {
 	var valid = true;
@@ -55,7 +55,7 @@ module.exports = obj => {
 								}
 								break;
 							case ValidatorsEnum.EMAIL:
-								if (!emailValidator(element.value, validator.options)) {
+								if (!emailValidator.validate(element.value)) {
 									valid = false;
 								}
 								break;
