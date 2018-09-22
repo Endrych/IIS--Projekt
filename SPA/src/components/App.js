@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch } from
 import { Row, Col, Container } from "reactstrap";
 import Route from "react-router-dom/Route";
 import AllRoutes from "./AllRoutes.js";
+import Header from "./Header//Header.js";
 // const App = () => {
 // 	return (
 // 		<Container className="bg-info clearfix">
@@ -17,9 +18,6 @@ const User = params => {
 	return <h1>Welcome User {params.username}</h1>;
 };
 
-const Header = () => {
-	return <h1>Header</h1>;
-};
 
 const Footer = () => {
 	return <h1>Footer</h1>;
@@ -63,7 +61,7 @@ class App extends Component {
 						value={this.state.loggedIn ? "log out" : "log in"}
 						onClick={this.loginHandle.bind(this)}
 					/> */}
-					<Header />
+					<Header/>
 
 					<AllRoutes />
 					<Footer />
