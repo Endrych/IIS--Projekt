@@ -1,0 +1,31 @@
+.header__top-2{
+	display: flex;
+	margin-top: 10px;
+	margin-bottom: 30px;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+	/* background-color: gray; */
+}
+
+.header__links{
+	display: flex;
+
+	/* justify-content: space-between; */
+	align-items: center;
+	color:white;
+}
+
+.header__links--text{
+	margin-right: 20px;
+	color:white;
+}
+
+.header__find{
+	width:100%;
+}
+
+.header__wrapper--find{
+	padding-right: 0px;
+
+}

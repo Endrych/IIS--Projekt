@@ -1,0 +1,29 @@
+.header__top-part{
+	display: inline-flex;
+	margin-top: 10px;
+	margin-bottom: 50px;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.header__login-wrapper{
+	display: inline-flex;
+}
+
+.header__input-group{
+	display: inline-flex;
+	align-items: center;
+	margin-right: 10px;
+}
+
+.header__login-button{}
+
+.header__input-group--label{
+	color:white;
+	margin-right: 5px;
+}
+
+.header__register{
+	color:white;
+}

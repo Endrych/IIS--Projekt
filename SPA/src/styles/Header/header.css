@@ -1,0 +1,47 @@
+.header__row-color{
+	background-color:gray;
+}
+
+.header__navigation-row{
+	padding: 0px;
+}
+
+
+.header__navigation-col:hover{
+	background-color: rgb(178,34,34);
+}
+
+.header__navigation-col:active{
+	background-color: rgb(128,0,0);
+}
+
+.header__nav-link{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height:100%;
+}
+
+.header__nav-link--text{
+	color:white;
+}
+@media only screen and (min-width: 992px){
+	.header__navigation-col{
+		display: flex;
+		background-color: rgb(237,41,57);
+		padding: 0px;
+		border: 1px solid black;
+		height: 40px;
+		cursor: pointer;
+	}
+}
+@media only screen and (max-width: 991px){
+	.header__navigation-col{
+		display: flex;
+		background-color: gray;
+		padding: 0px;
+		height: 30px;
+		cursor: pointer;
+	}
+}
