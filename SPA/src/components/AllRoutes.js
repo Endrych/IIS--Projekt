@@ -1,17 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch ,Route } from "react-router-dom";
 
-const LandingPage = () => {
-	return (
-		<div>
-			<h1>Nejpopularnejsi Hry</h1>
-			<br />
-			<h1>Nadchazejici turnaje</h1>
-			<br />
-			<h1>Novinky</h1>
-		</div>
-	);
-};
+import LandingPage from "./LandingPage/LandingPage.js";
+
 
 const Game = params => {
 	return <h2>Hra {params.gametitle}</h2>;
