@@ -9,10 +9,7 @@ module.exports = {
 					value: user.Nickname,
 					validators: [
 						{
-							validator: ValidatorsEnum.ALPHANUMERIC,
-							options: {
-								specialCharacters: ['_', '-', '$', '@', '.', "'"]
-							}
+							validator: ValidatorsEnum.ALPHANUMERIC
 						},
 						{
 							validator: ValidatorsEnum.RANGE,
@@ -28,7 +25,10 @@ module.exports = {
 					value: user.Firstname,
 					validators: [
 						{
-							validator: ValidatorsEnum.ALPHA_CHARACTERS
+							validator: ValidatorsEnum.ALPHA_CHARACTERS,
+							options: {
+								allowSpace: true
+							}
 						},
 						{
 							validator: ValidatorsEnum.RANGE,
@@ -44,7 +44,10 @@ module.exports = {
 					value: user.Lastname,
 					validators: [
 						{
-							validator: ValidatorsEnum.ALPHA_CHARACTERS
+							validator: ValidatorsEnum.ALPHA_CHARACTERS,
+							options: {
+								allowSpace: true
+							}
 						},
 						{
 							validator: ValidatorsEnum.RANGE,
@@ -109,10 +112,7 @@ module.exports = {
 					value: login.Nickname,
 					validators: [
 						{
-							validator: ValidatorsEnum.ALPHANUMERIC,
-							options: {
-								specialCharacters: ['_', '-', '$', '@', '.', "'"]
-							}
+							validator: ValidatorsEnum.ALPHANUMERIC
 						},
 						{
 							validator: ValidatorsEnum.RANGE,
