@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col, Carousel, CarouselItem, CarouselControl, CarouselIndicators, CarouselCaption } from "reactstrap";
-import {NavLink} from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 
 import FavoriteGames from "./FavoriteGames.js";
 import Fortnite from "../../data/favoriteGames/fortnite.jpg";
@@ -74,25 +74,34 @@ class NewestArticles extends Component {
 		const slides = this.state.data.map(item => {
 			return (
 				<CarouselItem onExiting={this.onExiting} onExited={this.onExited} key={item.id}>
-				<NavLink to={"/games/"+item.id}>
-					<img src={item.image} alt={item.altText} style={{ width: "960px", height: "400px" }} />
-					<CarouselCaption captionText={item.text} captionHeader={item.title} />
-				</NavLink>
+					<NavLink to={"/news/" + item.id}>
+						<img className="default-user" src={item.image} alt={item.altText} style={{ width: "960px", height: "400px" }} />
+						<CarouselCaption captionText={item.text} captionHeader={item.title} />
+					</NavLink>
 				</CarouselItem>
 			);
 		});
 		return (
 			<Col className="favorite__game-wrapper" xs="12" sm="12">
-				<Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
-					<CarouselIndicators
-						items={this.state.data}
-						activeIndex={activeIndex}
-						onClickHandler={this.goToIndex}
-					/>
-					{slides}
-					<CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
-					<CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
-				</Carousel>
+				<Row>
+					<Col className="" xs="12" sm="12" >
+						<div className="favorite__title">Novinky</div>
+					</Col>
+				</Row>
+				<Row>
+					<Col className="" xs="12" sm="12">
+						<Carousel activeIndex={activeIndex} next={this.next} previous={this.previous}>
+							<CarouselIndicators
+								items={this.state.data}
+								activeIndex={activeIndex}
+								onClickHandler={this.goToIndex}
+							/>
+							{slides}
+							<CarouselControl direction="prev" directionText="Previous" onClickHandler={this.previous} />
+							<CarouselControl direction="next" directionText="Next" onClickHandler={this.next} />
+						</Carousel>
+					</Col>
+				</Row>
 			</Col>
 		);
 	}

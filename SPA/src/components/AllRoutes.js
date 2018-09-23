@@ -56,10 +56,20 @@ const Tournament = params => {
 	return <h2>Turnaj {params.tournamentname} </h2>;
 };
 
+const NewsList = () => {
+	return<h2>News List</h2>
+}
+
+const NewsArticle = params => {
+	console.log(params)
+	return <h2>Article {params.articleid}</h2>;
+}
+
 class Match extends Component {
 	constructor(props) {
 		super(props);
 	}
+	//Nepouzivat WillMount depricaped od reactu 16.3
 	componentWillMount() {
 		console.log(this.props);
 		console.log("Game PAGE MOUNT WILL");
@@ -110,6 +120,19 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
+
+
+			<Route path="/news" component={NewsList} exact strict />
+
+			<Route
+				path="/news/:articleid"
+				render={({ match }) => {
+					return <NewsArticle articleid={match.params.articleid} />;
+				}}
+				exact
+				strict
+			/>
+
 
 			<Route path="/teams" component={TeamList} exact strict />
 
