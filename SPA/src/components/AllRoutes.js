@@ -1,12 +1,24 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch ,Route } from "react-router-dom";
+import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch, Route } from "react-router-dom";
 
 import LandingPage from "./LandingPage/LandingPage.js";
 
-
-const Game = params => {
-	return <h2>Hra {params.gametitle}</h2>;
-};
+class Game extends Component {
+	constructor(props) {
+		super();
+	}
+	componentWillMount() {
+		console.log(this.props);
+		console.log("Game PAGE MOUNT WILL");
+	}
+	componentDidMount() {
+		console.log(this.props);
+		console.log("Game PAGE MOUNT DID");
+	}
+	render() {
+		return <h2>Hra {this.props.gametitle}</h2>;
+	}
+}
 
 const GameList = () => {
 	return <h2>Seznam her</h2>;
@@ -44,18 +56,40 @@ const Tournament = params => {
 	return <h2>Turnaj {params.tournamentname} </h2>;
 };
 
-const Match = params => {
-	return (
-		<h2>
-			Zapas {params.matchname} v turnaji {params.tournamentname}
-		</h2>
-	);
-};
+const NewsList = () => {
+	return<h2>News List</h2>
+}
+
+const NewsArticle = params => {
+	console.log(params)
+	return <h2>Article {params.articleid}</h2>;
+}
+
+class Match extends Component {
+	constructor(props) {
+		super(props);
+	}
+	//Nepouzivat WillMount depricaped od reactu 16.3
+	componentWillMount() {
+		console.log(this.props);
+		console.log("Game PAGE MOUNT WILL");
+	}
+	componentDidMount() {
+		console.log(this.props);
+		console.log("Game PAGE MOUNT DID");
+	}
+	render() {
+		return (
+			<h2>
+				Zapas {this.props.matchname} v turnaji {this.props.tournamentname}
+			</h2>
+		);
+	}
+}
 
 const RegistrationPage = () => {
 	return <h2>Registrace</h2>;
 };
-
 
 const AllRoutes = () => {
 	return (
@@ -86,6 +120,19 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
+
+
+			<Route path="/news" component={NewsList} exact strict />
+
+			<Route
+				path="/news/:articleid"
+				render={({ match }) => {
+					return <NewsArticle articleid={match.params.articleid} />;
+				}}
+				exact
+				strict
+			/>
+
 
 			<Route path="/teams" component={TeamList} exact strict />
 

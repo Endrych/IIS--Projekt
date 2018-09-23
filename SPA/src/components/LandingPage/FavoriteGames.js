@@ -13,6 +13,7 @@ import Fortnite from "../../data/favoriteGames/fortnite.jpg";
 import "../../styles/LandingPage/favoriteGames.css";
 
 class FavoriteGames extends Component {
+
 	render() {
 		return (
 			<Col className="favorite__game-wrapper" xs="12" sm="12">
