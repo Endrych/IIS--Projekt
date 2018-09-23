@@ -43,6 +43,7 @@ class NewestArticles extends Component {
 	}
 	componentDidMount() {
 		var newData = this.state.data;
+//problem mam odkaz v newData a pushuje to primo do state opravit TODO
 		newData.push({
 			id: "15456487",
 			image: Fortnite,
