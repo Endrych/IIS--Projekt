@@ -6,5 +6,7 @@ module.exports = Object.freeze({
 	EQUAL_VALUE: 4,
 	ALPHA_CHARACTERS: 5,
 	PHONE: 6,
-	EMAIL: 7
+	EMAIL: 7,
+	DATE: 8,
+	YOUTUBE: 9
 });

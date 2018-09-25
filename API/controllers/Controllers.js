@@ -1,7 +1,9 @@
 const errorController = require('./ErrorController');
+const gameController = require('./GameController');
 const userController = require('./UserController');
 
-module.exports = (app) =>{
+module.exports = app => {
     userController(app);
-    errorController(app);
-}
+    gameController(app);
+	errorController(app);
+};

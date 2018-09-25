@@ -7,6 +7,8 @@ const equalValueValidator = require('./Basic/EqualValueValidator');
 const alphaCharactersValidator = require('./Basic/AlphaCharactersValidator');
 const phoneValidator = require('./Basic/PhoneValidator');
 const emailValidator = require('email-validator');
+const dateValidator = require('./Basic/DateValidator');
+const youtubeValidator = require('youtube-validator');
 
 module.exports = obj => {
 	var valid = true;
@@ -17,7 +19,7 @@ module.exports = obj => {
 					var validators = element.validators;
 					for (var i = 0, len = validators.length; i < len; i++) {
 						var validator = validators[i];
-
+						if (!valid) break;
 						switch (validator.validator) {
 							case ValidatorsEnum.MIN:
 								if (!minValidator(element.value, validator.options)) {
@@ -58,6 +60,18 @@ module.exports = obj => {
 								if (!emailValidator.validate(element.value)) {
 									valid = false;
 								}
+								break;
+							case ValidatorsEnum.DATE:
+								if (!dateValidator(element.value, validator.options)) {
+									valid = false;
+								}
+								break;
+							case ValidatorsEnum.YOUTUBE:
+								youtubeValidator.validateUrl(element.value, (res, err) => {
+									if(err){
+										valid = false;
+									}
+								});
 								break;
 							default:
 								valid = false;
