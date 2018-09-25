@@ -7,6 +7,7 @@ const ResultCodes = require('../enums/ResultCodes');
 module.exports = app => {
 	app.post('/user/register', (req, res) => {
 		var body = req.body;
+		console.log(body)
 		if (UserValidator.registerValidation(body)) {
 			db.query('SELECT Nickname FROM USER WHERE ?', { Nickname: body.Nickname }, (err, result) => {
 				if (result.length === 0) {
