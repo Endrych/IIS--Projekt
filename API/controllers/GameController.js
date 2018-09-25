@@ -180,9 +180,11 @@ module.exports = app => {
 						savePublisherToDb(body.Publisher)
 							.then(result => {
 								delete body.Publisher;
+
 								if (result) {
 									body.PublisherId = result;
 								}
+
 								saveGameToDb(body, genres)
 									.then(result => {
 										db.commit();

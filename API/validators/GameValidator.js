@@ -56,10 +56,7 @@ module.exports = {
 					value: game.Image,
 					validators: [
 						{
-							validator: ValidatorsEnum.MAX,
-							options: {
-								max: 255
-							}
+							validator: ValidatorsEnum.IMAGE,
 						}
 					],
 					required: false

@@ -8,5 +8,6 @@ module.exports = Object.freeze({
 	PHONE: 6,
 	EMAIL: 7,
 	DATE: 8,
-	YOUTUBE: 9
+	YOUTUBE: 9,
+	IMAGE: 10
 });

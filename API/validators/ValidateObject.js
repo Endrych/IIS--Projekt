@@ -9,6 +9,8 @@ const phoneValidator = require('./Basic/PhoneValidator');
 const emailValidator = require('email-validator');
 const dateValidator = require('./Basic/DateValidator');
 const youtubeValidator = require('youtube-validator');
+const imageValidator = require('is-base64');
+
 
 module.exports = obj => {
 	var valid = true;
@@ -72,6 +74,11 @@ module.exports = obj => {
 										valid = false;
 									}
 								});
+								break;
+							case ValidatorsEnum.IMAGE:
+								if(!imageValidator(element.value)){
+									valid = false;
+								}
 								break;
 							default:
 								valid = false;
