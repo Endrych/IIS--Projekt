@@ -7,28 +7,161 @@ module.exports = app => {
 	function saveGameGenreGameTableData(id, data) {
 		return new Promise((resolve, reject) => {
 			var item = [];
+
 			data.forEach(element => {
 				item.push([id, element]);
 			});
 
 			db.query('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [item], (err, result) => {
 				if (err) {
-					console.log(err);
-					resolve(false);
+					throw err;
 				} else {
-					resolve(true);
+					resolve();
 				}
 			});
 		});
 	}
 
+	function getGamePublisher(id) {
+		return new Promise((resolve, reject) => {
+			if (id) {
+				db.query('SELECT Name FROM PUBLISHER WHERE Id = ?', id, (err, result) => {
+					if (err) {
+						throw err;
+					}
+
+					if (result.length > 0) {
+						resolve(result[0].Name);
+					} else {
+						resolve(null);
+					}
+				});
+			} else {
+				resolve(null);
+			}
+		});
+	}
+
+	function getGenreById(id) {
+		return new Promise((resolve, reject) => {
+			db.query('SELECT Name FROM game_genre WHERE Id = ?', id, (err, result) => {
+				if (err) {
+					throw err;
+				}
+
+				if (result.length > 0) {
+					resolve(result[0].Name);
+				} else {
+					resolve(null);
+				}
+			});
+		});
+	}
+
+	function getGameGenresId(id) {
+		return new Promise((resolve, reject) => {
+			db.query('SELECT GameGenreId FROM game_genre_games WHERE GameId = ?', id, (err, result) => {
+				if (err) {
+					throw err;
+				}
+
+				var promises = [];
+				result.forEach(element => {
+					promises.push(getGenreById(element.GameGenreId));
+				});
+
+				Promise.all(promises)
+					.then(results => {
+						resolve(results);
+					})
+					.catch(err => {
+						throw err;
+					});
+			});
+		});
+	}
+
+	function savePublisherToDb(name) {
+		return new Promise((resolve, reject) => {
+			if (name) {
+				db.query('SELECT Id FROM Publisher WHERE ?', { Name: name }, (err, result) => {
+					if (err) {
+						throw err;
+					}
+					if (result.length !== 0) {
+						resolve(result[0].Id);
+					} else {
+						db.query('INSERT INTO Publisher SET ?', { Name: name }, (err, result) => {
+							if (err) {
+								throw err;
+							}
+							resolve(result.insertId);
+						});
+					}
+				});
+			} else {
+				resolve(null);
+			}
+		});
+	}
+
+	function saveGameToDb(body, genres) {
+		return new Promise((resolve, reject) => {
+			db.query('INSERT INTO GAME SET ?', body, (err, result) => {
+				if (err) {
+					throw err;
+				} else {
+					saveGameGenreGameTableData(result.insertId, genres)
+						.then(result1 => {
+							resolve(result.insertId);
+						})
+						.catch(error => {
+							throw error;
+						});
+				}
+			});
+		});
+	}
+
+	app.get('/games/:id', (req, res) => {
+		var id = req.params.id;
+		db.query('SELECT * FROM GAME WHERE Keyname = ? ', id, (err, result) => {
+			if (err) {
+				console.log(err);
+				res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+			} else {
+				if (result.length > 0) {
+					var game = result[0];
+
+					getGamePublisher(game.PublisherId)
+						.then(result => {
+							delete game.PublisherId;
+
+							if (result) {
+								game.Publisher = result;
+							}
+
+							getGameGenresId(game.Id)
+								.then(result => {
+									game.Genres = result;
+									res.send(new Result(ResultCodes.OK, game));
+								})
+								.catch(error => res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR)));
+						})
+						.catch(error => res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR)));
+				} else {
+					res.send(new Result(ResultCodes.NO_CONTENT));
+				}
+			}
+		});
+	});
+
 	app.get('/games', (req, res) => {
-		db.query('SELECT Id, Name FROM GAME', (err, res1) => {
+		db.query('SELECT Id, Name, Keyname FROM GAME', (err, res1) => {
 			if (err) {
 				res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
 			}
-			console.log(res1);
-			res.send(new Result(ResultCodes.OK,res1));
+			res.send(new Result(ResultCodes.OK, res1));
 		});
 	});
 
@@ -36,6 +169,7 @@ module.exports = app => {
 		var body = req.body;
 		var genres = body.Genres;
 		delete body.Genres;
+
 		if (gameValidator.addGameValidation(body)) {
 			db.beginTransaction(err => {
 				if (err) {
@@ -43,58 +177,27 @@ module.exports = app => {
 				}
 				db.query('SELECT Id FROM Game WHERE ?', { Keyname: body.Keyname }, (err, result) => {
 					if (result.length === 0) {
-						db.query('SELECT Id FROM Publisher WHERE ?', { Name: body.Publisher }, (err, result) => {
-							if (result.length !== 0) {
+						savePublisherToDb(body.Publisher)
+							.then(result => {
 								delete body.Publisher;
-								body.PublisherId = result[0].Id;
-								db.query('INSERT INTO GAME SET ?', body, (err, result) => {
-									if (err) {
-										console.log(err);
+								if (result) {
+									body.PublisherId = result;
+								}
+								saveGameToDb(body, genres)
+									.then(result => {
+										db.commit();
+										res.send(new Result(ResultCodes.OK, result));
+									})
+									.catch(error => {
 										db.rollback();
 										res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-									} else {
-										saveGameGenreGameTableData(result.insertId, genres)
-											.then(result => {
-												if (result) {
-													db.commit();
-													res.send(new Result(ResultCodes.OK, result.insertId));
-												} else {
-													db.rollback();
-													res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-												}
-											})
-											.catch(error => res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR)));
-									}
-								});
-							} else {
-								db.query('INSERT INTO Publisher SET ?', { Name: body.Publisher }, (err, result) => {
-									if (err) {
-										db.rollback();
-									}
-									body.PublisherId = result.insertId;
-									delete body.Publisher;
-									db.query('INSERT INTO GAME SET ?', body, (err, result) => {
-										if (err) {
-											console.log(err);
-											db.rollback();
-											res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-										} else {
-											saveGameGenreGameTableData(result.insertId, genres)
-												.then(result => {
-													if (result) {
-														db.commit();
-														res.send(new Result(ResultCodes.OK, result.insertId));
-													} else {
-														db.rollback();
-														res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-													}
-												})
-												.catch(error => console.log(error));
-										}
 									});
-								});
-							}
-						});
+							})
+							.catch(err => {
+								console.log(err);
+								db.rollback();
+								res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+							});
 					} else {
 						db.rollback();
 						res.send(new Result(ResultCodes.SEE_OTHER));
