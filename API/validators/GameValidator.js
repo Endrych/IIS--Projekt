@@ -32,6 +32,18 @@ module.exports = {
 					required: true
 				},
 				{
+					value: game.Publisher,
+					validators: [
+						{
+							validator: ValidatorsEnum.MAX,
+							options: {
+								max: 255
+							}
+						}
+					],
+					required: false
+				},				
+				{
 					value: game.ReleaseDate,
 					validators: [
 						{
