@@ -142,11 +142,11 @@ module.exports = app => {
 
 					getGamePublisher(game.PublisherId)
 						.then(result => {
-							delete game.PublisherId;
-
 							if (result) {
-								game.Publisher = result;
+								game.Publisher = { Id: game.PublisherId, Name: result };
 							}
+
+							delete game.PublisherId;
 
 							getGameGenresId(game.Id)
 								.then(result => {
@@ -175,7 +175,7 @@ module.exports = app => {
 	});
 
 	app.get('/games', (req, res) => {
-		db.query('SELECT Id, Name, Keyname FROM GAME WHERE Deleted = 0', (err, res1) => {
+		db.query('SELECT Id, Name, Keyname, Icon FROM GAME WHERE Deleted = 0', (err, res1) => {
 			if (err) {
 				res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
 			}
