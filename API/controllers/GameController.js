@@ -11,13 +11,19 @@ module.exports = app => {
 			data.forEach(element => {
 				item.push([id, element]);
 			});
-
-			db.query('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [item], (err, result) => {
+			db.query('DELETE FROM game_genre_games WHERE GameId = ?', [id], (err, res) => {
 				if (err) {
+					console.log(err);
 					throw err;
-				} else {
-					resolve();
 				}
+
+				db.query('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [item], (err, result) => {
+					if (err) {
+						throw err;
+					} else {
+						resolve();
+					}
+				});
 			});
 		});
 	}
@@ -114,7 +120,7 @@ module.exports = app => {
 				} else {
 					saveGameGenreGameTableData(result.insertId, genres)
 						.then(result1 => {
-							resolve(result.insertId);
+							resolve();
 						})
 						.catch(error => {
 							throw error;
@@ -157,22 +163,11 @@ module.exports = app => {
 		});
 	});
 
-	app.put('/games/:id', (req, res) => {
-		var body = req.body;
-		var id = req.params.id;
-		if (gameValidator.addGameValidation(body)) {
-			res.send(new Result(ResultCodes.OK));
-		} else {
-			res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-		}
-	});
-
 	app.delete('/games/:id', (req, res) => {
 		var id = req.params.id;
-		console.log(id)
-		db.query('UPDATE GAME SET Deleted = ? WHERE Keyname = ? AND Deleted = ?', [1,id,0], (err, result) => {
+		db.query('UPDATE GAME SET Deleted = ? WHERE Keyname = ? AND Deleted = ?', [1, id, 0], (err, result) => {
 			if (err) {
-				console.log(err)
+				console.log(err);
 				res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
 			}
 			res.send(new Result(ResultCodes.OK));
@@ -211,7 +206,7 @@ module.exports = app => {
 								saveGameToDb(body, genres)
 									.then(result => {
 										db.commit();
-										res.send(new Result(ResultCodes.OK, result));
+										res.send(new Result(ResultCodes.OK, body.Keyname));
 									})
 									.catch(error => {
 										db.rollback();
@@ -231,6 +226,72 @@ module.exports = app => {
 			});
 		} else {
 			res.send(new Result(ResultCodes.BAD_REQUEST));
+		}
+	});
+
+	app.put('/games/:keyname', (req, res) => {
+		var body = req.body;
+		var id = req.params.keyname;
+		if (gameValidator.addGameValidation(body)) {
+			db.query('SELECT Id FROM GAME WHERE Keyname = ? AND DELETED = ?', [id, 0], (err, result0) => {
+				if (err) {
+					console.log(err);
+					res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+				} else {
+					if (result0.length === 0) {
+						res.send(new Result(ResultCodes.NO_CONTENT));
+					} else {
+						var gameId = result0[0].Id;
+						db.query(
+							'SELECT Keyname FROM GAME WHERE Keyname = ? AND Deleted = ? AND Id <> ?',
+							[body.Keyname, 0, gameId],
+							(err, result) => {
+								if (err) {
+									console.log(err);
+									res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+								} else {
+									if (result.length === 0) {
+										savePublisherToDb(body.Publisher)
+											.then(result => {
+												delete body.Publisher;
+												if (result) {
+													body.PublisherId = result;
+												}
+												saveGameGenreGameTableData(gameId, body.Genres)
+													.then(result1 => {
+														delete body.Genres;
+														db.query(
+															'UPDATE GAME SET ? WHERE Keyname = ? AND Deleted = ?',
+															[body, id, 0],
+															(err, result2) => {
+																if (err) {
+																	console.log(err);
+																	res.send(
+																		new Result(ResultCodes.INTERNAL_SERVER_ERROR)
+																	);
+																}
+																res.send(new Result(ResultCodes.OK, body.Keyname));
+															}
+														);
+													})
+													.catch(error =>
+														res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR))
+													);
+											})
+											.catch(err => {
+												res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+											});
+									} else {
+										res.send(new Result(ResultCodes.SEE_OTHER));
+									}
+								}
+							}
+						);
+					}
+				}
+			});
+		} else {
+			res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
 		}
 	});
 };
