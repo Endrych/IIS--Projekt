@@ -62,6 +62,15 @@ module.exports = {
 					required: false
 				},
 				{
+					value: game.Icon,
+					validators: [
+						{
+							validator: ValidatorsEnum.IMAGE,
+						}
+					],
+					required: false
+				},
+				{
 					value: game.Video,
 					validators: [
 						{

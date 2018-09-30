@@ -107,6 +107,7 @@ module.exports = app => {
 
 	function saveGameToDb(body, genres) {
 		return new Promise((resolve, reject) => {
+			body.Deleted = 0;
 			db.query('INSERT INTO GAME SET ?', body, (err, result) => {
 				if (err) {
 					throw err;
