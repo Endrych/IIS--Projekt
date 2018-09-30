@@ -125,7 +125,7 @@ module.exports = app => {
 
 	app.get('/games/:id', (req, res) => {
 		var id = req.params.id;
-		db.query('SELECT * FROM GAME WHERE Keyname = ? ', id, (err, result) => {
+		db.query('SELECT * FROM GAME WHERE Keyname = ? AND Deleted = 0', id, (err, result) => {
 			if (err) {
 				console.log(err);
 				res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
@@ -156,8 +156,30 @@ module.exports = app => {
 		});
 	});
 
+	app.put('/games/:id', (req, res) => {
+		var body = req.body;
+		var id = req.params.id;
+		if (gameValidator.addGameValidation(body)) {
+			res.send(new Result(ResultCodes.OK));
+		} else {
+			res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+		}
+	});
+
+	app.delete('/games/:id', (req, res) => {
+		var id = req.params.id;
+		console.log(id)
+		db.query('UPDATE GAME SET Deleted = ? WHERE Keyname = ? AND Deleted = ?', [1,id,0], (err, result) => {
+			if (err) {
+				console.log(err)
+				res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+			}
+			res.send(new Result(ResultCodes.OK));
+		});
+	});
+
 	app.get('/games', (req, res) => {
-		db.query('SELECT Id, Name, Keyname FROM GAME', (err, res1) => {
+		db.query('SELECT Id, Name, Keyname FROM GAME WHERE Deleted = 0', (err, res1) => {
 			if (err) {
 				res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
 			}
@@ -175,7 +197,7 @@ module.exports = app => {
 				if (err) {
 					throw err;
 				}
-				db.query('SELECT Id FROM Game WHERE ?', { Keyname: body.Keyname }, (err, result) => {
+				db.query('SELECT Id FROM Game WHERE ? AND Deleted = 0', { Keyname: body.Keyname }, (err, result) => {
 					if (result.length === 0) {
 						savePublisherToDb(body.Publisher)
 							.then(result => {
