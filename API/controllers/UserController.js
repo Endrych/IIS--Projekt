@@ -1,5 +1,5 @@
 const db = require('../config/DbConnection');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const UserValidator = require('../validators/UserValidator');
 const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
@@ -42,21 +42,21 @@ module.exports = app => {
 		if (body) {
 			if (UserValidator.loginValidation(body)) {
 				db.query('SELECT Password, Salt FROM USER WHERE ?', { Nickname: body.Nickname }, (err, result) => {
-					if(result.length > 0){
+					if (result.length > 0) {
 						var dbUser = result[0];
-						bcrypt.hash(body.Password,dbUser.Salt,(err,hash)=>{
-							if(err){
+						bcrypt.hash(body.Password, dbUser.Salt, (err, hash) => {
+							if (err) {
 								res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-							}else{
-								if(hash === dbUser.Password){
+							} else {
+								if (hash === dbUser.Password) {
 									res.send(new Result(ResultCodes.OK));
-								}else{
-									res.send(new Result(ResultCodes.BAD_REQUEST))
+								} else {
+									res.send(new Result(ResultCodes.BAD_REQUEST));
 								}
 							}
-						})
-					}else{
-						res.send(new Result(ResultCodes.BAD_REQUEST))
+						});
+					} else {
+						res.send(new Result(ResultCodes.BAD_REQUEST));
 					}
 				});
 			} else {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Sob 22. zář 2018, 12:37
+-- Vytvořeno: Ned 30. zář 2018, 09:27
 -- Verze serveru: 10.1.34-MariaDB
 -- Verze PHP: 7.2.7
 
@@ -30,13 +30,33 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `game` (
   `Id` int(11) NOT NULL,
-  `Name` varchar(255) COLLATE utf16_czech_ci NOT NULL,
+  `Name` tinytext COLLATE utf16_czech_ci NOT NULL,
+  `Keyname` varchar(45) COLLATE utf16_czech_ci NOT NULL,
   `ReleaseDate` date DEFAULT NULL,
   `Description` text COLLATE utf16_czech_ci,
   `PublisherId` int(11) DEFAULT NULL,
-  `Image` tinytext COLLATE utf16_czech_ci NOT NULL,
-  `Video` tinytext COLLATE utf16_czech_ci NOT NULL
+  `Icon` text COLLATE utf16_czech_ci,
+  `Image` longtext COLLATE utf16_czech_ci,
+  `Video` tinytext COLLATE utf16_czech_ci,
+  `Deleted` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_czech_ci;
+
+--
+-- Vypisuji data pro tabulku `game`
+--
+
+INSERT INTO `game` (`Id`, `Name`, `Keyname`, `ReleaseDate`, `Description`, `PublisherId`, `Icon`, `Image`, `Video`, `Deleted`) VALUES
+(1, 'Counter strike: Global offensive', 'CSGO', '2012-09-27', 'Best game ever', 6, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(2, 'Counter strike: Global offensive', 'CSGO1', '2012-09-27', 'Best game ever', 9, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(3, 'Counter strike: Global offensive', 'CSGO2', '2012-09-27', 'Best game ever', 9, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(5, 'Counter strike: Global offensive', 'CSGO3', '2012-09-27', 'Best game ever', 9, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(10, 'Counter strike: Global offensive', 'CSGO4', '2012-09-27', 'Best game ever', 9, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(11, 'Counter strike: Global offensive', 'CSGO5', '2012-09-27', 'Best game ever', 9, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(13, 'Counter strike: Global offensive', 'CSGO6', '2012-09-27', 'Best game ever', 9, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(14, 'Counter strike: Global offensive', 'CSGO7', '2012-09-27', 'Best game ever', 9, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(15, 'Counter strike: Global offensive', 'CSGO8', '2012-09-27', 'Best game ever', NULL, NULL, 'neconeco', 'www.youtube.com/watch?v=2XH5_qafR8k', 1),
+(16, 'Counter strike: Global offensive', 'CSGO9', '2012-09-27', 'Best game ever', NULL, NULL, 'uuLMhh==', 'www.youtube.com/watch?v=2XH5_qafR8k', 0),
+(17, 'Counter strike: Global offensive', 'CSGO8', '2012-09-27', 'Best game ever', NULL, NULL, 'uuLMhh==', 'www.youtube.com/watch?v=2XH5_qafR8k', 0);
 
 -- --------------------------------------------------------
 
@@ -49,6 +69,15 @@ CREATE TABLE `game_genre` (
   `Name` varchar(55) COLLATE utf16_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_czech_ci;
 
+--
+-- Vypisuji data pro tabulku `game_genre`
+--
+
+INSERT INTO `game_genre` (`Id`, `Name`) VALUES
+(1, 'FPS'),
+(2, 'Strategy'),
+(3, 'Sport');
+
 -- --------------------------------------------------------
 
 --
@@ -60,6 +89,34 @@ CREATE TABLE `game_genre_games` (
   `GameGenreId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_czech_ci;
 
+--
+-- Vypisuji data pro tabulku `game_genre_games`
+--
+
+INSERT INTO `game_genre_games` (`GameId`, `GameGenreId`) VALUES
+(5, 3),
+(10, 1),
+(10, 2),
+(10, 3),
+(11, 1),
+(11, 2),
+(11, 3),
+(13, 1),
+(13, 2),
+(13, 3),
+(14, 1),
+(14, 2),
+(14, 3),
+(15, 1),
+(15, 2),
+(15, 3),
+(16, 1),
+(16, 2),
+(16, 3),
+(17, 1),
+(17, 2),
+(17, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -70,6 +127,14 @@ CREATE TABLE `publisher` (
   `Id` int(11) NOT NULL,
   `Name` varchar(255) COLLATE utf16_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_czech_ci;
+
+--
+-- Vypisuji data pro tabulku `publisher`
+--
+
+INSERT INTO `publisher` (`Id`, `Name`) VALUES
+(6, 'Blizzard Entertainment'),
+(9, 'Blizzard Entertainment 1');
 
 -- --------------------------------------------------------
 
@@ -138,19 +203,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pro tabulku `game`
 --
 ALTER TABLE `game`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT pro tabulku `game_genre`
 --
 ALTER TABLE `game_genre`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pro tabulku `publisher`
 --
 ALTER TABLE `publisher`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Omezení pro exportované tabulky
@@ -160,14 +225,14 @@ ALTER TABLE `publisher`
 -- Omezení pro tabulku `game`
 --
 ALTER TABLE `game`
-  ADD CONSTRAINT `game_ibfk_1` FOREIGN KEY (`PublisherId`) REFERENCES `publisher` (`Id`),
-  ADD CONSTRAINT `game_ibfk_2` FOREIGN KEY (`Id`) REFERENCES `game_genre_games` (`GameId`);
+  ADD CONSTRAINT `game_ibfk_1` FOREIGN KEY (`PublisherId`) REFERENCES `publisher` (`Id`);
 
 --
 -- Omezení pro tabulku `game_genre_games`
 --
 ALTER TABLE `game_genre_games`
-  ADD CONSTRAINT `game_genre_games_ibfk_1` FOREIGN KEY (`GameGenreId`) REFERENCES `game_genre` (`Id`);
+  ADD CONSTRAINT `game_genre_games_ibfk_1` FOREIGN KEY (`GameGenreId`) REFERENCES `game_genre` (`Id`),
+  ADD CONSTRAINT `game_genre_games_ibfk_2` FOREIGN KEY (`GameId`) REFERENCES `game` (`Id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
