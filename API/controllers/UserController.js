@@ -1,5 +1,5 @@
 const db = require('../config/DbConnection');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const UserValidator = require('../validators/UserValidator');
 const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
