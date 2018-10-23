@@ -6,7 +6,31 @@ const articleValidator = require('../validators/ArticleValidator');
 
 module.exports = app => {
 
-    // Ziskavani seznamu
+    app.get('/articles/:count', (req, res) => {
+        var count = parseInt(req.params.count);
+        db.query('SELECT * FROM ARTICLE WHERE Deleted = 0 order by Created DESC limit ?', count, (err, result) => {
+            if (err) {
+                console.log(err);
+                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+            }
+            res.send(new Result(ResultCodes.OK, result))
+        });
+
+    });
+
+    app.get('/articles/:gameid/:count', (req, res) => {
+        var gameId = parseInt(req.params.gameid);
+        var count = parseInt(req.params.count);
+
+        db.query('SELECT * FROM ARTICLE WHERE Deleted = ? AND Game = ? order by Created DESC limit ?', [0,gameId, count], (err, result) => {
+            if (err) {
+                console.log(err);
+                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+            }
+            console.log(result);
+            res.send(new Result(ResultCodes.OK, result))
+        });
+    });
 
     app.post('/article', (req, res) => {
         var body = req.body;
@@ -56,7 +80,7 @@ module.exports = app => {
                         'UPDATE ARTICLE SET ? WHERE Id = ? AND Deleted = ?',
                         [body, id, 0],
                         (err, result2) => {
-                            if(err){
+                            if (err) {
                                 console.log(err);
                                 res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
                             }
