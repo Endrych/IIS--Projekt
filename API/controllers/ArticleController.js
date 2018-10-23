@@ -27,7 +27,6 @@ module.exports = app => {
                 console.log(err);
                 res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
             }
-            console.log(result);
             res.send(new Result(ResultCodes.OK, result))
         });
     });
