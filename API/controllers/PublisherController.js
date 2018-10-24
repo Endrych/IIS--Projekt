@@ -3,6 +3,16 @@ const ResultCodes = require('../enums/ResultCodes');
 const db = require('../config/dbconnection');
 
 module.exports = app => {
+	app.get('/publisher', (req, res) => {
+		db.query('SELECT * FROM Publisher', (err, result) => {
+			if (err) {
+				console.log(err);
+				res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+			}
+			res.send(new Result(ResultCodes.OK, result))
+		})
+	});
+
 	app.get('/publisher/:id', (req, res) => {
 		var id = req.params.id;
 		db.query(
