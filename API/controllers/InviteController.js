@@ -57,13 +57,89 @@ module.exports = app => {
         });
     });
 
-    app.post('/invite/accept', (req, res) => {});
+    app.post('/invite/accept', (req, res) => {
+        var body = req.body;
+
+        if (!body.User || !body.Team) {
+            res.send(new Result(ResultCodes.BAD_REQUEST));
+        } else {
+            db.beginTransaction(err => {
+                if (err) {
+                    console.log(err);
+                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                } else {
+                    db.query(
+                        'SELECT * From Invite Where User = ? AND Team = ?',
+                        [body.User, body.Team],
+                        (err, invite) => {
+                            if (err) {
+                                console.log(err);
+                                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                            } else {
+                                if (invite.length > 0) {
+                                    db.query(
+                                        'UPDATE User SET ? WHERE Nickname = ?',
+                                        [{ Team: body.Team }, body.User],
+                                        (err, _) => {
+                                            if (err) {
+                                                console.log(err);
+                                                db.rollback(err => {
+                                                    if (err) {
+                                                        console.log(err);
+                                                    }
+                                                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                                                });
+                                            } else {
+                                                deleteInvite(body.User, body.Team)
+                                                    .then(_ => {
+                                                        db.commit(err => {
+                                                            if (err) {
+                                                                console.log(err);
+                                                                db.rollback(err => {
+                                                                    if (err) {
+                                                                        console.log(err);
+                                                                    } else {
+                                                                        res.send(
+                                                                            new Result(
+                                                                                ResultCodes.INTERNAL_SERVER_ERROR
+                                                                            )
+                                                                        );
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                res.send(new Result(ResultCodes.OK));
+                                                            }
+                                                        });
+                                                    })
+                                                    .catch(err => {
+                                                        console.log(err);
+                                                        db.rollback(err => {
+                                                            if (err) {
+                                                                console.log(err);
+                                                            } else {
+                                                                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                                                            }
+                                                        });
+                                                    });
+                                            }
+                                        }
+                                    );
+                                } else {
+                                    res.send(new Result(ResultCodes.NO_CONTENT));
+                                }
+                            }
+                        }
+                    );
+                }
+            });
+        }
+    });
 
     function deleteInvite(user, team) {
         return new Promise((resolve, reject) => {
             db.query('DELETE FROM Invite WHERE User = ? AND Team = ? ', [user, team], (err, _) => {
                 if (err) {
-                    console.log(err)
+                    console.log(err);
                     reject(err);
                 } else {
                     resolve(true);
@@ -83,7 +159,7 @@ module.exports = app => {
                     res.send(new Result(ResultCodes.OK));
                 })
                 .catch(err => {
-                    console.log('err',err);
+                    console.log('err', err);
                     res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
                 });
         }

@@ -10,7 +10,7 @@ module.exports = app => {
             if (err) {
                 console.log(err);
                 res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-            }else{
+            } else {
                 res.send(new Result(ResultCodes.OK, teams));
             }
         });
@@ -61,21 +61,22 @@ module.exports = app => {
                                         }
                                         res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
                                     });
+                                } else {
+                                    db.commit(err => {
+                                        if (err) {
+                                            console.log(err);
+                                            db.rollback(err => {
+                                                if (err) {
+                                                    console.log(err);
+                                                } else {
+                                                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                                                }
+                                            });
+                                        } else {
+                                            res.send(new Result(ResultCodes.OK, team.insertId));
+                                        }
+                                    });
                                 }
-                                db.commit(err => {
-                                    if(err){
-                                        console.log(err);
-                                        db.rollback(err => {
-                                            if (err) {
-                                                console.log(err);
-                                            }else{
-                                                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                                            }
-                                        });
-                                    }else{
-                                        res.send(new Result(ResultCodes.OK, team.insertId));
-                                    }
-                                });
                             }
                         );
                     });
@@ -90,7 +91,7 @@ module.exports = app => {
             if (err) {
                 console.log(err);
                 res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-            }else{
+            } else {
                 res.send(new Result(ResultCodes.OK));
             }
         });
