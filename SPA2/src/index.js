@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from "redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import promise from "redux-promise";
 import thunk from 'redux-thunk';
-
+import "babel-polyfill";
 import reducers from "./reducers";
 
 import AllRoutes from "./components/all_routes.js";
