@@ -23,7 +23,7 @@ module.exports = app => {
             return;
         }
 
-        db.query('SELECT Nickname FROM USER WHERE Nickname = ?', nickname, (err, user) => {
+        db.query('SELECT Nickname, Admin FROM USER WHERE Nickname = ?', nickname, (err, user) => {
             if (err) {
                 console.log(err);
 
@@ -31,14 +31,18 @@ module.exports = app => {
                 return;
             }
             if (user.length > 0) {
-                db.query('UPDATE USER SET ? WHERE Nickname = ?', [{ Admin: adminLevel }, nickname], (err, _) => {
-                    if (err) {
-                        console.log(err);
-                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                        return;
-                    }
-                    res.sendStatus(ResultCodes.OK);
-                });
+                if (user[0].Admin === 2) {
+                    res.sendStatus(ResultCodes.FORBIDDEN);
+                } else {
+                    db.query('UPDATE USER SET ? WHERE Nickname = ?', [{ Admin: adminLevel }, nickname], (err, _) => {
+                        if (err) {
+                            console.log(err);
+                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                            return;
+                        }
+                        res.sendStatus(ResultCodes.OK);
+                    });
+                }
             } else {
                 res.sendStatus(ResultCodes.NO_CONTENT);
             }
