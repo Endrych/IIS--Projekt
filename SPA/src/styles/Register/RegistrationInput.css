@@ -1,0 +1,19 @@
+.register__input {
+	border: none;
+}
+
+.register__input:focus {
+	outline: none;
+}
+
+.register__input-error {
+	border: 1px solid rgb(255, 0, 0);
+}
+
+.register__input-correct {
+	border: 1px solid rgb(9, 255, 0);
+}
+
+.register__text-error{
+	color: rgb(255, 0, 0);
+}

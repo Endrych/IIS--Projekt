@@ -1,20 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch, Route } from "react-router-dom";
 
-import LandingPage from "./LandingPage/LandingPage.js";
-import RegistrationForm from "./Registration/RegistrationForm.js";
+import LandingPage from "./LandingPage/landing_page";
+import RegistrationForm from "./registration_form.js";
 
 class Game extends Component {
 	constructor(props) {
 		super();
-	}
-	componentWillMount() {
-		console.log(this.props);
-		console.log("Game PAGE MOUNT WILL");
-	}
-	componentDidMount() {
-		console.log(this.props);
-		console.log("Game PAGE MOUNT DID");
 	}
 	render() {
 		return <h2>Hra {this.props.gametitle}</h2>;
@@ -40,6 +32,7 @@ const About = () => {
 const TeamList = () => {
 	return <h2>List tymu</h2>;
 };
+
 
 const Team = params => {
 	return <h2>Team {params.teamname}</h2>;
@@ -71,14 +64,6 @@ class Match extends Component {
 		super(props);
 	}
 	//Nepouzivat WillMount depricaped od reactu 16.3
-	componentWillMount() {
-		console.log(this.props);
-		console.log("Game PAGE MOUNT WILL");
-	}
-	componentDidMount() {
-		console.log(this.props);
-		console.log("Game PAGE MOUNT DID");
-	}
 	render() {
 		return (
 			<h2>

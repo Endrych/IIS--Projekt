@@ -7,21 +7,7 @@ import axios from "axios";
 
 class HeaderLoginFields extends Component {
 
-	// sendRegister(e){
-	// 	e.preventDefault();
-	// 	var axiosInstance = axios.create({
-	// 		baseURL: 'http://localhost:5050',
-	// 		/* other custom settings */
-	// 	  });
-	// 	  axiosInstance.post("/user/register",{
-	// 		"Nickname":"ZabaAHad4",
-	// "Firstname":"asdasdasd",
-	// "Lastname":"asdasd",
-	// "Email":"test@saas.cz",
-	// "Password":"asdasd",
-	// "PasswordConfirm":"asdasd"}).then(res =>{
-	// 	console.log(res)});
-	// }
+
 
 	render() {
 		return (
