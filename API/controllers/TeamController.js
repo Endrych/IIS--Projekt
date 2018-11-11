@@ -23,7 +23,11 @@ module.exports = app => {
                 console.log(err);
                 res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
             } else {
-                res.send(new Result(ResultCodes.OK, team));
+                if (team.length > 0) {
+                    res.send(new Result(ResultCodes.OK, team));
+                } else {
+                    res.send(new Result(ResultCodes.NO_CONTENT));
+                }
             }
         });
     });
@@ -82,7 +86,38 @@ module.exports = app => {
                     });
                 }
             });
+        } else {
+            res.send(new Result(ResultCodes.BAD_REQUEST));
         }
+    });
+
+    app.post('/team/:id', (req, res) => {
+        var id = parseInt(req.params.id);
+        var body = req.body;
+
+        db.query('SELECT Id FROM Team WHERE Id = ? AND Deleted = 0', id, (err, team) => {
+            if (err) {
+                console.log(err);
+                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+            } else {
+                if (team.length > 0) {
+                    if (!teamValidator.addTeamValidation(body)) {
+                        res.send(new Result(ResultCodes.BAD_REQUEST));
+                    } else {
+                        db.query('UPDATE Team SET ? WHERE Id = ? AND DELETED = 0', [body, id], (err, _) => {
+                            if (err) {
+                                console.log(err);
+                                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                            } else {
+                                res.send(new Result(ResultCodes.OK));
+                            }
+                        });
+                    }
+                } else {
+                    res.send(new Result(ResultCodes.NO_CONTENT));
+                }
+            }
+        });
     });
 
     app.delete('/team/:id', (req, res) => {
