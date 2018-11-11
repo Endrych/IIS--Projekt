@@ -2,7 +2,7 @@ const validateObject = require('./ValidateObject');
 const ValidatorsEnum = require('./ValidatorsEnum');
 
 module.exports = {
-	addArticleValidation: article => {
+	articleValidation: article => {
 		if (article && typeof article === 'object') {
 			return validateObject([
 				{
@@ -45,15 +45,6 @@ module.exports = {
 					required: true
 				},				
 				{
-					value: article.Created,
-					validators: [
-						{
-							validator: ValidatorsEnum.DATE
-						}
-					],
-					required: true
-				},
-				{
 					value: article.Image,
 					validators: [
 						{
@@ -72,7 +63,7 @@ module.exports = {
                             }
 						}
 					],
-					required: true
+					required: false
 				},
 				
 			]);

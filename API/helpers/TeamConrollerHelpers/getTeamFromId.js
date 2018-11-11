@@ -5,7 +5,6 @@ function getTeamName(teamId, db) {
                 if (err) {
                     reject(err);
                 } else {
-                    console.log(team);
                     if (team.length > 0) {
                         resolve(team[0]);
                     } else {

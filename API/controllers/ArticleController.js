@@ -1,65 +1,87 @@
-const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
 const db = require('../config/dbconnection');
 const articleValidator = require('../validators/ArticleValidator');
-
+const moment = require('moment')
 
 module.exports = app => {
+    app.get('/articles', (req, res) => {
+        var offset = parseInt(req.query.offset) || 0;
+        var count = parseInt(req.query.count) || 50;
 
-    app.get('/articles/:count', (req, res) => {
-        var count = parseInt(req.params.count);
-        db.query('SELECT * FROM ARTICLE WHERE Deleted = 0 order by Created DESC limit ?', count, (err, result) => {
-            if (err) {
-                console.log(err);
-                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+        if (step < 0 || count < 0) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
+            return;
+        }
+
+        db.query(
+            'SELECT * FROM ARTICLE WHERE Deleted = 0 order by Created DESC limit ?',
+            count + step,
+            (err, articles) => {
+                if (err) {
+                    console.log(err);
+                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                } else {
+                    res.send(articles.slice(offset));
+                }
             }
-            res.send(new Result(ResultCodes.OK, result))
-        });
-
+        );
     });
 
-    app.get('/articles/:gameid/:count', (req, res) => {
+    app.get('/articles/:gameid', (req, res) => {
         var gameId = parseInt(req.params.gameid);
-        var count = parseInt(req.params.count);
+        var offset = parseInt(req.query.offset) || 0;
+        var count = parseInt(req.query.count) || 50;
 
-        db.query('SELECT * FROM ARTICLE WHERE Deleted = ? AND Game = ? order by Created DESC limit ?', [0,gameId, count], (err, result) => {
-            if (err) {
-                console.log(err);
-                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+        if (step < 0 || count < 0) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
+            return;
+        }
+
+        db.query(
+            'SELECT * FROM ARTICLE WHERE Deleted = ? AND Game = ? order by Created DESC limit ?',
+            [0, gameId, count + offset],
+            (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                }
+                res.send(result.slice(offset));
             }
-            res.send(new Result(ResultCodes.OK, result))
-        });
+        );
     });
 
     app.post('/article', (req, res) => {
         var body = req.body;
-        if (articleValidator.addArticleValidation(body)) {
+        if (articleValidator.articleValidation(body)) {
             body.Deleted = 0;
-            db.query("INSERT INTO ARTICLE SET ?", body, (err, result) => {
+            body.Created = moment().toISOString();
+            db.query('INSERT INTO ARTICLE SET ?', body, (err, result) => {
                 if (err) {
                     console.log(err);
-                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                    return;
                 }
-                res.send(new Result(ResultCodes.OK, result['insertId']));
+                res.send(result['insertId'].toString());
             });
         } else {
-            res.send(new Result(ResultCodes.BAD_REQUEST));
+            res.sendStatus(ResultCodes.BAD_REQUEST);
         }
     });
 
     app.get('/article/:id', (req, res) => {
         var id = req.params.id;
-        db.query('SELECT * FROM ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, result) => {
+
+        db.query('SELECT * FROM ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, article) => {
             if (err) {
                 console.log(err);
-                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-            }
-            if (result.length > 0) {
-                var data = result[0];
-                delete data.Deleted;
-                res.send(new Result(ResultCodes.OK, data));
+                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
             } else {
-                res.send(new Result(ResultCodes.NO_CONTENT));
+                if (article.length > 0) {
+                    var data = article[0];
+                    res.send(data);
+                } else {
+                    res.sendStatus(ResultCodes.NO_CONTENT);
+                }
             }
         });
     });
@@ -68,41 +90,50 @@ module.exports = app => {
         var id = req.params.id;
         var body = req.body;
 
-        if (articleValidator.addArticleValidation(body)) {
-            db.query("SELECT Id from ARTICLE WHERE Id = ? AND Deleted = 0", id, (err, result) => {
+        if (articleValidator.articleValidation(body)) {
+            db.query('SELECT Id from ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, result) => {
                 if (err) {
                     console.log(err);
-                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                    return;
                 }
                 if (result.length > 0) {
-                    db.query(
-                        'UPDATE ARTICLE SET ? WHERE Id = ? AND Deleted = ?',
-                        [body, id, 0],
-                        (err, result2) => {
-                            if (err) {
-                                console.log(err);
-                                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                            }
-                            res.send(new Result(ResultCodes.OK));
-                        });
+                    db.query('UPDATE ARTICLE SET ? WHERE Id = ? AND Deleted = ?', [body, id, 0], (err, _) => {
+                        if (err) {
+                            console.log(err);
+                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                        }
+                        res.sendStatus(ResultCodes.OK);
+                    });
                 } else {
-                    res.send(new Result(ResultCodes.NO_CONTENT));
+                    res.sendStatus(ResultCodes.NO_CONTENT);
                 }
             });
         } else {
-            res.send(new Result(ResultCodes.BAD_REQUEST));
+            res.sendStatus(ResultCodes.BAD_REQUEST);
         }
-
     });
 
     app.delete('/article/:id', (req, res) => {
-        var id = req.params.id;
-        db.query('UPDATE ARTICLE SET Deleted = ? WHERE Id = ? AND Deleted = ?', [1, id, 0], (err, result) => {
+        var id = parseInt(req.params.id);
+        db.query('SELECT Id FROM ARTICLE WHER Id = ? AND Deleted = 0', Id, (err, article) => {
             if (err) {
                 console.log(err);
-                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+            } else {
+                if (article.length > 0) {
+                    db.query('UPDATE ARTICLE SET Deleted = ? WHERE Id = ? AND Deleted = ?', [1, id, 0], (err, _) => {
+                        if (err) {
+                            console.log(err);
+                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                        } else {
+                            res.sendStatus(ResultCodes.OK);
+                        }
+                    });
+                } else {
+                    res.sendStatus(ResultCodes.NO_CONTENT);
+                }
             }
-            res.send(new Result(ResultCodes.OK));
         });
     });
-}
+};
