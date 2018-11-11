@@ -9,7 +9,6 @@ import registerCodes from "../../enums/register_codes";
 import GeneralValidators from "../../validators/general_validators";
 
 class RegistrationForm extends Component {
-
 	renderField(field) {
 		const {
 			meta: { touched, error }
@@ -23,10 +22,11 @@ class RegistrationForm extends Component {
 				hasError = <div className="text-help">{registerCodes.code_303}</div>;
 			}
 		}
+
 		return (
 			<div className={className}>
 				<label>{field.label}</label>
-				<input className="form-control" type="text" {...field.input} />
+				<input className="form-control" type={field.type} {...field.input} />
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
 			</div>
@@ -38,10 +38,7 @@ class RegistrationForm extends Component {
 	}
 
 	handleCorrectSubmit() {
-
-		// if(statusCode === 200){
-			this.props.history.push("/register/sucess");
-		// }
+		this.props.history.push("/register/sucess");
 	}
 
 	render() {
@@ -64,13 +61,34 @@ class RegistrationForm extends Component {
 						component={this.renderField}
 						props={this.props}
 					/>
-					<Field name="Firstname" label={registrationFields.FIRSTNAME} component={this.renderField} />
-					<Field name="Lastname" label={registrationFields.LASTNAME} component={this.renderField} />
-					<Field name="Email" label={registrationFields.EMAIL} component={this.renderField} />
-					<Field name="Phone" label={registrationFields.PHONE_NUMBER} component={this.renderField} />
-					<Field name="Password" label={registrationFields.PASSWORD} component={this.renderField} />
+					<Field
+						name="Firstname"
+						type="text"
+						label={registrationFields.FIRSTNAME}
+						component={this.renderField}
+					/>
+					<Field
+						name="Lastname"
+						type="text"
+						label={registrationFields.LASTNAME}
+						component={this.renderField}
+					/>
+					<Field name="Email" type="text" label={registrationFields.EMAIL} component={this.renderField} />
+					<Field
+						name="Phone"
+						type="text"
+						label={registrationFields.PHONE_NUMBER}
+						component={this.renderField}
+					/>
+					<Field
+						name="Password"
+						type="password"
+						label={registrationFields.PASSWORD}
+						component={this.renderField}
+					/>
 					<Field
 						name="PasswordConfirm"
+						type="password"
 						label={registrationFields.REPEATED_PASSWORD}
 						component={this.renderField}
 					/>
