@@ -11,16 +11,16 @@ const dateValidator = require('./Basic/DateValidator');
 const youtubeValidator = require('youtube-validator');
 const imageValidator = require('is-base64');
 
-module.exports = (validators, obj) => {
+module.exports = (validatorsOptionObject, obj) => {
     var valid = true;
-    if (obj && typeof obj === 'object' && validators && typeof validators === 'object') {
+    if (obj && typeof obj === 'object' && validatorsOptionObject && typeof validatorsOptionObject === 'object') {
         var keys = Object.keys(obj);
-        for (var i = 0; i < keys.length; i++) {
-            var key = keys[i];
+        for (var j = 0; j < keys.length; j++) {
+            var key = keys[j];
             var value = obj[key];
-            var validatorsOptions = validators[key];
+            var validatorsOptions = validatorsOptionObject[key];
 
-            if (!validator) {
+            if (!validatorsOptions) {
                 return false;
             }
 

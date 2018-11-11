@@ -78,6 +78,10 @@ module.exports = {
 
                         required: true
                     },
+                    PasswordConfirm: {
+                        validators: [],
+                        required: true
+                    },
                     Phone: {
                         validators: [
                             {
@@ -104,38 +108,41 @@ module.exports = {
 
     loginValidation: login => {
         if (login && typeof login === 'object') {
-            return validateObject({
-                Nickname: {
-                    validators: [
-                        {
-                            validator: ValidatorsEnum.ALPHANUMERIC
-                        },
-                        {
-                            validator: ValidatorsEnum.RANGE,
-                            options: {
-                                min: 4,
-                                max: 45
+            return validateObject(
+                {
+                    Nickname: {
+                        validators: [
+                            {
+                                validator: ValidatorsEnum.ALPHANUMERIC
+                            },
+                            {
+                                validator: ValidatorsEnum.RANGE,
+                                options: {
+                                    min: 4,
+                                    max: 45
+                                }
                             }
-                        }
-                    ],
-                    required: true
-                },
-                Password: {
-                    validators: [
-                        {
-                            validator: ValidatorsEnum.ALPHANUMERIC
-                        },
-                        {
-                            validator: ValidatorsEnum.MIN,
-                            options: {
-                                min: 6
+                        ],
+                        required: true
+                    },
+                    Password: {
+                        validators: [
+                            {
+                                validator: ValidatorsEnum.ALPHANUMERIC
+                            },
+                            {
+                                validator: ValidatorsEnum.MIN,
+                                options: {
+                                    min: 6
+                                }
                             }
-                        }
-                    ],
+                        ],
 
-                    required: true
-                }
-            },login);
+                        required: true
+                    }
+                },
+                login
+            );
         } else {
             return false;
         }
