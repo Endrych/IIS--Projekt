@@ -7,6 +7,17 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 
 module.exports = app => {
+    app.get('/user', (req, res) => {
+        if (req.user) {
+            var user = req.user;
+            delete user.Password;
+            delete user.Salt;
+            res.send(req.user);
+        } else {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+        }
+    });
+
     app.get('/user/:nickname', (req, res) => {
         var nickname = req.params.nickname;
         db.query(
