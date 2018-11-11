@@ -15,6 +15,7 @@ class RegistrationForm extends Component {
 		} = field;
 		let hasError = "";
 		let className = `form-group ${touched && error ? "has-danger" : ""}`;
+
 		if (field.label === registrationFields.NICKNAME) {
 			var getError = field.statusCode;
 			if (getError === 303) {
