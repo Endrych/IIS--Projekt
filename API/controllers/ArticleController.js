@@ -1,7 +1,7 @@
 const ResultCodes = require('../enums/ResultCodes');
 const db = require('../config/dbconnection');
 const articleValidator = require('../validators/ArticleValidator');
-const moment = require('moment')
+const moment = require('moment');
 
 module.exports = app => {
     app.get('/articles', (req, res) => {

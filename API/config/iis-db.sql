@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Ned 11. lis 2018, 16:34
+-- Vytvořeno: Ned 11. lis 2018, 18:16
 -- Verze serveru: 10.1.36-MariaDB
 -- Verze PHP: 7.2.10
 
@@ -132,7 +132,8 @@ CREATE TABLE `user` (
   `Phone` varchar(20) CHARACTER SET utf8 COLLATE utf8_czech_ci DEFAULT NULL,
   `Password` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL,
   `Salt` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL,
-  `Team` int(11) DEFAULT NULL
+  `Team` int(11) DEFAULT NULL,
+  `Admin` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_czech_ci;
 
 --

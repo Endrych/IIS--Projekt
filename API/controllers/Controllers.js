@@ -6,9 +6,11 @@ const articleController = require('./ArticleController');
 const gameGenreController = require('./GameGenreController');
 const teamController = require('./TeamController');
 const inviteController = require('./InviteController');
+const adminController = require('./AdminController');
 
 module.exports = app => {
     userController(app);
+    adminController(app);
     gameController(app);
     articleController(app);
     gameGenreController(app);
