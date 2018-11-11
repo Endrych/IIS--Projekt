@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
-import registrationFields from "../enums/registration_fields";
+import registrationFields from "../../enums/registration_fields";
 import { Link } from "react-router-dom";
-import { registerUser } from "../actions";
-import registerCodes from "../enums/register_codes";
+import { registerUser } from "../../actions";
+import registerCodes from "../../enums/register_codes";
 
-import GeneralValidators from "../validators/general_validators";
+import GeneralValidators from "../../validators/general_validators";
 
 class RegistrationForm extends Component {
 
@@ -135,7 +135,6 @@ function validate(values) {
 }
 
 function mapStateToProps({ registrationResultCode }) {
-	console.log(registrationResultCode, "||||||");
 	return { statusCode: registrationResultCode.statusCode };
 }
 

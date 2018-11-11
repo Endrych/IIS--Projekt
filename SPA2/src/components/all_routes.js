@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch, Route } from "react-router-dom";
 
 import LandingPage from "./LandingPage/landing_page";
-import RegistrationForm from "./registration_form.js";
+import RegistrationForm from "./Registration/registration_form.js";
+import RegistrationSucess from "./Registration/registration_sucess.js";
 
 class Game extends Component {
 	constructor(props) {
@@ -55,7 +56,6 @@ const NewsList = () => {
 }
 
 const NewsArticle = params => {
-	console.log(params)
 	return <h2>Article {params.articleid}</h2>;
 }
 
@@ -151,6 +151,8 @@ const AllRoutes = () => {
 			/>
 
 			<Route path="/register" component={RegistrationForm} exact strict />
+
+			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
 
 			<Route
 				render={() => {

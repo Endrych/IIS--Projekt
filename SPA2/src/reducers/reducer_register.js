@@ -6,9 +6,7 @@ export default function(state = {statusCode: ""}, action){
 			// action.callback();
 			return {statusCode: 200};
 		case REGISTER_USER_FAILED:
-			// console.log("REDUCER HERE", action.payload.response.status, action, state);
 			const newState = {statusCode: action.payload.response.status };
-			// console.log(newState)
 			return newState;
 		default:
 			return state;
