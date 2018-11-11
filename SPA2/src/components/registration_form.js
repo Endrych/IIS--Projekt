@@ -38,7 +38,7 @@ class RegistrationForm extends Component{
 				<Field name="Email" label={registrationFields.EMAIL} component={this.renderField}/>
 				<Field name="Phone" label={registrationFields.PHONE_NUMBER} component={this.renderField}/>
 				<Field name="Password" label={registrationFields.PASSWORD} component={this.renderField}/>
-				<Field name="Password_repeat" label={registrationFields.REPEATED_PASSWORD} component={this.renderField}/>
+				<Field name="PasswordConfirm" label={registrationFields.REPEATED_PASSWORD} component={this.renderField}/>
 				<button type="submit" className="btn btn-primary">{registrationFields.SUBMIT}</button>
 				<Link to="/" className="btn btn-danger">{registrationFields.CANCEL}</Link>
 			</form>
@@ -88,9 +88,9 @@ function validate(values){
 		errors.Password = "Povoleny pouze alfanumericke znaky"
 	}else if(!validator.Min(values.Password, {min: 6})){
 		errors.Password = "Heslo musi mit aspon 6 znaku."
-	}else if(!validator.EqualValue(values.Password, {value: values.Password_repeat})){
+	}else if(!validator.EqualValue(values.Password, {value: values.PasswordConfirm})){
 		// errors.Password = "Hesla se neshoduji";
-		errors.Password_repeat = "Neshoduje se s heslem";
+		errors.PasswordConfirm = "Neshoduje se s heslem";
 	}
 
 

@@ -1,12 +1,21 @@
-import axios from 'axios';
+import axios from "axios";
 
-export const REGISTER_USER = "REGISTER_USER";
+export const REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS";
+export const REGISTER_USER_FAILED = "REGISTER_USER_FAILED";
 
-export function registerUser(values){
-	console.log(values)
+const baseUrl = `http://localhost:5050`;
 
-	return{
-		type:REGISTER_USER,
-		payload: null
+export function registerUser(values) {
+	console.log(values);
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+	console.log(baseUrl);
+	const request = axiosInstance.post("/register", values);
+
+	return(dispatch) => {
+		request.then((res) => {
+			dispatch({type: REGISTER_USER_SUCCESS, payload: res});
+		}).catch((err) => {
+			dispatch({type: REGISTER_USER_FAILED, payload:err});
+		})
 	}
 }

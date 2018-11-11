@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Row, Col } from "reactstrap";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../../styles/Header/headerLoginFields.css";
 
 import axios from "axios";
@@ -32,9 +32,9 @@ class HeaderLoginFields extends Component {
 								value="Přihlásit"
 							/>
 						</div>
-						<NavLink className="header__register" to="/register">
+						<Link className="header__register" to="/register">
 							Registrace
-						</NavLink>
+						</Link>
 						<input type="text" placeholder="Hledej" />
 					</div>
 				</Col>
