@@ -4,9 +4,8 @@ const ValidatorsEnum = require('./ValidatorsEnum');
 module.exports = {
     addTeamValidation: team => {
         if (team && typeof team === 'object') {
-            return validateObject([
-                {
-                    value: team.Name,
+            return validateObject({
+                Name:{
                     validators: [
                         {
                             validator: ValidatorsEnum.RANGE,
@@ -18,8 +17,11 @@ module.exports = {
                     ],
                     required: true
                 },
-                {
-                    value: team.Owner,
+                Description:{
+                    validators: [],
+                    required: true
+                },
+                Owner:{
                     validators: [
                         {
                             validator: ValidatorsEnum.ALPHANUMERIC
@@ -34,8 +36,7 @@ module.exports = {
                     ],
                     required: true
                 },
-                {
-                    value: team.Logo,
+                Logo:{
                     validators: [
                         {
                             validator: ValidatorsEnum.IMAGE
@@ -43,7 +44,7 @@ module.exports = {
                     ],
                     required: false
                 }
-            ]);
+            },team);
         } else {
             return false;
         }

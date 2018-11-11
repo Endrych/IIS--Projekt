@@ -11,88 +11,96 @@ const dateValidator = require('./Basic/DateValidator');
 const youtubeValidator = require('youtube-validator');
 const imageValidator = require('is-base64');
 
+module.exports = (validators, obj) => {
+    var valid = true;
+    if (obj && typeof obj === 'object' && validators && typeof validators === 'object') {
+        var keys = Object.keys(obj);
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var value = obj[key];
+            var validatorsOptions = validators[key];
 
-module.exports = obj => {
-	var valid = true;
-	if (obj && typeof obj === 'object') {
-		obj.forEach(element => {
-			if (element.value) {
-				if (element.validators && typeof element.validators === 'object') {
-					var validators = element.validators;
-					for (var i = 0, len = validators.length; i < len; i++) {
-						var validator = validators[i];
-						if (!valid) break;
-						switch (validator.validator) {
-							case ValidatorsEnum.MIN:
-								if (!minValidator(element.value, validator.options)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.MAX:
-								if (!maxValidator(element.value, validator.options)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.RANGE:
-								if (!rangeValidator(element.value, validator.options)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.ALPHANUMERIC:
-								if (!alphaNumericValidator(element.value, validator.options)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.EQUAL_VALUE:
-								if (!equalValueValidator(element.value, validator.options)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.ALPHA_CHARACTERS:
-								if (!alphaCharactersValidator(element.value, validator.options)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.PHONE:
-								if (!phoneValidator(element.value, validator.options)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.EMAIL:
-								if (!emailValidator.validate(element.value)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.DATE:
-								if (!dateValidator(element.value, validator.options)) {
-									valid = false;
-								}
-								break;
-							case ValidatorsEnum.YOUTUBE:
-								youtubeValidator.validateUrl(element.value, (res, err) => {
-									if(err){
-										valid = false;
-									}
-								});
-								break;
-							case ValidatorsEnum.IMAGE:
-								if(!imageValidator(element.value)){
-									valid = false;
-								}
-								break;
-							default:
-								valid = false;
-						}
-					}
-				}
-			} else {
-				if (element.required) {
-					valid = false;
-				}
-			}
-		});
-		return valid;
-	} else {
-		return false;
-	}
+            if (!validator) {
+                return false;
+            }
+
+            if (!value && validatorsOptions.required) {
+                return false;
+            }
+
+            if (value) {
+                if (validatorsOptions.validators && typeof validatorsOptions.validators === 'object') {
+                    var validators = validatorsOptions.validators;
+                    for (var i = 0, len = validators.length; i < len; i++) {
+                        var validator = validators[i];
+                        if (!valid) break;
+                        switch (validator.validator) {
+                            case ValidatorsEnum.MIN:
+                                if (!minValidator(value, validator.options)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.MAX:
+                                if (!maxValidator(value, validator.options)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.RANGE:
+                                if (!rangeValidator(value, validator.options)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.ALPHANUMERIC:
+                                if (!alphaNumericValidator(value, validator.options)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.EQUAL_VALUE:
+                                if (!equalValueValidator(value, validator.options)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.ALPHA_CHARACTERS:
+                                if (!alphaCharactersValidator(value, validator.options)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.PHONE:
+                                if (!phoneValidator(value, validator.options)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.EMAIL:
+                                if (!emailValidator.validate(value)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.DATE:
+                                if (!dateValidator(value, validator.options)) {
+                                    valid = false;
+                                }
+                                break;
+                            case ValidatorsEnum.YOUTUBE:
+                                youtubeValidator.validateUrl(value, (res, err) => {
+                                    if (err) {
+                                        valid = false;
+                                    }
+                                });
+                                break;
+                            case ValidatorsEnum.IMAGE:
+                                if (!imageValidator(value)) {
+                                    valid = false;
+                                }
+                                break;
+                            default:
+                                valid = false;
+                        }
+                    }
+                }
+            }
+        }
+        return valid;
+    } else {
+        return false;
+    }
 };

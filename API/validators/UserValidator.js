@@ -4,102 +4,99 @@ const ValidatorsEnum = require('./ValidatorsEnum');
 module.exports = {
     registerValidation: user => {
         if (user && typeof user === 'object') {
-            return validateObject([
+            return validateObject(
                 {
-                    value: user.Nickname,
-                    validators: [
-                        {
-                            validator: ValidatorsEnum.ALPHANUMERIC
-                        },
-                        {
-                            validator: ValidatorsEnum.RANGE,
-                            options: {
-                                min: 4,
-                                max: 45
+                    Nickname: {
+                        validators: [
+                            {
+                                validator: ValidatorsEnum.ALPHANUMERIC
+                            },
+                            {
+                                validator: ValidatorsEnum.RANGE,
+                                options: {
+                                    min: 4,
+                                    max: 45
+                                }
                             }
-                        }
-                    ],
-                    required: true
-                },
-                {
-                    value: user.Firstname,
-                    validators: [
-                        {
-                            validator: ValidatorsEnum.ALPHA_CHARACTERS,
-                            options: {
-                                allowSpace: true
+                        ],
+                        required: true
+                    },
+                    Firstname: {
+                        validators: [
+                            {
+                                validator: ValidatorsEnum.ALPHA_CHARACTERS,
+                                options: {
+                                    allowSpace: true
+                                }
+                            },
+                            {
+                                validator: ValidatorsEnum.RANGE,
+                                options: {
+                                    min: 1,
+                                    max: 45
+                                }
                             }
-                        },
-                        {
-                            validator: ValidatorsEnum.RANGE,
-                            options: {
-                                min: 1,
-                                max: 45
+                        ],
+                        required: true
+                    },
+                    Lastname: {
+                        validators: [
+                            {
+                                validator: ValidatorsEnum.ALPHA_CHARACTERS,
+                                options: {
+                                    allowSpace: true
+                                }
+                            },
+                            {
+                                validator: ValidatorsEnum.RANGE,
+                                options: {
+                                    min: 1,
+                                    max: 45
+                                }
                             }
-                        }
-                    ],
-                    required: true
-                },
-                {
-                    value: user.Lastname,
-                    validators: [
-                        {
-                            validator: ValidatorsEnum.ALPHA_CHARACTERS,
-                            options: {
-                                allowSpace: true
+                        ],
+                        required: true
+                    },
+                    Password: {
+                        validators: [
+                            {
+                                validator: ValidatorsEnum.ALPHANUMERIC
+                            },
+                            {
+                                validator: ValidatorsEnum.MIN,
+                                options: {
+                                    min: 6
+                                }
+                            },
+                            {
+                                validator: ValidatorsEnum.EQUAL_VALUE,
+                                options: {
+                                    value: user.PasswordConfirm
+                                }
                             }
-                        },
-                        {
-                            validator: ValidatorsEnum.RANGE,
-                            options: {
-                                min: 1,
-                                max: 45
-                            }
-                        }
-                    ],
-                    required: true
-                },
-                {
-                    value: user.Password,
-                    validators: [
-                        {
-                            validator: ValidatorsEnum.ALPHANUMERIC
-                        },
-                        {
-                            validator: ValidatorsEnum.MIN,
-                            options: {
-                                min: 6
-                            }
-                        },
-                        {
-                            validator: ValidatorsEnum.EQUAL_VALUE,
-                            options: {
-                                value: user.PasswordConfirm
-                            }
-                        }
-                    ],
+                        ],
 
-                    required: true
+                        required: true
+                    },
+                    Phone: {
+                        validators: [
+                            {
+                                validator: ValidatorsEnum.PHONE
+                            }
+                        ],
+                        required: false
+                    },
+                    Email: {
+                        validators: [
+                            {
+                                validator: ValidatorsEnum.EMAIL
+                            }
+                        ],
+                        required: true
+                    }
                 },
-                {
-                    value: user.Phone,
-                    validators: [
-                        {
-                            validator: ValidatorsEnum.PHONE
-                        }
-                    ],
-                    required: false
-                },
-                {
-                    value: user.Email,
-                    validators: [
-                        {
-                            validator: ValidatorsEnum.EMAIL
-                        }
-                    ],
-                    required: true
-                }
-            ]);
+                user
+            );
         } else {
             return false;
         }
@@ -107,9 +104,8 @@ module.exports = {
 
     loginValidation: login => {
         if (login && typeof login === 'object') {
-            return validateObject([
-                {
-                    value: login.Nickname,
+            return validateObject({
+                Nickname: {
                     validators: [
                         {
                             validator: ValidatorsEnum.ALPHANUMERIC
@@ -124,8 +120,7 @@ module.exports = {
                     ],
                     required: true
                 },
-                {
-                    value: login.Password,
+                Password: {
                     validators: [
                         {
                             validator: ValidatorsEnum.ALPHANUMERIC
@@ -140,7 +135,7 @@ module.exports = {
 
                     required: true
                 }
-            ]);
+            },login);
         } else {
             return false;
         }
