@@ -1,9 +1,8 @@
 const db = require('../config/DbConnection');
-const bcrypt = require('bcryptjs');
 const UserValidator = require('../validators/UserValidator');
-const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
-const getTeamName = require('../helpers/TeamConrollerHelpers/getTeamName');
+const getTeam = require('../helpers/TeamConrollerHelpers/getTeamFromId');
+const hashPassword = require('../helpers/hashPassword');
 
 module.exports = app => {
     app.get('/user/:nickname', (req, res) => {
@@ -14,11 +13,11 @@ module.exports = app => {
             (err, user) => {
                 if (err) {
                     console.log(err);
-                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
                 } else {
                     if (user.length === 1) {
                         var userData = user[0];
-                        getTeamName(userData.Team, db)
+                        getTeam(userData.Team, db)
                             .then(team => {
                                 userData.Team = team;
                                 res.send(userData);
@@ -39,27 +38,33 @@ module.exports = app => {
         var body = req.body;
         if (UserValidator.registerValidation(body)) {
             db.query('SELECT Nickname FROM USER WHERE ?', { Nickname: body.Nickname }, (err, result) => {
-                if (result.length === 0) {
-                    bcrypt.genSalt().then(salt => {
-                        bcrypt.hash(body.Password, salt, (err, hash) => {
-                            if (err) {
-                                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                            } else {
+                if (err) {
+                    console.log(err);
+                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                } else {
+                    if (result.length === 0) {
+                        hashPassword(body.Password)
+                            .then(hashAndSalt => {
                                 delete body.PasswordConfirm;
-                                body.Password = hash;
-                                body.Salt = salt;
-                                db.query('INSERT INTO USER SET ?', body, (err, result) => {
+                                body.Password = hashAndSalt.hash;
+                                body.Salt = hashAndSalt.salt;
+
+                                db.query('INSERT INTO USER SET ?', body, (err, _) => {
                                     if (err) {
+                                        console.log(err);
                                         res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
                                     } else {
                                         res.sendStatus(ResultCodes.OK);
                                     }
                                 });
-                            }
-                        });
-                    });
-                } else {
-                    res.sendStatus(ResultCodes.SEE_OTHER);
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                            });
+                    } else {
+                        res.sendStatus(ResultCodes.SEE_OTHER);
+                    }
                 }
             });
         } else {
@@ -78,18 +83,18 @@ module.exports = app => {
                     }
                     if (result.length > 0) {
                         var dbUser = result[0];
-                        bcrypt.hash(body.Password, dbUser.Salt, (err, hash) => {
-                            if (err) {
-                                console.log(err);
-                                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                            } else {
-                                if (hash === dbUser.Password) {
+                        hashPassword(body.Password, dbUser.Salt)
+                            .then(hashAndSalt => {
+                                if (hashAndSalt.hash === dbUser.Password) {
                                     res.sendStatus(ResultCodes.OK);
                                 } else {
                                     res.sendStatus(ResultCodes.UNAUTHORIZED);
                                 }
-                            }
-                        });
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                            });
                     } else {
                         res.sendStatus(ResultCodes.UNAUTHORIZED);
                     }

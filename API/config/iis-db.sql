@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Ned 11. lis 2018, 01:46
+-- Vytvořeno: Ned 11. lis 2018, 16:34
 -- Verze serveru: 10.1.36-MariaDB
 -- Verze PHP: 7.2.10
 
@@ -34,7 +34,7 @@ CREATE TABLE `article` (
   `Header` tinytext COLLATE utf8_czech_ci NOT NULL,
   `Content` text COLLATE utf8_czech_ci NOT NULL,
   `Image` longtext COLLATE utf8_czech_ci,
-  `Game` int(11) NOT NULL,
+  `Game` int(11) DEFAULT NULL,
   `Created` date NOT NULL,
   `Deleted` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
