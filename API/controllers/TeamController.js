@@ -35,7 +35,7 @@ module.exports = app => {
     app.post('/team', (req, res) => {
         var body = req.body;
         if (teamValidator.addTeamValidation(body)) {
-            body.Created = moment();
+            body.Created =  moment().toISOString();
             body.Deleted = 0;
             db.beginTransaction(err => {
                 if (err) {

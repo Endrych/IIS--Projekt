@@ -4,9 +4,8 @@ const ValidatorsEnum = require('./ValidatorsEnum');
 module.exports = {
     addGameValidation: game => {
         if (game && typeof game === 'object') {
-            return validateObject([
-                {
-                    value: game.Name,
+            return validateObject({
+                Name:{
                     validators: [
                         {
                             validator: ValidatorsEnum.RANGE,
@@ -18,8 +17,7 @@ module.exports = {
                     ],
                     required: true
                 },
-                {
-                    value: game.Keyname,
+                Keyname:{
                     validators: [
                         {
                             validator: ValidatorsEnum.RANGE,
@@ -31,8 +29,7 @@ module.exports = {
                     ],
                     required: true
                 },
-                {
-                    value: game.Publisher,
+                Publisher:{
                     validators: [
                         {
                             validator: ValidatorsEnum.MAX,
@@ -43,8 +40,7 @@ module.exports = {
                     ],
                     required: false
                 },
-                {
-                    value: game.ReleaseDate,
+                ReleaseDate:{
                     validators: [
                         {
                             validator: ValidatorsEnum.DATE
@@ -52,8 +48,7 @@ module.exports = {
                     ],
                     required: false
                 },
-                {
-                    value: game.Image,
+                Image:{
                     validators: [
                         {
                             validator: ValidatorsEnum.IMAGE
@@ -61,8 +56,7 @@ module.exports = {
                     ],
                     required: false
                 },
-                {
-                    value: game.Icon,
+                Icon:{
                     validators: [
                         {
                             validator: ValidatorsEnum.IMAGE
@@ -70,8 +64,7 @@ module.exports = {
                     ],
                     required: false
                 },
-                {
-                    value: game.Video,
+                Video:{
                     validators: [
                         {
                             validator: ValidatorsEnum.MAX,
@@ -85,7 +78,7 @@ module.exports = {
                     ],
                     required: false
                 }
-            ]);
+            },game);
         } else {
             return false;
         }

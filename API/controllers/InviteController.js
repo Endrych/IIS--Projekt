@@ -1,8 +1,6 @@
 const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
 const db = require('../config/dbconnection');
-const teamValidator = require('../validators/TeamValidator');
-const moment = require('moment');
 
 module.exports = app => {
     app.post('/invite', (req, res) => {
