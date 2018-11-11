@@ -23,29 +23,41 @@ module.exports = app => {
             return;
         }
 
-        db.query('SELECT Nickname, Admin FROM USER WHERE Nickname = ?', nickname, (err, user) => {
-            if (err) {
-                console.log(err);
+        if (req.user) {
+            if (req.user.Admin === 2) {
+                db.query('SELECT Nickname, Admin FROM USER WHERE Nickname = ?', nickname, (err, user) => {
+                    if (err) {
+                        console.log(err);
 
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                return;
-            }
-            if (user.length > 0) {
-                if (user[0].Admin === 2) {
-                    res.sendStatus(ResultCodes.FORBIDDEN);
-                } else {
-                    db.query('UPDATE USER SET ? WHERE Nickname = ?', [{ Admin: adminLevel }, nickname], (err, _) => {
-                        if (err) {
-                            console.log(err);
-                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                            return;
+                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                        return;
+                    }
+                    if (user.length > 0) {
+                        if (user[0].Admin === 2) {
+                            res.sendStatus(ResultCodes.FORBIDDEN);
+                        } else {
+                            db.query(
+                                'UPDATE USER SET ? WHERE Nickname = ?',
+                                [{ Admin: adminLevel }, nickname],
+                                (err, _) => {
+                                    if (err) {
+                                        console.log(err);
+                                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                                        return;
+                                    }
+                                    res.sendStatus(ResultCodes.OK);
+                                }
+                            );
                         }
-                        res.sendStatus(ResultCodes.OK);
-                    });
-                }
+                    } else {
+                        res.sendStatus(ResultCodes.NO_CONTENT);
+                    }
+                });
             } else {
-                res.sendStatus(ResultCodes.NO_CONTENT);
+                res.sendStatus(ResultCodes.FORBIDDEN);
             }
-        });
+        } else {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+        }
     });
 };

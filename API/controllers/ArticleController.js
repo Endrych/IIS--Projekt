@@ -52,24 +52,33 @@ module.exports = app => {
 
     app.post('/article', (req, res) => {
         var body = req.body;
-        if (articleValidator.articleValidation(body)) {
-            body.Deleted = 0;
-            body.Created = moment().toISOString();
-            db.query('INSERT INTO ARTICLE SET ?', body, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                    return;
+        if (req.user) {
+            if (req.user.Admin > 0) {
+                if (articleValidator.articleValidation(body)) {
+                    body.Deleted = 0;
+                    body.Created = moment().toISOString();
+                    body.Author = req.user.Nickname;
+                    db.query('INSERT INTO ARTICLE SET ?', body, (err, result) => {
+                        if (err) {
+                            console.log(err);
+                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                            return;
+                        }
+                        res.send(result['insertId'].toString());
+                    });
+                } else {
+                    res.sendStatus(ResultCodes.BAD_REQUEST);
                 }
-                res.send(result['insertId'].toString());
-            });
+            } else {
+                res.sendStatus(ResultCodes.FORBIDDEN);
+            }
         } else {
-            res.sendStatus(ResultCodes.BAD_REQUEST);
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
         }
     });
 
     app.get('/article/:id', (req, res) => {
-        var id = req.params.id;
+        var id = parseInt(req.params.id);
 
         db.query('SELECT * FROM ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, article) => {
             if (err) {
@@ -89,51 +98,70 @@ module.exports = app => {
     app.put('/article/:id', (req, res) => {
         var id = req.params.id;
         var body = req.body;
-
-        if (articleValidator.articleValidation(body)) {
-            db.query('SELECT Id from ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, result) => {
-                if (err) {
-                    console.log(err);
-                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                    return;
-                }
-                if (result.length > 0) {
-                    db.query('UPDATE ARTICLE SET ? WHERE Id = ? AND Deleted = ?', [body, id, 0], (err, _) => {
+        if (req.user) {
+            if (req.user.Admin > 0) {
+                if (articleValidator.articleValidation(body)) {
+                    db.query('SELECT Id from ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, result) => {
                         if (err) {
                             console.log(err);
                             res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                            return;
                         }
-                        res.sendStatus(ResultCodes.OK);
+                        if (result.length > 0) {
+                            db.query('UPDATE ARTICLE SET ? WHERE Id = ? AND Deleted = ?', [body, id, 0], (err, _) => {
+                                if (err) {
+                                    console.log(err);
+                                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                                }
+                                res.sendStatus(ResultCodes.OK);
+                            });
+                        } else {
+                            res.sendStatus(ResultCodes.NO_CONTENT);
+                        }
                     });
                 } else {
-                    res.sendStatus(ResultCodes.NO_CONTENT);
+                    res.sendStatus(ResultCodes.BAD_REQUEST);
                 }
-            });
+            } else {
+                res.sendStatus(ResultCodes.FORBIDDEN);
+            }
         } else {
-            res.sendStatus(ResultCodes.BAD_REQUEST);
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
         }
     });
 
     app.delete('/article/:id', (req, res) => {
         var id = parseInt(req.params.id);
-        db.query('SELECT Id FROM ARTICLE WHER Id = ? AND Deleted = 0', Id, (err, article) => {
-            if (err) {
-                console.log(err);
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-            } else {
-                if (article.length > 0) {
-                    db.query('UPDATE ARTICLE SET Deleted = ? WHERE Id = ? AND Deleted = ?', [1, id, 0], (err, _) => {
-                        if (err) {
-                            console.log(err);
-                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+        if (req.user) {
+            if (req.user.Admin > 0) {
+                db.query('SELECT Id FROM ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, article) => {
+                    if (err) {
+                        console.log(err);
+                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                    } else {
+                        if (article.length > 0) {
+                            db.query(
+                                'UPDATE ARTICLE SET Deleted = ? WHERE Id = ? AND Deleted = ?',
+                                [1, id, 0],
+                                (err, _) => {
+                                    if (err) {
+                                        console.log(err);
+                                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                                    } else {
+                                        res.sendStatus(ResultCodes.OK);
+                                    }
+                                }
+                            );
                         } else {
-                            res.sendStatus(ResultCodes.OK);
+                            res.sendStatus(ResultCodes.NO_CONTENT);
                         }
-                    });
-                } else {
-                    res.sendStatus(ResultCodes.NO_CONTENT);
-                }
+                    }
+                });
+            } else {
+                res.sendStatus(ResultCodes.FORBIDDEN);
             }
-        });
+        } else {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+        }
     });
 };
