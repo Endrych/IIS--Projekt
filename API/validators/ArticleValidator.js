@@ -6,18 +6,6 @@ module.exports = {
         if (article && typeof article === 'object') {
             return validateObject(
                 {
-                    Author: {
-                        validators: [
-                            {
-                                validator: ValidatorsEnum.RANGE,
-                                options: {
-                                    min: 1,
-                                    max: 45
-                                }
-                            }
-                        ],
-                        required: true
-                    },
                     Header: {
                         validators: [
                             {
