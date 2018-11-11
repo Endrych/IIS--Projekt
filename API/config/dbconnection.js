@@ -4,7 +4,8 @@ var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
 	password: '',
-	database: 'iis-db'
+	database: 'iis-db',
+	dateStrings: true
 });
 
 connection.connect(function(err) {
