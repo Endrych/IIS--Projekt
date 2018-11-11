@@ -48,6 +48,7 @@ module.exports = app => {
                                 delete body.PasswordConfirm;
                                 body.Password = hashAndSalt.hash;
                                 body.Salt = hashAndSalt.salt;
+                                body.Admin = 0;
 
                                 db.query('INSERT INTO USER SET ?', body, (err, _) => {
                                     if (err) {
@@ -76,7 +77,7 @@ module.exports = app => {
         var body = req.body;
         if (body) {
             if (UserValidator.loginValidation(body)) {
-                db.query('SELECT Password, Salt FROM USER WHERE ?', { Nickname: body.Nickname }, (err, result) => {
+                db.query('SELECT Nickname, Admin, Password, Salt FROM USER WHERE ?', { Nickname: body.Nickname }, (err, result) => {
                     if (err) {
                         console.log(err);
                         res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
@@ -86,7 +87,7 @@ module.exports = app => {
                         hashPassword(body.Password, dbUser.Salt)
                             .then(hashAndSalt => {
                                 if (hashAndSalt.hash === dbUser.Password) {
-                                    res.sendStatus(ResultCodes.OK);
+                                    res.send({Nickname: dbUser.Nickname, Admin: dbUser.Admin});
                                 } else {
                                     res.sendStatus(ResultCodes.UNAUTHORIZED);
                                 }
