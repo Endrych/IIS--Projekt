@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from 'universal-cookie';
 
 export const REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS";
 export const REGISTER_USER_FAILED = "REGISTER_USER_FAILED";
@@ -34,9 +35,12 @@ export function loginUser(values){
 	return(dispatch) => {
 		request.then((res) => {
 			dispatch({type: LOGIN_SUCESS, payload: res});
-			// setTimeout(() => {
-			// 	callback();
-			// }, 0);
+			setTimeout(() => {
+					const cookies = new Cookies();
+					console.log(res.data)
+				cookies.set("user", res.data.Token, {path: '/'});
+				console.log(cookies.get("user"), "sd45")
+			}, 0);
 		}).catch((err) => {
 			dispatch({type: LOGIN_FAILED, payload:err});
 		})
