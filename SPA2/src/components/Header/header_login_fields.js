@@ -1,38 +1,140 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Field, reduxForm } from "redux-form";
+
+import { loginUser, logOut } from "../../actions";
+
 import { Link } from "react-router-dom";
+import GeneralValidators from "../../validators/general_validators";
 
 class HeaderLoginFields extends Component {
-	handleSubmit(e) {
-		e.preventDefault();
-		console.log("Submitted", e);
+	renderField(field) {
+		const {
+			meta: { touched, error }
+		} = field;
+		let hasError = "";
+		let className = `form-group ${touched && error ? "has-danger" : ""}`;
+
+		// if (field.label === registrationFields.NICKNAME) {
+		// 	var getError = field.statusCode;
+		// 	if (getError === 303) {
+		// 		className = `form-group has-danger`;
+		// 		hasError = <div className="text-help">{registerCodes.code_303}</div>;
+		// 	}
+		// }
+
+		return (
+			<div className={className}>
+				<label>{field.label}</label>
+				<input className="form-control" type={field.type} {...field.input} />
+				{hasError}
+				<div className="text-help">{touched ? error : ""}</div>
+			</div>
+		);
 	}
 
-	render() {
+	onSubmit(values) {
+		this.props.loginUser(values);
+	}
+
+	loggedOut() {
+		const { handleSubmit } = this.props;
+		const { statusCode } = this.props;
+		const loginFailed = statusCode === 401 || statusCode === 400 || statusCode === 500;
+
 		return (
-			<div className="row">
-				<div className="col col-8">
-					<form className="header__login-fields" onSubmit={this.handleSubmit}>
-						<div className="header__login-fields--title">Jméno</div>
-						<input className="header__login-fields--input" name="login" placeholder="Jméno" />
-						<div className="header__login-fields--title">Heslo</div>
-						<input
-							className="header__login-fields--input"
-							name="login"
-							type="password"
-							placeholder="******"
-							name="password"
-						/>
-						<input className="btn btn-primary" type="submit" value="Přihlásit" />
-					</form>
-				</div>
-				<div className="col col-4">
-					<Link to="/register"><div>Registrace</div></Link>
+			<div className="col col-12">
+				<div className="row">
+					<div className="col col-8">
+						<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+							<Field name="Nickname" label="Přezdívka" component={this.renderField} />
+							<Field name="Password" label="Heslo" component={this.renderField} />
+							{loginFailed ? <div>Neplatné údaje</div> : ""}
+							<button type="submit" className="btn btn-primary">
+								Přihlásit
+							</button>
+						</form>
+					</div>
+					<div className="col col-4">
+						<Link to="/register">
+							<div>Registrace</div>
+						</Link>
+					</div>
 				</div>
 			</div>
 		);
 	}
+
+	logOutUser() {
+		this.props.logOut();
+	}
+
+	logedIn() {
+		return (
+			<div className="col col-12">
+				<div className="row">
+					<div>{this.props.nickname}</div>
+					<div> Profil </div>
+					<button className="btn btn-danger" onClick={this.logOutUser.bind(this)}>
+						Odhlásit
+					</button>
+				</div>
+			</div>
+		);
+	}
+
+	render() {
+		console.log("ASDASD", this.props, "PROPS");
+		let toRender;
+		if (this.props.loggedIn) {
+			toRender = this.logedIn();
+		} else {
+			toRender = this.loggedOut();
+		}
+		// if(this.)this.logedOut
+		return <div className="row">{toRender}</div>;
+	}
 }
 
+function validate(values) {
+	const errors = {};
+	const validator = new GeneralValidators();
+	// validate inputs here
+	if (!values.Nickname) {
+		errors.Nickname = "Enter a nickname";
+	} else if (!validator.AlphaNumericCharacters(values.Nickname)) {
+		errors.Nickname = "Povoleny pouze alfanumericke znaky";
+	} else if (!validator.Range(values.Nickname, { min: 4, max: 45 })) {
+		errors.Nickname = "Povolena delka je 4-45 znaku";
+	}
 
-export default connect(null)(HeaderLoginFields);
+	if (!values.Password) {
+		errors.Password = "Zadejte heslo";
+		// errors.Password_repeat = "Zadejte heslo";
+	} else if (!validator.AlphaNumericCharacters(values.Password)) {
+		errors.Password = "Povoleny pouze alfanumericke znaky";
+	} else if (!validator.Min(values.Password, { min: 6 })) {
+		errors.Password = "Heslo musi mit aspon 6 znaku.";
+	}
+
+	//if errors is empty form is fine to submit
+	return errors;
+}
+
+function mapStateToProps(state) {
+	const newState = state.loginStatus;
+	console.log(newState.statusCode, "SAD@@@");
+	return state.loginStatus;
+}
+
+export default reduxForm({
+	validate,
+	form: "LoginForm"
+})(
+	connect(
+		mapStateToProps,
+		{ loginUser, logOut }
+	)(HeaderLoginFields)
+);
+//{ loginUser }
+// export default connect(null)(HeaderLoginFields);
