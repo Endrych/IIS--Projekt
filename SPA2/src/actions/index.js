@@ -39,10 +39,30 @@ export function loginUser(values){
 					const cookies = new Cookies();
 					console.log(res.data)
 				cookies.set("user", res.data.Token, {path: '/'});
-				console.log(cookies.get("user"), "sd45")
+				// console.log(, "sd45")
 			}, 0);
 		}).catch((err) => {
 			dispatch({type: LOGIN_FAILED, payload:err});
+		})
+	}
+}
+
+export function setTokenCookies(token){
+
+}
+
+export function getUserInfoFromToken(token){
+	const axiosInstance = axios.create({ baseURL: baseUrl,  headers: {'x-access-token': token} });
+
+	const request = axiosInstance.get("/user");
+
+	return(dispatch) => {
+		request.then((res) => {
+			dispatch({type: GET_DATA_TOKEN, payload: res});
+			setTimeout(() => {
+				console.log(res.data)
+			// console.log(, "sd45")
+		}, 0);
 		})
 	}
 
