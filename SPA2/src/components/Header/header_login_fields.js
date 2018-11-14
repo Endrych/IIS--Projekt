@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 
-import { loginUser } from "../../actions";
+import { loginUser, logOut } from "../../actions";
 
 import { Link } from "react-router-dom";
 import GeneralValidators from "../../validators/general_validators";
@@ -65,32 +65,34 @@ class HeaderLoginFields extends Component {
 		);
 	}
 
-	logedIn(){
+	logOutUser() {
+		this.props.logOut();
+	}
+
+	logedIn() {
 		return (
 			<div className="col col-12">
 				<div className="row">
 					<div>{this.props.nickname}</div>
 					<div> Profil </div>
-					<div>Odhlásit</div>
+					<button className="btn btn-danger" onClick={this.logOutUser.bind(this)}>
+						Odhlásit
+					</button>
 				</div>
 			</div>
-		)
+		);
 	}
 
 	render() {
-		console.log("ASDASD",this.props, "PROPS");
+		console.log("ASDASD", this.props, "PROPS");
 		let toRender;
-		if(this.props.loggedIn){
-			toRender= this.logedIn();
-		}else{
+		if (this.props.loggedIn) {
+			toRender = this.logedIn();
+		} else {
 			toRender = this.loggedOut();
 		}
 		// if(this.)this.logedOut
-		return (
-			<div className="row">
-				{toRender}
-			</div>
-		);
+		return <div className="row">{toRender}</div>;
 	}
 }
 
@@ -121,7 +123,7 @@ function validate(values) {
 
 function mapStateToProps(state) {
 	const newState = state.loginStatus;
-	console.log(newState.statusCode, "SAD@@@")
+	console.log(newState.statusCode, "SAD@@@");
 	return state.loginStatus;
 }
 
@@ -131,7 +133,7 @@ export default reduxForm({
 })(
 	connect(
 		mapStateToProps,
-		{ loginUser }
+		{ loginUser, logOut }
 	)(HeaderLoginFields)
 );
 //{ loginUser }

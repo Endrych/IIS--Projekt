@@ -8,12 +8,11 @@ import HeaderNavigationBar from "./header_navigation_bar.js";
 class Header extends Component {
 	componentDidMount(){
 		var cookies = new Cookies;
-		console.log("HEADER COOKIES: ", cookies.get("user"));
+
 		var token = cookies.get("user");
 		if(token !== undefined){
 			console.log(this);
-			getUserInfoFromToken(token);
-			console.log("PUHS OUT ACTION")
+			this.props.getUserInfoFromToken(token);
 		}
 	}
 
@@ -28,5 +27,6 @@ class Header extends Component {
 		);
 	}
 }
+
 
 export default connect(null, {getUserInfoFromToken})(Header);
