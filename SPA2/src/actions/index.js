@@ -7,6 +7,7 @@ export const LOGIN_SUCESS = "LOGIN_SUCESS";
 export const LOGIN_FAILED = "LOGIN_FAILED";
 export const GET_DATA_TOKEN = "GET_DATA_TOKEN";
 export const LOG_OUT = "LOG_OUT";
+export const LOGGED_IN = "LOGGED_IN";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -53,11 +54,21 @@ export function loginUser(values) {
 
 export function setTokenCookies(token) {}
 
+export function getLoggedInStatus(token){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.get("/user");
+	return {
+		type: LOGGED_IN,
+		payload: request
+	};
+}
+
 export function getUserInfoFromToken(token) {
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 
 	const request = axiosInstance.get("/user");
-
+	console.log("user data: ", request);
 	return {
 		type: GET_DATA_TOKEN,
 		payload: request

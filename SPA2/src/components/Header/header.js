@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Cookies from 'universal-cookie';
-import { getUserInfoFromToken } from "../../actions";
+import { getLoggedInStatus } from "../../actions";
 import HeaderLoginFields from "./header_login_fields.js";
 import HeaderNavigationBar from "./header_navigation_bar.js";
 
@@ -11,8 +11,9 @@ class Header extends Component {
 
 		var token = cookies.get("user");
 		if(token !== undefined){
-			console.log(this);
-			this.props.getUserInfoFromToken(token);
+			// console.log(this);
+			console.log(token)
+			this.props.getLoggedInStatus(token);
 		}
 	}
 
@@ -29,4 +30,4 @@ class Header extends Component {
 }
 
 
-export default connect(null, {getUserInfoFromToken})(Header);
+export default connect(null, {getLoggedInStatus})(Header);
