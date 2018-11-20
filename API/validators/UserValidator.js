@@ -1,6 +1,61 @@
 const validateObject = require('./ValidateObject');
 const ValidatorsEnum = require('./ValidatorsEnum');
 
+const userValidationOptions = {
+    Firstname: {
+        validators: [
+            {
+                validator: ValidatorsEnum.ALPHA_CHARACTERS,
+                options: {
+                    allowSpace: true
+                }
+            },
+            {
+                validator: ValidatorsEnum.RANGE,
+                options: {
+                    min: 1,
+                    max: 45
+                }
+            }
+        ],
+        required: true
+    },
+    Lastname: {
+        validators: [
+            {
+                validator: ValidatorsEnum.ALPHA_CHARACTERS,
+                options: {
+                    allowSpace: true
+                }
+            },
+            {
+                validator: ValidatorsEnum.RANGE,
+                options: {
+                    min: 1,
+                    max: 45
+                }
+            }
+        ],
+        required: true
+    },
+    Phone: {
+        validators: [
+            {
+                validator: ValidatorsEnum.PHONE
+            }
+        ],
+        required: false
+    },
+    Email: {
+        validators: [
+            {
+                validator: ValidatorsEnum.EMAIL
+            }
+        ],
+        required: true
+    }
+};
+
 module.exports = {
     registerValidation: user => {
         if (user && typeof user === 'object') {
@@ -15,42 +70,6 @@ module.exports = {
                                 validator: ValidatorsEnum.RANGE,
                                 options: {
                                     min: 4,
-                                    max: 45
-                                }
-                            }
-                        ],
-                        required: true
-                    },
-                    Firstname: {
-                        validators: [
-                            {
-                                validator: ValidatorsEnum.ALPHA_CHARACTERS,
-                                options: {
-                                    allowSpace: true
-                                }
-                            },
-                            {
-                                validator: ValidatorsEnum.RANGE,
-                                options: {
-                                    min: 1,
-                                    max: 45
-                                }
-                            }
-                        ],
-                        required: true
-                    },
-                    Lastname: {
-                        validators: [
-                            {
-                                validator: ValidatorsEnum.ALPHA_CHARACTERS,
-                                options: {
-                                    allowSpace: true
-                                }
-                            },
-                            {
-                                validator: ValidatorsEnum.RANGE,
-                                options: {
-                                    min: 1,
                                     max: 45
                                 }
                             }
@@ -82,22 +101,7 @@ module.exports = {
                         validators: [],
                         required: true
                     },
-                    Phone: {
-                        validators: [
-                            {
-                                validator: ValidatorsEnum.PHONE
-                            }
-                        ],
-                        required: false
-                    },
-                    Email: {
-                        validators: [
-                            {
-                                validator: ValidatorsEnum.EMAIL
-                            }
-                        ],
-                        required: true
-                    }
+                    ...userValidationOptions
                 },
                 user
             );
@@ -143,6 +147,13 @@ module.exports = {
                 },
                 login
             );
+        } else {
+            return false;
+        }
+    },
+    editValidation: editObj => {
+        if (editObj && typeof editObj === 'object') {
+            return validateObject(userValidationOptions, editObj);
         } else {
             return false;
         }
