@@ -52,6 +52,10 @@ export function loginUser(values) {
 	};
 }
 
+export function updateUserInformations(){
+
+}
+
 export function setTokenCookies(token) {}
 
 export function getLoggedInStatus(token){

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router';
 import { getUserInfoFromToken } from "../../actions";
 import Cookies from 'universal-cookie';
+import { Link } from 'react-router-dom';
 
 class UserPrivateProfile extends Component {
 	componentDidMount(){
@@ -26,6 +27,7 @@ class UserPrivateProfile extends Component {
 			<div>Příjmení: <span>{this.props.userInformations.lastname}</span></div>
 			<div>Email: <span>{this.props.userInformations.email}</span></div>
 			<div>Telefon: <span>{this.props.userInformations.phone}</span></div>
+			<Link to="/user/edit"><button className="btn btn-primary">Upravit údaje</button></Link>
 		</div>;
 		}else{
 			toRender =  <Redirect  to="/" />
