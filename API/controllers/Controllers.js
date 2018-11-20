@@ -7,8 +7,10 @@ const gameGenreController = require('./GameGenreController');
 const teamController = require('./TeamController');
 const inviteController = require('./InviteController');
 const adminController = require('./AdminController');
+const authenticationController = require('./AuthenticationController');
 
 module.exports = app => {
+    authenticationController(app);
     userController(app);
     adminController(app);
     gameController(app);
