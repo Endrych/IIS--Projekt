@@ -52,7 +52,25 @@ export function loginUser(values) {
 	};
 }
 
-export function updateUserInformations(){
+export function updateUserInformations(values, token, callback){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token }  });
+
+	const request = axiosInstance.put("/user/edit", values);
+	// request.then(
+		console.log(request)
+		return dispatch => {
+			request
+				.then(res => {
+					dispatch({ type: "USERINGO", payload: res });
+					setTimeout(() => {
+						callback();
+					}, 0);
+				})
+				.catch(err => {
+					dispatch({ type: "USERERROR", payload: err });
+				});
+		};
+
 
 }
 

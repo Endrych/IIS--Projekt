@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm, initialize  } from "redux-form";
 import  { Link } from 'react-router-dom';
-
+import { updateUserInformations } from '../../actions';
 import GeneralValidators from "../../validators/general_validators";
+import Cookies from 'universal-cookie';
 
 class UserPrivateEditInformations extends Component{
 	componentDidMount() {
@@ -51,7 +52,10 @@ class UserPrivateEditInformations extends Component{
 
 	onSubmit(values) {
 		console.log(values)
-		// this.props.loginUser(values);
+		var cookies = new Cookies;
+
+		var token = cookies.get("user");
+		this.props.updateUserInformations(values, token, () => { this.props.history.push("/user")});
 	}
 
 	render(){
@@ -121,6 +125,6 @@ export default reduxForm({
 	form: "ChangeUserInfo"
 })(
 	connect(
-		mapStateToProps
+		mapStateToProps, { updateUserInformations }
 	)(UserPrivateEditInformations)
 );

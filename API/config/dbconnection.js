@@ -3,10 +3,10 @@ const mysql = require('mysql');
 var connection = mysql.createConnection({
 	host: 'localhost',
 	user: 'root',
-	password: 'root',
+	password: '',
 	database: 'iis-db',
 	dateStrings: true,
-	socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock'
+	// socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock'
 });
 
 connection.connect(function(err) {
