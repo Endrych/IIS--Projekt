@@ -24,8 +24,14 @@ module.exports = app => {
             .then(id => {
                 selectGamesIdByGameGenre(id, db)
                     .then(ids => {
-                        getGamesByIds(ids)
+                        if (ids.length === 0) {
+                            res.send([]);
+                            return;
+                        }
+
+                        getGamesByIds(ids, db)
                             .then(games => {
+                                console.log('games', games);
                                 res.send(games);
                             })
                             .catch(err => {
