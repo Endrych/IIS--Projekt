@@ -2,6 +2,7 @@ const ResultCodes = require('../enums/ResultCodes');
 const getAdminStateByNickname = require('../helpers/AdminHelpers/getAdminStateByNickname');
 const setUserAdminState = require('../helpers/AdminHelpers/setUserAdminState');
 const checkAdminEditPermission = require('../helpers/AdminHelpers/checkAdminEditPermission');
+const processError = require('../helpers/processError');
 
 module.exports = app => {
     const db = app.db;

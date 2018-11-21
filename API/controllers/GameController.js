@@ -2,6 +2,8 @@ const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
 const db = require('../config/dbconnection');
 const gameValidator = require('../validators/GameValidator');
+const processError = require('../helpers/processError');
+
 
 module.exports = app => {
 	function saveGameGenreGameTableData(id, data) {

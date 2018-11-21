@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const checkIfUserExists = require('../helpers/UsersHelpers/checkIfUserExists');
 const selectLoginUserInfo = require('../helpers/AuthenticationHelpers/selectLoginUserInfo');
+const processError = require('../helpers/processError');
+
 
 module.exports = app => {
     const db = app.db;

@@ -12,10 +12,10 @@ module.exports = (user, nickname, db) => {
             reject(new RejectError(ResultCodes.FORBIDDEN));
         }
 
-        getAdminStateByNickname(nickname)
+        getAdminStateByNickname(nickname, db)
             .then(user => {
-                if (user.length > 0) {
-                    if (user[0].Admin === 2) {
+                if (user) {
+                    if (user.Admin === 2) {
                         reject(new RejectError(ResultCodes.FORBIDDEN));
                     } else {
                         resolve(null);
