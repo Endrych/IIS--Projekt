@@ -1,21 +1,19 @@
-function getTeamName(teamId, db) {
+module.exports = (teamId, db) => {
     return new Promise((resolve, reject) => {
         if (teamId) {
-            db.query('SELECT Id,Name FROM Team WHERE Id = ? AND Deleted = ?', [teamId, 0], (err, team) => {
-                if (err) {
-                    reject(err);
-                } else {
+            db.promiseQuery('SELECT Id,Name FROM Team WHERE Id = ? AND Deleted = 0', teamId)
+                .then(team => {
                     if (team.length > 0) {
                         resolve(team[0]);
                     } else {
                         resolve(null);
                     }
-                }
-            });
+                })
+                .catch(err => {
+                    reject(err);
+                });
         } else {
             resolve(null);
         }
     });
-}
-
-module.exports = getTeamName;
+};

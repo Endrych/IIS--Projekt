@@ -14,6 +14,18 @@ const imageValidator = require('is-base64');
 module.exports = (validatorsOptionObject, obj) => {
     var valid = true;
     if (obj && typeof obj === 'object' && validatorsOptionObject && typeof validatorsOptionObject === 'object') {
+        var validatorsKey = Object.keys(validatorsOptionObject);
+        for (var i = 0, len = validatorsKey.length; i < len; i++) {
+            var key = validatorsKey[i];
+            var valItem = validatorsOptionObject[key];
+
+            if (valItem.required) {
+                if (!obj[key]) {
+                    return false;
+                }
+            }
+        }
+
         var keys = Object.keys(obj);
         for (var j = 0; j < keys.length; j++) {
             var key = keys[j];

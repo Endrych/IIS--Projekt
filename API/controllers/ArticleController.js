@@ -1,9 +1,16 @@
 const ResultCodes = require('../enums/ResultCodes');
-const db = require('../config/dbconnection');
 const articleValidator = require('../validators/ArticleValidator');
-const moment = require('moment');
+const selectNewestArticles = require('../helpers/ArticleHelpers/selectNewestArticles');
+const selectNewestArtilcesByGameId = require('../helpers/ArticleHelpers/selectNewestArtilcesByGameId');
+const insertNewArticle = require('../helpers/ArticleHelpers/insertNewArticle');
+const selectArticleById = require('../helpers/ArticleHelpers/selectArticleById');
+const updateArticle = require('../helpers/ArticleHelpers/updateArticle');
+const processError = require('../helpers/processError');
+const getGameForArticle = require('../helpers/GameHelpers/getGameForArticle');
 
 module.exports = app => {
+    const db = app.db;
+
     app.get('/articles', (req, res) => {
         var offset = parseInt(req.query.offset) || 0;
         var count = parseInt(req.query.count) || 50;
@@ -13,18 +20,13 @@ module.exports = app => {
             return;
         }
 
-        db.query(
-            'SELECT * FROM ARTICLE WHERE Deleted = 0 order by Created DESC limit ?',
-            count + offset,
-            (err, articles) => {
-                if (err) {
-                    console.log(err);
-                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                } else {
-                    res.send(articles.slice(offset));
-                }
-            }
-        );
+        selectNewestArticles(count, offset, db)
+            .then(articles => {
+                res.send(articles);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.get('/articles/:gameid', (req, res) => {
@@ -32,22 +34,18 @@ module.exports = app => {
         var offset = parseInt(req.query.offset) || 0;
         var count = parseInt(req.query.count) || 50;
 
-        if (step < 0 || count < 0) {
+        if (offset < 0 || count < 0) {
             res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
 
-        db.query(
-            'SELECT * FROM ARTICLE WHERE Deleted = ? AND Game = ? order by Created DESC limit ?',
-            [0, gameId, count + offset],
-            (err, result) => {
-                if (err) {
-                    console.log(err);
-                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                }
-                res.send(result.slice(offset));
-            }
-        );
+        selectNewestArtilcesByGameId(gameId, count, offset, db)
+            .then(articles => {
+                res.send(articles);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.post('/article', (req, res) => {
@@ -55,17 +53,13 @@ module.exports = app => {
         if (req.user) {
             if (req.user.Admin > 0) {
                 if (articleValidator.articleValidation(body)) {
-                    body.Deleted = 0;
-                    body.Created = moment().toISOString();
-                    body.Author = req.user.Nickname;
-                    db.query('INSERT INTO ARTICLE SET ?', body, (err, result) => {
-                        if (err) {
-                            console.log(err);
-                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                            return;
-                        }
-                        res.send(result['insertId'].toString());
-                    });
+                    insertNewArticle(body, req.user.Nickname, db)
+                        .then(articleId => {
+                            res.send(articleId);
+                        })
+                        .catch(err => {
+                            processError(res, err);
+                        });
                 } else {
                     res.sendStatus(ResultCodes.BAD_REQUEST);
                 }
@@ -80,19 +74,24 @@ module.exports = app => {
     app.get('/article/:id', (req, res) => {
         var id = parseInt(req.params.id);
 
-        db.query('SELECT * FROM ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, article) => {
-            if (err) {
-                console.log(err);
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-            } else {
-                if (article.length > 0) {
-                    var data = article[0];
-                    res.send(data);
+        selectArticleById(id, db)
+            .then(article => {
+                if (article.Game) {
+                    getGameForArticle(article.Game, db)
+                        .then(game => {
+                            article.Game = game;
+                            res.send(article);
+                        })
+                        .catch(err => {
+                            processError(res, err);
+                        });
                 } else {
-                    res.sendStatus(ResultCodes.NO_CONTENT);
+                    res.send(article);
                 }
-            }
-        });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.put('/article/:id', (req, res) => {
@@ -101,24 +100,13 @@ module.exports = app => {
         if (req.user) {
             if (req.user.Admin > 0) {
                 if (articleValidator.articleValidation(body)) {
-                    db.query('SELECT Id from ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, result) => {
-                        if (err) {
-                            console.log(err);
-                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                            return;
-                        }
-                        if (result.length > 0) {
-                            db.query('UPDATE ARTICLE SET ? WHERE Id = ? AND Deleted = ?', [body, id, 0], (err, _) => {
-                                if (err) {
-                                    console.log(err);
-                                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                                }
-                                res.sendStatus(ResultCodes.OK);
-                            });
-                        } else {
-                            res.sendStatus(ResultCodes.NO_CONTENT);
-                        }
-                    });
+                    updateArticle(id, body, db)
+                        .then(_ => {
+                            res.sendStatus(ResultCodes.OK);
+                        })
+                        .catch(err => {
+                            processError(res, err);
+                        });
                 } else {
                     res.sendStatus(ResultCodes.BAD_REQUEST);
                 }
@@ -134,29 +122,13 @@ module.exports = app => {
         var id = parseInt(req.params.id);
         if (req.user) {
             if (req.user.Admin > 0) {
-                db.query('SELECT Id FROM ARTICLE WHERE Id = ? AND Deleted = 0', id, (err, article) => {
-                    if (err) {
-                        console.log(err);
-                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                    } else {
-                        if (article.length > 0) {
-                            db.query(
-                                'UPDATE ARTICLE SET Deleted = ? WHERE Id = ? AND Deleted = ?',
-                                [1, id, 0],
-                                (err, _) => {
-                                    if (err) {
-                                        console.log(err);
-                                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                                    } else {
-                                        res.sendStatus(ResultCodes.OK);
-                                    }
-                                }
-                            );
-                        } else {
-                            res.sendStatus(ResultCodes.NO_CONTENT);
-                        }
-                    }
-                });
+                updateArticle(id, { Deleted: 1 }, db)
+                    .then(_ => {
+                        res.sendStatus(ResultCodes.OK);
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
             } else {
                 res.sendStatus(ResultCodes.FORBIDDEN);
             }
