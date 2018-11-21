@@ -28,6 +28,7 @@ class UserPrivateProfile extends Component {
 			<div>Email: <span>{this.props.userInformations.email}</span></div>
 			<div>Telefon: <span>{this.props.userInformations.phone}</span></div>
 			<Link to="/user/edit"><button className="btn btn-primary">Upravit údaje</button></Link>
+			{this.props.loginStatus.admin > 0 ? <Link to="/article/new"><button className="btn btn-primary">Přidat článek</button> </Link>: ""}
 		</div>;
 		}else{
 			toRender =  <Redirect  to="/" />

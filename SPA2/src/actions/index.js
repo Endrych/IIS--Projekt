@@ -35,7 +35,6 @@ export function loginUser(values) {
 	const axiosInstance = axios.create({ baseURL: baseUrl });
 	const request = axiosInstance.post("/login", values);
 
-	console.log(values);
 
 	return dispatch => {
 		request
@@ -59,7 +58,6 @@ export function updateUserInformations(values, token, callback){
 
 	const request = axiosInstance.put("/user/edit", values);
 	// request.then(
-		console.log(request)
 		return dispatch => {
 			request
 				.then(res => {
@@ -92,7 +90,6 @@ export function getUserInfoFromToken(token) {
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 
 	const request = axiosInstance.get("/user");
-	console.log("user data: ", request);
 	return {
 		type: GET_DATA_TOKEN,
 		payload: request
@@ -108,13 +105,22 @@ export function logOut() {
 	};
 }
 
-export function postNewArticle(values, token){
+export function postNewArticle(values, token, callback){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
-	axiosInstance.post("/article",values);
+	const request = axiosInstance.post("/article",values);
 
-	return {
-		type: ARTICLE_CREATION_SUCCESFULL,
-		payload: {}
-	}
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: ARTICLE_CREATION_SUCCESFULL, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: ARTICLE_CRAETION_FAILED, payload: err });
+			});
+	};
+
 
 }

@@ -7,6 +7,7 @@ import RegistrationSucess from "./Registration/registration_sucess.js";
 import UserPrivateProfile from "./PrivateProfile/user_private_profile";
 import UserPrivateEditInformations from "./PrivateProfile/user_private_edit_infromations";
 import ArticleNew from "./Articles/article_new";
+import ArticleNewSuccess from "./Articles/article_new_sucess";
 
 class Game extends Component {
 	constructor(props) {
@@ -117,6 +118,7 @@ const AllRoutes = () => {
 				strict
 			/>
 			<Route path="/article/new" component={ArticleNew} exact strict />
+			<Route path="/article/new/sucess" component={ArticleNewSuccess} exact strict />
 			<Route path="/teams" component={TeamList} exact strict />
 			<Route
 				path="/teams/:teamname"
