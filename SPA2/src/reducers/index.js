@@ -2,12 +2,12 @@ import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 import RegisterReducer from './reducer_register';
 import LoginReducer from './reducer_login';
-import UserStatusReducer from './reducer_user_status';
+import UserInformationsReducer from './reducer_user_informations';
 
 const rootReducer = combineReducers({
 	registrationResultCode: RegisterReducer,
 	loginStatus: LoginReducer,
-	// userStatus: UserStatusReducer, //zbytecne
+	userInformations: UserInformationsReducer,
 	form: formReducer
 });
 

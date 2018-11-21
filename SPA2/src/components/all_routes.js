@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch, Route
 import LandingPage from "./LandingPage/landing_page";
 import RegistrationForm from "./Registration/registration_form.js";
 import RegistrationSucess from "./Registration/registration_sucess.js";
+import UserPrivateProfile from "./PrivateProfile/user_private_profile";
+import UserPrivateEditInformations from "./PrivateProfile/user_private_edit_infromations";
 
 class Game extends Component {
 	constructor(props) {
@@ -34,7 +36,6 @@ const TeamList = () => {
 	return <h2>List tymu</h2>;
 };
 
-
 const Team = params => {
 	return <h2>Team {params.teamname}</h2>;
 };
@@ -52,12 +53,12 @@ const Tournament = params => {
 };
 
 const NewsList = () => {
-	return<h2>News List</h2>
-}
+	return <h2>News List</h2>;
+};
 
 const NewsArticle = params => {
 	return <h2>Article {params.articleid}</h2>;
-}
+};
 
 class Match extends Component {
 	constructor(props) {
@@ -83,9 +84,7 @@ const AllRoutes = () => {
 			<Route path="/" exact strict component={LandingPage} />
 			<Route path="/about" exact strict component={About} />
 			<Route path="/contacts" exact strict component={Contacts} />
-
 			<Route path="/games" component={GameList} exact strict />
-
 			{/* <Route to="/" component={LandingPage} exact strict /> */}
 			<Route
 				path="/games/:gametitle"
@@ -95,9 +94,10 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-
+			UserPrivateProfile
+			<Route path="/user" component={UserPrivateProfile} exact strict />
+			<Route path="/user/edit" component={UserPrivateEditInformations} exact strict />
 			<Route path="/players" component={PlayerList} exact strict />
-
 			<Route
 				path="/players/:playername"
 				render={({ match }) => {
@@ -106,10 +106,7 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-
-
 			<Route path="/news" component={NewsList} exact strict />
-
 			<Route
 				path="/news/:articleid"
 				render={({ match }) => {
@@ -118,10 +115,7 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-
-
 			<Route path="/teams" component={TeamList} exact strict />
-
 			<Route
 				path="/teams/:teamname"
 				render={({ match }) => {
@@ -130,9 +124,7 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-
 			<Route path="/tournaments" component={TournamentList} exact strict />
-
 			<Route
 				path="/tournaments/:tournamentname"
 				render={({ match }) => {
@@ -149,11 +141,8 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-
 			<Route path="/register" component={RegistrationForm} exact strict />
-
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
-
 			<Route
 				render={() => {
 					return "ERROR 404";

@@ -21,6 +21,11 @@ class HeaderNavigationBar extends Component {
 						<div>Turnaje</div>
 					</Link>
 				</div>
+				<div className="col col-4">
+					<Link to="/user">
+						<div>User test</div>
+					</Link>
+				</div>
 			</div>
 		);
 	}

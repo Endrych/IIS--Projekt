@@ -2,14 +2,20 @@ const mysql = require('mysql');
 const RejectError = require('../models/RejectError');
 const ResultCodes = require('../enums/ResultCodes');
 
-var connection = mysql.createConnection({
+var options = {
     host: 'localhost',
     user: 'root',
-    password: 'root',
     database: 'iis-db',
-    dateStrings: true,
-    socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock'
-});
+    dateStrings: true
+};
+
+if (process.platform === 'win32') {
+    options.password = '';
+} else {
+    (options.password = 'root'), (options.socketPath = '/Applications/MAMP/tmp/mysql/mysql.sock');
+}
+
+var connection = mysql.createConnection(options);
 
 connection.connect(function(err) {
     if (err) throw err;
