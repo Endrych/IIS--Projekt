@@ -8,6 +8,8 @@ export const LOGIN_FAILED = "LOGIN_FAILED";
 export const GET_DATA_TOKEN = "GET_DATA_TOKEN";
 export const LOG_OUT = "LOG_OUT";
 export const LOGGED_IN = "LOGGED_IN";
+export const ARTICLE_CREATION_SUCCESFULL = "ARTICLE_CREATION_SUCCESFULL";
+export const ARTICLE_CRAETION_FAILED = "ARTICLE_CRAETION_FAILED";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -104,4 +106,15 @@ export function logOut() {
 		type: LOG_OUT,
 		payload: {}
 	};
+}
+
+export function postNewArticle(values, token){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	axiosInstance.post("/article",values);
+
+	return {
+		type: ARTICLE_CREATION_SUCCESFULL,
+		payload: {}
+	}
+
 }

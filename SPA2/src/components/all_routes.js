@@ -6,6 +6,7 @@ import RegistrationForm from "./Registration/registration_form.js";
 import RegistrationSucess from "./Registration/registration_sucess.js";
 import UserPrivateProfile from "./PrivateProfile/user_private_profile";
 import UserPrivateEditInformations from "./PrivateProfile/user_private_edit_infromations";
+import ArticleNew from "./Articles/article_new";
 
 class Game extends Component {
 	constructor(props) {
@@ -115,6 +116,7 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
+			<Route path="/article/new" component={ArticleNew} exact strict />
 			<Route path="/teams" component={TeamList} exact strict />
 			<Route
 				path="/teams/:teamname"
