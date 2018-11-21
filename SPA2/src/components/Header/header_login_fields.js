@@ -74,7 +74,7 @@ class HeaderLoginFields extends Component {
 			<div className="col col-12">
 				<div className="row">
 					<div>{this.props.nickname}</div>
-					<div> Profil </div>
+					<Link to="/user"> Profil </Link>
 					<button className="btn btn-danger" onClick={this.logOutUser.bind(this)}>
 						Odhlásit
 					</button>
@@ -84,7 +84,7 @@ class HeaderLoginFields extends Component {
 	}
 
 	render() {
-		console.log("ASDASD", this.props, "PROPS");
+		// console.log("ASDASD", this.props, "PROPS");
 		let toRender;
 		if (this.props.loggedIn) {
 			toRender = this.logedIn();
@@ -123,7 +123,7 @@ function validate(values) {
 
 function mapStateToProps(state) {
 	const newState = state.loginStatus;
-	console.log(newState.statusCode, "SAD@@@");
+	// console.log(newState.statusCode, "SAD@@@");
 	return state.loginStatus;
 }
 
