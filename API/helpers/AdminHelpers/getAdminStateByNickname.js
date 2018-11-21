@@ -12,7 +12,7 @@ module.exports = (nickname, db) => {
                 resolve(user[0]);
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

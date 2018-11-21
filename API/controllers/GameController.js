@@ -7,24 +7,27 @@ module.exports = app => {
 	function saveGameGenreGameTableData(id, data) {
 		return new Promise((resolve, reject) => {
 			var item = [];
-
-			data.forEach(element => {
-				item.push([id, element]);
-			});
-			db.query('DELETE FROM game_genre_games WHERE GameId = ?', [id], (err, res) => {
-				if (err) {
-					console.log(err);
-					throw err;
-				}
-
-				db.query('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [item], (err, result) => {
-					if (err) {
-						throw err;
-					} else {
-						resolve();
-					}
+			if(data){
+				data.forEach(element => {
+					item.push([id, element]);
 				});
-			});
+				db.query('DELETE FROM game_genre_games WHERE GameId = ?', [id], (err, res) => {
+					if (err) {
+						console.log(err);
+						throw err;
+					}
+	
+					db.query('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [item], (err, result) => {
+						if (err) {
+							throw err;
+						} else {
+							resolve();
+						}
+					});
+				});
+			}else{
+				resolve()
+			}
 		});
 	}
 

@@ -9,7 +9,7 @@ module.exports = (user, hash, salt, db) => {
                 resolve(user);
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

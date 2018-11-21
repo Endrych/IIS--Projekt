@@ -5,7 +5,7 @@ module.exports = (body, nickname, db) => {
                 resolve(null);
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

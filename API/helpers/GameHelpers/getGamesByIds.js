@@ -13,7 +13,7 @@ module.exports = (ids, db) => {
                 resolve(games);
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

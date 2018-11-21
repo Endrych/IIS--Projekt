@@ -9,7 +9,7 @@ module.exports = (nickname, db) => {
                 }
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

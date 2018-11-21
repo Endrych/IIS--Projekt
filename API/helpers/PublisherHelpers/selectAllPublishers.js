@@ -3,7 +3,7 @@ module.exports = db => {
         db.promiseQuery('SELECT * FROM Publisher')
             .then(res => resolve(res))
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

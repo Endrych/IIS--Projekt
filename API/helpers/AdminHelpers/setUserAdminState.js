@@ -5,7 +5,7 @@ module.exports = (adminLevel, nickname, db) => {
                 resolve(res);
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

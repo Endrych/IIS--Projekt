@@ -1,4 +1,3 @@
-const ResultCodes = require('../enums/ResultCodes');
 const selectAllPublishers = require('../helpers/PublisherHelpers/selectAllPublishers');
 const processError = require('../helpers/processError');
 const getGamesByPublisherId = require('../helpers/GameHelpers/getGamesByPublisherId');
@@ -17,8 +16,9 @@ module.exports = app => {
     });
 
     app.get('/publisher/:id', (req, res) => {
-        var id = req.params.id;
-        getGamesByPublisherId(id)
+        var id = parseInt(req.params.id);
+
+        getGamesByPublisherId(id, db)
             .then(games => {
                 res.send(games);
             })

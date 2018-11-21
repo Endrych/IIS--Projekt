@@ -22,7 +22,7 @@ module.exports = (db, nickname) => {
                 }
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

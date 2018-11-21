@@ -5,7 +5,7 @@ module.exports = (id, db) => {
                 resolve(gamesId);
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

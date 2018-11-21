@@ -12,7 +12,7 @@ module.exports = (name, db) => {
                 resolve(id[0].Id);
             })
             .catch(err => {
-                throw err;
+                reject(err);
             });
     });
 };

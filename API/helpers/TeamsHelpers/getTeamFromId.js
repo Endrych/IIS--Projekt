@@ -10,7 +10,7 @@ module.exports = (teamId, db) => {
                     }
                 })
                 .catch(err => {
-                    throw err;
+                    reject(err);
                 });
         } else {
             resolve(null);
