@@ -42,7 +42,9 @@ module.exports = app => {
         }
 
         updateUserToDb(req.body, req.user.Nickname, db)
-            .then(_ => {})
+            .then(_ => {
+                res.sendStatus(ResultCodes.OK);
+            })
             .catch(err => {
                 processError(res, err);
             });
