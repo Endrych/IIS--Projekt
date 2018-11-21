@@ -71,7 +71,11 @@ class GeneralValidators{
 			}
 		}
 		if (typeof value !== 'number') {
-			value = value.toString().length;
+			if(value !== undefined){
+				value = value.toString().length;
+			}else{
+				value = 0;
+			}
 		}
 
 		if (value >= min) {

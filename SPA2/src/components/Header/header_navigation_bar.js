@@ -7,7 +7,7 @@ class HeaderNavigationBar extends Component {
 		return (
 			<div className="row">
 				<div className="col col-4">
-					<Link to="/news">
+					<Link to="/articles">
 						<div>Novinky</div>
 					</Link>
 				</div>

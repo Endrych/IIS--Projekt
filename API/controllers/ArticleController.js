@@ -8,14 +8,14 @@ module.exports = app => {
         var offset = parseInt(req.query.offset) || 0;
         var count = parseInt(req.query.count) || 50;
 
-        if (step < 0 || count < 0) {
+        if (offset < 0 || count < 0) {
             res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
 
         db.query(
             'SELECT * FROM ARTICLE WHERE Deleted = 0 order by Created DESC limit ?',
-            count + step,
+            count + offset,
             (err, articles) => {
                 if (err) {
                     console.log(err);

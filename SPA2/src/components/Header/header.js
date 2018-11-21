@@ -12,7 +12,6 @@ class Header extends Component {
 		var token = cookies.get("user");
 		if(token !== undefined){
 			// console.log(this);
-			console.log(token)
 			this.props.getLoggedInStatus(token);
 		}
 	}

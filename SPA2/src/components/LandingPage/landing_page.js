@@ -5,7 +5,7 @@ class LandingPage extends Component{
 	render(){
 		return(
 			<div className="row">
-				asdsadsad
+				Landing page
 			</div>
 		)
 	}

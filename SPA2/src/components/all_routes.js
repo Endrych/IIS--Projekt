@@ -8,6 +8,8 @@ import UserPrivateProfile from "./PrivateProfile/user_private_profile";
 import UserPrivateEditInformations from "./PrivateProfile/user_private_edit_infromations";
 import ArticleNew from "./Articles/article_new";
 import ArticleNewSuccess from "./Articles/article_new_sucess";
+import ArticlesShowAll from "./Articles/articles_show_all";
+
 
 class Game extends Component {
 	constructor(props) {
@@ -108,9 +110,9 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-			<Route path="/news" component={NewsList} exact strict />
+			<Route path="/articles" component={ArticlesShowAll} exact strict />
 			<Route
-				path="/news/:articleid"
+				path="/articles/:articleid"
 				render={({ match }) => {
 					return <NewsArticle articleid={match.params.articleid} />;
 				}}

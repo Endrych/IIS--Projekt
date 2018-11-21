@@ -12,11 +12,9 @@ class UserPrivateProfile extends Component {
 
 		var token = cookies.get("user");
 		this.props.getUserInfoFromToken(token);
-		console.log("ASD", this)
 	}
 
 	render() {
-		console.log(this.props, "PROPS")
 		let toRender;
 		if(this.props.loginStatus.loggedIn){
 			toRender = <div className="row">
@@ -44,7 +42,6 @@ class UserPrivateProfile extends Component {
 }
 
 function mapStateToProps(state){
-	console.log(state, "STAV");
 	// const newState = state.userInformations;
 
 	return state;

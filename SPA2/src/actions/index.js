@@ -10,6 +10,7 @@ export const LOG_OUT = "LOG_OUT";
 export const LOGGED_IN = "LOGGED_IN";
 export const ARTICLE_CREATION_SUCCESFULL = "ARTICLE_CREATION_SUCCESFULL";
 export const ARTICLE_CRAETION_FAILED = "ARTICLE_CRAETION_FAILED";
+export const ARTICLE_FETCH_SUCESS = "ARTICLE_FETCH_SUCESS";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -124,3 +125,22 @@ export function postNewArticle(values, token, callback){
 
 
 }
+
+export function fetchAllArticles(){
+	const axiosInstance = axios.create({baseURL: baseUrl});
+	const request = axiosInstance.get("/articles")
+
+	console.log(request);
+
+	return dispatch => {
+		request.then(res => {
+			dispatch({ type: ARTICLE_FETCH_SUCESS, payload:res});
+		})
+	}
+}
+
+
+
+
+
+

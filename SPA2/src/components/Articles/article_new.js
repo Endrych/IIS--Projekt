@@ -12,7 +12,6 @@ class ArticleNew extends Component {
 
 	onSubmit(values) {
 		//Select transform number from string to number
-		console.log("||||||||||||", values);
 		var cookies = new Cookies();
 
 		var token = cookies.get("user");
@@ -34,7 +33,6 @@ class ArticleNew extends Component {
 		// 	}
 		// }
 
-		console.log("FIELD arARTICLE", field);
 		return (
 			<div className={className}>
 				<label>{field.label}</label>
@@ -60,7 +58,6 @@ class ArticleNew extends Component {
 		// 	}
 		// }
 
-		console.log("FIELD arARTICLE", field);
 		return (
 			<div className={className}>
 				<label>{field.label}</label>
@@ -86,7 +83,6 @@ class ArticleNew extends Component {
 		// 	}
 		// }
 
-		console.log("FIELD arARTICLE", field);
 		return (
 			<div className={className}>
 				<label>{field.label}</label>
@@ -112,7 +108,6 @@ class ArticleNew extends Component {
 		// 	}
 		// }
 
-		console.log("FIELD arARTICLE", field);
 		return (
 			<div className={className}>
 				<label>{field.label}</label>
@@ -149,7 +144,6 @@ class ArticleNew extends Component {
 
 	render() {
 		const { handleSubmit } = this.props;
-		console.log(this.props.loginStatus.admin);
 		let toRender;
 		if (this.props.loginStatus.admin > 0) {
 			toRender = this.renderForAdmin(handleSubmit);
@@ -166,12 +160,30 @@ class ArticleNew extends Component {
 	}
 }
 
+
+
+function validate(values) {
+	const errors = {};
+	const validator = new GeneralValidators();
+	// validate inputs here
+	if (!values.Header) {
+		errors.Header = "Zadejte nadpis";
+	}
+
+	if (!validator.Min(values.Content, { min: 20 })) {
+		errors.Content = "Obsah musí mít aspoň 20 znaků.";
+	}
+
+	//if errors is empty form is fine to submit
+	return errors;
+}
+
 function mapStateToProps(state) {
 	return state;
 }
 
 export default reduxForm({
-	// validate,
+	validate,
 	form: "NewArticleForm"
 })(
 	connect(
