@@ -1,30 +1,29 @@
-const ResultCodes = require('../enums/ResultCodes');
-const db = require('../config/dbconnection');
+const selectAllPublishers = require('../helpers/PublisherHelpers/selectAllPublishers');
+const processError = require('../helpers/processError');
+const getGamesByPublisherId = require('../helpers/GameHelpers/getGamesByPublisherId');
 
 module.exports = app => {
+    var db = app.db;
+
     app.get('/publishers', (req, res) => {
-        db.query('SELECT * FROM Publisher', (err, result) => {
-            if (err) {
-                console.log(err);
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                return;
-            }
-            res.send(result);
-        });
+        selectAllPublishers(db)
+            .then(publishers => {
+                res.send(publishers);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.get('/publisher/:id', (req, res) => {
-        var id = req.params.id;
-        db.query(
-            'SELECT Id, Name, Keyname, Icon FROM GAME WHERE PublisherId = ? AND Deleted = 0 ',
-            [id],
-            (err, result) => {
-                if (err) {
-                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                    return;
-                }
-                res.send(result);
-            }
-        );
+        var id = parseInt(req.params.id);
+
+        getGamesByPublisherId(id, db)
+            .then(games => {
+                res.send(games);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 };

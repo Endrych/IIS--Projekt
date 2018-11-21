@@ -1,6 +1,8 @@
 const ResultCodes = require('../enums/ResultCodes');
 const db = require('../config/dbconnection');
+const processError = require('../helpers/processError');
 const deleteInvite = require('../helpers/InviteConrollerHelpers/deleteInvite');
+
 
 module.exports = app => {
     app.post('/invite', (req, res) => {

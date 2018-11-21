@@ -1,9 +1,12 @@
-const db = require('../config/DbConnection');
 const ResultCodes = require('../enums/ResultCodes');
-const getTeam = require('../helpers/TeamConrollerHelpers/getTeamFromId');
 const userValidator = require('../validators/UserValidator');
+const updateUserToDb = require('../helpers/UsersHelpers/updateUserToDb');
+const getPublicUserProfile = require('../helpers/UsersHelpers/getPublicUserProfile');
+const processError = require('../helpers/processError');
 
 module.exports = app => {
+    const db = app.db;
+
     app.get('/user', (req, res) => {
         if (req.user) {
             var user = req.user;
@@ -17,31 +20,14 @@ module.exports = app => {
 
     app.get('/user/:nickname', (req, res) => {
         var nickname = req.params.nickname;
-        db.query(
-            'SELECT Nickname, Firstname, Lastname, Team FROM USER WHERE ?',
-            { Nickname: nickname },
-            (err, user) => {
-                if (err) {
-                    console.log(err);
-                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                } else {
-                    if (user.length === 1) {
-                        var userData = user[0];
-                        getTeam(userData.Team, db)
-                            .then(team => {
-                                userData.Team = team;
-                                res.send(userData);
-                            })
-                            .catch(err => {
-                                console.log(err);
-                                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                            });
-                    } else {
-                        res.sendStatus(ResultCodes.NO_CONTENT);
-                    }
-                }
-            }
-        );
+
+        getPublicUserProfile(db, nickname)
+            .then(user => {
+                res.send(user);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.put('/user/edit', (req, res) => {
@@ -55,13 +41,12 @@ module.exports = app => {
             return;
         }
 
-        db.query('UPDATE User SET ? WHERE Nickname = ?', [req.body, req.user.Nickname], (err, _) => {
-            if (err) {
-                console.log(err);
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                return;
-            }
-            res.sendStatus(ResultCodes.OK);
-        });
+        updateUserToDb(req.body, req.user.Nickname, db)
+            .then(_ => {
+                res.sendStatus(ResultCodes.OK);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 };
