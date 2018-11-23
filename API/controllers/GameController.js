@@ -10,57 +10,6 @@ const getGameGenres = require('../helpers/GameGenreHelpers/getGameGenres');
 module.exports = app => {
     const db = app.db;
 
-    function saveGameGenreGameTableData(id, data) {
-        return new Promise((resolve, reject) => {
-            var item = [];
-            if (data) {
-                data.forEach(element => {
-                    item.push([id, element]);
-                });
-                db.query('DELETE FROM game_genre_games WHERE GameId = ?', [id], (err, res) => {
-                    if (err) {
-                        console.log(err);
-                        throw err;
-                    }
-
-                    db.query('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [item], (err, result) => {
-                        if (err) {
-                            throw err;
-                        } else {
-                            resolve();
-                        }
-                    });
-                });
-            } else {
-                resolve();
-            }
-        });
-    }
-
-    function savePublisherToDb(name) {
-        return new Promise((resolve, reject) => {
-            if (name) {
-                db.query('SELECT Id FROM Publisher WHERE ?', { Name: name }, (err, result) => {
-                    if (err) {
-                        throw err;
-                    }
-                    if (result.length !== 0) {
-                        resolve(result[0].Id);
-                    } else {
-                        db.query('INSERT INTO Publisher SET ?', { Name: name }, (err, result) => {
-                            if (err) {
-                                throw err;
-                            }
-                            resolve(result.insertId);
-                        });
-                    }
-                });
-            } else {
-                resolve(null);
-            }
-        });
-    }
-
     function saveGameToDb(body, genres) {
         return new Promise((resolve, reject) => {
             body.Deleted = 0;
