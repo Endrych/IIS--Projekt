@@ -6,6 +6,7 @@ const selectAllGames = require('../helpers/GameHelpers/selectAllGames');
 const getGameByKeyname = require('../helpers/GameHelpers/getGameByKeyname');
 const getPublisherName = require('../helpers/PublisherHelpers/getPublisherName');
 const getGameGenres = require('../helpers/GameGenreHelpers/getGameGenres');
+const updateGame = require('../helpers/GameHelpers/updateGame');
 
 module.exports = app => {
     const db = app.db;
@@ -174,14 +175,25 @@ module.exports = app => {
         }
     });
 
-    app.delete('/games/:id', (req, res) => {
+    app.delete('/game/:id', (req, res) => {
         var id = req.params.id;
-        db.query('UPDATE GAME SET Deleted = ? WHERE Keyname = ? AND Deleted = ?', [1, id, 0], (err, result) => {
-            if (err) {
-                console.log(err);
-                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-            }
-            res.send(new Result(ResultCodes.OK));
-        });
+
+        if (!req.user) {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+            return;
+        }
+
+        if (req.user.Admin === 0) {
+            res.sendStatus(ResultCodes.FORBIDDEN);
+            return;
+        }
+
+        updateGame(id, { Deleted: 1 }, db)
+            .then(_ => {
+                res.sendStatus(ResultCodes.OK);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 };
