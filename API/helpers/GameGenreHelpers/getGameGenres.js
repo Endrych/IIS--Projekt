@@ -2,7 +2,6 @@ module.exports = (id, db) => {
     return new Promise((resolve, reject) => {
         db.promiseQuery('SELECT GameGenreId FROM game_genre_games WHERE GameId = ?', id)
             .then(res => {
-                console.log('Res', res);
                 var promises = [];
                 res.forEach(element => {
                     promises.push(getGenreById(element.GameGenreId, db));

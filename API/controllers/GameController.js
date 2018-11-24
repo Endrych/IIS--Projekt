@@ -1,4 +1,3 @@
-const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
 const gameValidator = require('../validators/GameValidator');
 const processError = require('../helpers/processError');
@@ -8,6 +7,9 @@ const getPublisherName = require('../helpers/PublisherHelpers/getPublisherName')
 const getGameGenres = require('../helpers/GameGenreHelpers/getGameGenres');
 const updateGame = require('../helpers/GameHelpers/updateGame');
 const insertGame = require('../helpers/GameHelpers/insertGame');
+const savePublisher = require('../helpers/PublisherHelpers/savePublisher');
+const deleteGameGenres = require('../helpers/GameGenreHelpers/deleteGameGenres');
+const saveGameGenres = require('../helpers/GameGenreHelpers/saveGameGenres');
 
 module.exports = app => {
     const db = app.db;
@@ -31,7 +33,7 @@ module.exports = app => {
                     res.sendStatus(ResultCodes.NO_CONTENT);
                     return;
                 }
-                
+
                 Promise.all([getPublisherName(game.PublisherId, db), getGameGenres(game.Id, db)])
                     .then(results => {
                         if (results[0]) {
@@ -67,6 +69,7 @@ module.exports = app => {
             res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
+
         insertGame(req.body, db)
             .then(result => {
                 res.send(result.toString());
@@ -76,70 +79,80 @@ module.exports = app => {
             });
     });
 
-    app.put('/games/:keyname', (req, res) => {
-        // var body = req.body;
-        // var id = req.params.keyname;
-        // if (gameValidator.addGameValidation(body)) {
-        //     db.query('SELECT Id FROM GAME WHERE Keyname = ? AND DELETED = ?', [id, 0], (err, result0) => {
-        //         if (err) {
-        //             console.log(err);
-        //             res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-        //         } else {
-        //             if (result0.length === 0) {
-        //                 res.send(new Result(ResultCodes.NO_CONTENT));
-        //             } else {
-        //                 var gameId = result0[0].Id;
-        //                 db.query(
-        //                     'SELECT Keyname FROM GAME WHERE Keyname = ? AND Deleted = ? AND Id <> ?',
-        //                     [body.Keyname, 0, gameId],
-        //                     (err, result) => {
-        //                         if (err) {
-        //                             console.log(err);
-        //                             res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-        //                         } else {
-        //                             if (result.length === 0) {
-        //                                 savePublisherToDb(body.Publisher)
-        //                                     .then(result => {
-        //                                         delete body.Publisher;
-        //                                         if (result) {
-        //                                             body.PublisherId = result;
-        //                                         }
-        //                                         saveGameGenreGameTableData(gameId, body.Genres)
-        //                                             .then(result1 => {
-        //                                                 delete body.Genres;
-        //                                                 db.query(
-        //                                                     'UPDATE GAME SET ? WHERE Keyname = ? AND Deleted = ?',
-        //                                                     [body, id, 0],
-        //                                                     (err, result2) => {
-        //                                                         if (err) {
-        //                                                             console.log(err);
-        //                                                             res.send(
-        //                                                                 new Result(ResultCodes.INTERNAL_SERVER_ERROR)
-        //                                                             );
-        //                                                         }
-        //                                                         res.send(new Result(ResultCodes.OK, body.Keyname));
-        //                                                     }
-        //                                                 );
-        //                                             })
-        //                                             .catch(error =>
-        //                                                 res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR))
-        //                                             );
-        //                                     })
-        //                                     .catch(err => {
-        //                                         res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-        //                                     });
-        //                             } else {
-        //                                 res.send(new Result(ResultCodes.SEE_OTHER));
-        //                             }
-        //                         }
-        //                     }
-        //                 );
-        //             }
-        //         }
-        //     });
-        // } else {
-        //     res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-        // }
+    app.put('/game/:keyname', (req, res) => {
+        var body = req.body;
+        var keyname = req.params.keyname;
+
+        if (!req.user) {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+            return;
+        }
+
+        if (req.user.Admin === 0) {
+            res.sendStatus(ResultCodes.FORBIDDEN);
+            return;
+        }
+
+        if (!gameValidator.updateValidation(body)) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
+            return;
+        }
+
+        getGameByKeyname(keyname, db)
+            .then(game => {
+                if (!game) {
+                    res.sendStatus(ResultCodes.NO_CONTENT);
+                    return;
+                }
+
+                db.promiseBeginTransaction()
+                    .then(() => {
+                        savePublisher(body.Publisher, db)
+                            .then(publisher => {
+                                delete body.Publisher;
+                                
+                                if (publisher) {
+                                    body.PublisherId = publisher;
+                                }
+
+                                deleteGameGenres(game.Id, db)
+                                    .then(() => {
+                                        var genres = body.Genres;
+                                        delete body.Genres;
+
+                                        Promise.all([
+                                            saveGameGenres(game.Id, genres, db),
+                                            updateGame(game.Id, body, db)
+                                        ])
+                                            .then(() => {
+                                                db.commit();
+                                                res.sendStatus(ResultCodes.OK);
+                                            })
+                                            .catch(err => {
+                                                db.promiseRollback();
+                                                processError(res, err);
+                                                return;
+                                            });
+                                    })
+                                    .catch(err => {
+                                        db.promiseRollback();
+                                        processError(res, err);
+                                        return;
+                                    });
+                            })
+                            .catch(err => {
+                                db.promiseRollback();
+                                processError(res, err);
+                                return;
+                            });
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.delete('/game/:id', (req, res) => {
@@ -156,7 +169,7 @@ module.exports = app => {
         }
 
         updateGame(id, { Deleted: 1 }, db)
-            .then(_ => {
+            .then(() => {
                 res.sendStatus(ResultCodes.OK);
             })
             .catch(err => {
