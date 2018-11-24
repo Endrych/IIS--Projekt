@@ -4,15 +4,15 @@ import { BrowserRouter as Router, Link, NavLink, Redirect, Prompt, Switch, Route
 import LandingPage from "./LandingPage/landing_page";
 import RegistrationForm from "./Registration/registration_form.js";
 import RegistrationSucess from "./Registration/registration_sucess.js";
-import UserPrivateProfile from "./PrivateProfile/user_private_profile";
-import UserPrivateEditInformations from "./PrivateProfile/user_private_edit_infromations";
+import UserPrivateProfile from "./Profile/user_private_profile";
+import UserPrivateEditInformations from "./Profile/user_private_edit_infromations";
 import ArticleNew from "./Articles/article_new";
 import ArticleNewSuccess from "./Articles/article_new_sucess";
 import ArticlesShowAll from "./Articles/articles_show_all";
 import ArticleListAdmin from "./Articles/articles_list_admin";
 import ArticleEdit from "./Articles/article_edit";
 import ArticleShow from "./Articles/article_show";
-
+import UserPublicProfile from './Profile/user_public_profile'
 class Game extends Component {
 	constructor(props) {
 		super();
@@ -100,14 +100,13 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-			UserPrivateProfile
 			<Route path="/user" component={UserPrivateProfile} exact strict />
 			<Route path="/user/edit" component={UserPrivateEditInformations} exact strict />
 			<Route path="/players" component={PlayerList} exact strict />
 			<Route
 				path="/players/:playername"
-				render={({ match }) => {
-					return <Player playername={match.params.playername} />;
+				render={({ match, history }) => {
+					return <UserPublicProfile history={history} playername={match.params.playername} />;
 				}}
 				exact
 				strict
