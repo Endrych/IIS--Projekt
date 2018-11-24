@@ -6,6 +6,12 @@ import RegistrationForm from "./Registration/registration_form.js";
 import RegistrationSucess from "./Registration/registration_sucess.js";
 import UserPrivateProfile from "./PrivateProfile/user_private_profile";
 import UserPrivateEditInformations from "./PrivateProfile/user_private_edit_infromations";
+import ArticleNew from "./Articles/article_new";
+import ArticleNewSuccess from "./Articles/article_new_sucess";
+import ArticlesShowAll from "./Articles/articles_show_all";
+import ArticleListAdmin from "./Articles/articles_list_admin";
+import ArticleEdit from "./Articles/article_edit";
+import ArticleShow from "./Articles/article_show";
 
 class Game extends Component {
 	constructor(props) {
@@ -16,7 +22,7 @@ class Game extends Component {
 	}
 }
 
-const GameList = () => {
+const GameList = (props) => {
 	return <h2>Seznam her</h2>;
 };
 
@@ -106,15 +112,17 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-			<Route path="/news" component={NewsList} exact strict />
+			<Route path="/articles" component={ArticlesShowAll} exact strict />
 			<Route
-				path="/news/:articleid"
-				render={({ match }) => {
-					return <NewsArticle articleid={match.params.articleid} />;
+				path="/articles/:articleid"
+				render={({ match, history }) => {
+					return <ArticleShow history={history} articleid={match.params.articleid} />;
 				}}
 				exact
 				strict
 			/>
+			<Route path="/article/new" component={ArticleNew} exact strict />
+			<Route path="/article/new/sucess" component={ArticleNewSuccess} exact strict />
 			<Route path="/teams" component={TeamList} exact strict />
 			<Route
 				path="/teams/:teamname"
@@ -143,11 +151,18 @@ const AllRoutes = () => {
 			/>
 			<Route path="/register" component={RegistrationForm} exact strict />
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
+			<Route path="/admin/articles" component={ArticleListAdmin} exact strict />
+			<Route path="/admin/articles/edit/:articleid" render={({ match, history }) => {
+					return <ArticleEdit history={history} articleid={match.params.articleid} />;
+				}} exact strict />
+
 			<Route
 				render={() => {
 					return "ERROR 404";
 				}}
 			/>
+
+
 		</Switch>
 	);
 };

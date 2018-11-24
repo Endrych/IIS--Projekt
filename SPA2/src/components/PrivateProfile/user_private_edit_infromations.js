@@ -38,7 +38,6 @@ class UserPrivateEditInformations extends Component{
 		// 	}
 		// }
 
-		console.log("FIELD VALUE", field);
 		return (
 			<div className={className}>
 				<label>{field.label}</label>
@@ -51,10 +50,9 @@ class UserPrivateEditInformations extends Component{
 
 
 	onSubmit(values) {
-		console.log(values)
-		var cookies = new Cookies;
+		const cookies = new Cookies;
 
-		var token = cookies.get("user");
+		const token = cookies.get("user");
 		this.props.updateUserInformations(values, token, () => { this.props.history.push("/user")});
 	}
 
@@ -84,8 +82,7 @@ class UserPrivateEditInformations extends Component{
 }
 
 function mapStateToProps(state){
-	console.log("MAPTOSTATE", state)
-	return {...state, initialValues: {Firstname: "SADWE"}};
+	return {...state};
 }
 
 

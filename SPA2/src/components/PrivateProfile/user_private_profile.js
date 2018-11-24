@@ -12,11 +12,9 @@ class UserPrivateProfile extends Component {
 
 		var token = cookies.get("user");
 		this.props.getUserInfoFromToken(token);
-		console.log("ASD", this)
 	}
 
 	render() {
-		console.log(this.props, "PROPS")
 		let toRender;
 		if(this.props.loginStatus.loggedIn){
 			toRender = <div className="row">
@@ -28,6 +26,7 @@ class UserPrivateProfile extends Component {
 			<div>Email: <span>{this.props.userInformations.email}</span></div>
 			<div>Telefon: <span>{this.props.userInformations.phone}</span></div>
 			<Link to="/user/edit"><button className="btn btn-primary">Upravit údaje</button></Link>
+			{this.props.loginStatus.admin > 0 ? <Link to="/admin/articles"><button className="btn btn-primary">Správa článků</button> </Link>: ""}
 		</div>;
 		}else{
 			toRender =  <Redirect  to="/" />
@@ -43,7 +42,6 @@ class UserPrivateProfile extends Component {
 }
 
 function mapStateToProps(state){
-	console.log(state, "STAV");
 	// const newState = state.userInformations;
 
 	return state;
