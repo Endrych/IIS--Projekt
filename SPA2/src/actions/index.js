@@ -10,8 +10,12 @@ export const LOG_OUT = "LOG_OUT";
 export const LOGGED_IN = "LOGGED_IN";
 export const ARTICLE_CREATION_SUCCESFULL = "ARTICLE_CREATION_SUCCESFULL";
 export const ARTICLE_CRAETION_FAILED = "ARTICLE_CRAETION_FAILED";
-export const ARTICLE_FETCH_SUCESS = "ARTICLE_FETCH_SUCESS";
+export const ALL_ARTICLES_FETCH_SUCESS = "ALL_ARTICLES_FETCH_SUCESS";
 export const ARTICLE_REMOV_SUCCES = "ARTICLE_REMOV_SUCCES";
+export const ARTICLE_FETCH_SUCESS = "ARTICLE_FETCH_SUCESS";
+export const ARTICLE_FETCH_FAILED = "ARTICLE_FETCH_FAILED";
+export const ARTICLE_UDPATE_SUCESS = "ARTICLE_UDPATE_SUCESS";
+export const ARTICLE_UDPATE_FAILED = "ARTICLE_UDPATE_FAILED"
 
 const baseUrl = `http://localhost:5050`;
 
@@ -133,7 +137,7 @@ export function fetchAllArticles(){
 
 	return dispatch => {
 		request.then(res => {
-			dispatch({ type: ARTICLE_FETCH_SUCESS, payload:res});
+			dispatch({ type: ALL_ARTICLES_FETCH_SUCESS, payload:res});
 		})
 	}
 }
@@ -150,5 +154,49 @@ console.log(request);
 	}
 }
 
+export function fetchArticle(id, callback){
+	const axiosInstance = axios.create({baseURL: baseUrl});
+	const request = axiosInstance.get(`/article/${id}`);
+
+	console.log(request)
+
+	// return{
+	// 	type: ARTICLE_FETCH_SUCESS,
+	// 	payload: request
+	// }
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: ARTICLE_FETCH_SUCESS, payload: res });
+				setTimeout(() => {
+					// console.log()
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: ARTICLE_FETCH_FAILED, payload: err });
+			});
+	};
 
 
+
+
+}
+
+export function updateArticle(id, data, token, callback){
+	const axiosInstance = axios.create({baseURL: baseUrl, headers: { "x-access-token": token } });
+	const request = axiosInstance.put(`/article/${id}`, data);
+
+	return dispatch => {
+		request.then(res => {
+			dispatch({type: ARTICLE_UDPATE_SUCESS, payload: res});
+			setTimeout(() => {
+				// console.log()
+				callback();
+			}, 0);
+		}).catch(err=>{
+
+		})
+	}
+
+}

@@ -50,9 +50,9 @@ class UserPrivateEditInformations extends Component{
 
 
 	onSubmit(values) {
-		var cookies = new Cookies;
+		const cookies = new Cookies;
 
-		var token = cookies.get("user");
+		const token = cookies.get("user");
 		this.props.updateUserInformations(values, token, () => { this.props.history.push("/user")});
 	}
 

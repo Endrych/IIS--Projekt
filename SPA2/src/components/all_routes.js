@@ -10,6 +10,7 @@ import ArticleNew from "./Articles/article_new";
 import ArticleNewSuccess from "./Articles/article_new_sucess";
 import ArticlesShowAll from "./Articles/articles_show_all";
 import ArticleListAdmin from "./Articles/articles_list_admin";
+import ArticleEdit from "./Articles/article_edit";
 
 class Game extends Component {
 	constructor(props) {
@@ -20,7 +21,7 @@ class Game extends Component {
 	}
 }
 
-const GameList = () => {
+const GameList = (props) => {
 	return <h2>Seznam her</h2>;
 };
 
@@ -150,6 +151,10 @@ const AllRoutes = () => {
 			<Route path="/register" component={RegistrationForm} exact strict />
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
 			<Route path="/admin/articles" component={ArticleListAdmin} exact strict />
+			<Route path="/admin/articles/edit/:articleid" render={({ match, history }) => {
+					return <ArticleEdit history={history} articleid={match.params.articleid} />;
+				}} exact strict />
+
 			<Route
 				render={() => {
 					return "ERROR 404";
