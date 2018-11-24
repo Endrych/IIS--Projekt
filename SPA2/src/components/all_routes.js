@@ -9,7 +9,7 @@ import UserPrivateEditInformations from "./PrivateProfile/user_private_edit_infr
 import ArticleNew from "./Articles/article_new";
 import ArticleNewSuccess from "./Articles/article_new_sucess";
 import ArticlesShowAll from "./Articles/articles_show_all";
-
+import ArticleListAdmin from "./Articles/articles_list_admin";
 
 class Game extends Component {
 	constructor(props) {
@@ -149,11 +149,14 @@ const AllRoutes = () => {
 			/>
 			<Route path="/register" component={RegistrationForm} exact strict />
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
+			<Route path="/admin/articles" component={ArticleListAdmin} exact strict />
 			<Route
 				render={() => {
 					return "ERROR 404";
 				}}
 			/>
+
+
 		</Switch>
 	);
 };

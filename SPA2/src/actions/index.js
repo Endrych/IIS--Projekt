@@ -11,6 +11,7 @@ export const LOGGED_IN = "LOGGED_IN";
 export const ARTICLE_CREATION_SUCCESFULL = "ARTICLE_CREATION_SUCCESFULL";
 export const ARTICLE_CRAETION_FAILED = "ARTICLE_CRAETION_FAILED";
 export const ARTICLE_FETCH_SUCESS = "ARTICLE_FETCH_SUCESS";
+export const ARTICLE_REMOV_SUCCES = "ARTICLE_REMOV_SUCCES";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -130,8 +131,6 @@ export function fetchAllArticles(){
 	const axiosInstance = axios.create({baseURL: baseUrl});
 	const request = axiosInstance.get("/articles")
 
-	console.log(request);
-
 	return dispatch => {
 		request.then(res => {
 			dispatch({ type: ARTICLE_FETCH_SUCESS, payload:res});
@@ -140,7 +139,16 @@ export function fetchAllArticles(){
 }
 
 
-
+export function removeArticle(id, token){
+	const axiosInstance = axios.create({baseURL: baseUrl , headers: { "x-access-token": token } });
+	const request = axiosInstance.delete(`/article/${id}`)
+console.log(request);
+	return dispatch => {
+		request.then(res => {
+			dispatch({ type: ARTICLE_REMOV_SUCCES, payload:res});
+		})
+	}
+}
 
 
 

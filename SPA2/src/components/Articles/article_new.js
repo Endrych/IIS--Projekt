@@ -136,7 +136,7 @@ class ArticleNew extends Component {
 					<button type="submit" className="btn btn-primary">
 						Publikovat
 					</button>
-					<Link to="/"><button className="btn btn-danger">Zrušit</button></Link>
+					<Link to="/admin/articles"><button className="btn btn-danger">Zrušit</button></Link>
 				</form>
 			</div>
 		);
