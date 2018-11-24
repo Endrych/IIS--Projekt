@@ -24,16 +24,12 @@ class ArticleEdit extends Component{
 		this.props.initialize(initData);
 	}
 
-	pushHistory = () => {
-		console.log(this.props)
-	}
-
 	onSubmit = (values)=>{
 		console.log("Submit", this.props);
 		const cookie = new Cookies();
 		const token = cookie.get("user");
-		// this.props.updateArticle(this.props.articleid, values, token,  this.pushHistory.bind(this));
-		this.props.history.push("/user")
+		this.props.updateArticle(this.props.articleid, values, token, ()=>{this.props.history.push("/user")});
+		// this.props.history.push("/user")
 
 	}
 

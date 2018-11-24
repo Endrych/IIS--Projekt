@@ -154,7 +154,7 @@ console.log(request);
 	}
 }
 
-export function fetchArticle(id, callback){
+export function fetchArticle(id, callback =()=>{}){
 	const axiosInstance = axios.create({baseURL: baseUrl});
 	const request = axiosInstance.get(`/article/${id}`);
 
@@ -169,7 +169,7 @@ export function fetchArticle(id, callback){
 			.then(res => {
 				dispatch({ type: ARTICLE_FETCH_SUCESS, payload: res });
 				setTimeout(() => {
-					// console.log()
+					console.log()
 					callback();
 				}, 0);
 			})
@@ -177,11 +177,9 @@ export function fetchArticle(id, callback){
 				dispatch({ type: ARTICLE_FETCH_FAILED, payload: err });
 			});
 	};
-
-
-
-
 }
+
+
 
 export function updateArticle(id, data, token, callback){
 	const axiosInstance = axios.create({baseURL: baseUrl, headers: { "x-access-token": token } });

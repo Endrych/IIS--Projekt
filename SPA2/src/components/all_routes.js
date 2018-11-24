@@ -11,6 +11,7 @@ import ArticleNewSuccess from "./Articles/article_new_sucess";
 import ArticlesShowAll from "./Articles/articles_show_all";
 import ArticleListAdmin from "./Articles/articles_list_admin";
 import ArticleEdit from "./Articles/article_edit";
+import ArticleShow from "./Articles/article_show";
 
 class Game extends Component {
 	constructor(props) {
@@ -114,8 +115,8 @@ const AllRoutes = () => {
 			<Route path="/articles" component={ArticlesShowAll} exact strict />
 			<Route
 				path="/articles/:articleid"
-				render={({ match }) => {
-					return <NewsArticle articleid={match.params.articleid} />;
+				render={({ match, history }) => {
+					return <ArticleShow history={history} articleid={match.params.articleid} />;
 				}}
 				exact
 				strict
