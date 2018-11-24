@@ -34,7 +34,6 @@ class ArticlesShowAll extends Component{
 			arrayOfArticleItems.push(this.articleItem("", items[i].Header, items[i].Content, items[i].Id, items[i].Created, items[i].Author))
 			// console.log(items[i])
 		}
-		console.log(arrayOfArticleItems)
 		return arrayOfArticleItems
 	}
 
@@ -52,7 +51,6 @@ class ArticlesShowAll extends Component{
 }
 
 function mapStateToProps({articlesAll}){
-	console.log(articlesAll)
 	return {articlesAll};
 }
 

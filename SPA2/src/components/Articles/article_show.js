@@ -5,13 +5,11 @@ import { fetchArticle  } from '../../actions';
 
 class ArticleShow extends Component{
 	componentDidMount(){
-		console.log(this.props)
 		this.props.fetchArticle(this.props.articleid);
 	}
 
 
 	render(){
-		console.log("wooooosh", this.props);
 		const { articleInfo } = this.props;
 		if(articleInfo.articleFetched){
 			return(

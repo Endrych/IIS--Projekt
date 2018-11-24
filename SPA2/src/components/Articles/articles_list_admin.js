@@ -14,7 +14,6 @@ class ArticlesListAdmin extends Component{
 
 	articleListItem = (header, id,  author, created ) => {
 		//pak se to prestyluje idealne nasekat na divy
-		console.log(this, "THIS")
 		return(
 			<div id={`article_${id}`} key={id}>
 				<div>{header} | {author} | {created}   <Link to={`/admin/articles/edit/${id}`}>Edit</Link><button onClick={()=>{this.deleteArticle(id)}}>Smazat</button></div>
@@ -37,7 +36,6 @@ class ArticlesListAdmin extends Component{
 	}
 
 	render(){
-		console.log(this.props)
 		if(this.props.loginStatus.admin > 0){
 			const articleList = this.generateArticleList(this.props.articlesAll);
 			return(

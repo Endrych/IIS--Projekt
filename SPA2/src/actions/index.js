@@ -146,7 +146,7 @@ export function fetchAllArticles(){
 export function removeArticle(id, token){
 	const axiosInstance = axios.create({baseURL: baseUrl , headers: { "x-access-token": token } });
 	const request = axiosInstance.delete(`/article/${id}`)
-console.log(request);
+
 	return dispatch => {
 		request.then(res => {
 			dispatch({ type: ARTICLE_REMOV_SUCCES, payload:res});
@@ -158,7 +158,6 @@ export function fetchArticle(id, callback =()=>{}){
 	const axiosInstance = axios.create({baseURL: baseUrl});
 	const request = axiosInstance.get(`/article/${id}`);
 
-	console.log(request)
 
 	// return{
 	// 	type: ARTICLE_FETCH_SUCESS,
@@ -169,7 +168,6 @@ export function fetchArticle(id, callback =()=>{}){
 			.then(res => {
 				dispatch({ type: ARTICLE_FETCH_SUCESS, payload: res });
 				setTimeout(() => {
-					console.log()
 					callback();
 				}, 0);
 			})

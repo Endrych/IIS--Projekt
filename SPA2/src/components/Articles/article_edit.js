@@ -8,12 +8,10 @@ import Cookies from "universal-cookie";
 
 class ArticleEdit extends Component{
 	componentDidMount(){
-		console.log(this.props)
 		this.props.fetchArticle(this.props.articleid, this.handleInitialize.bind(this));
 	}
 
 	handleInitialize() {
-		console.log("THIS", this.props)
 		const initData = {
 		  "Header": this.props.articleInfo.Header,
 		  "Content": this.props.articleInfo.Content,
@@ -25,7 +23,6 @@ class ArticleEdit extends Component{
 	}
 
 	onSubmit = (values)=>{
-		console.log("Submit", this.props);
 		const cookie = new Cookies();
 		const token = cookie.get("user");
 		this.props.updateArticle(this.props.articleid, values, token, ()=>{this.props.history.push("/user")});
@@ -137,7 +134,6 @@ class ArticleEdit extends Component{
 
 		const { handleSubmit } = this.props;
 
-		console.log("wooooosh", this.props);
 		const { articleInfo } = this.props;
 		if(articleInfo.articleFetched){
 			return(
