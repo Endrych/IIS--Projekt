@@ -16,6 +16,8 @@ export const ARTICLE_FETCH_SUCESS = "ARTICLE_FETCH_SUCESS";
 export const ARTICLE_FETCH_FAILED = "ARTICLE_FETCH_FAILED";
 export const ARTICLE_UDPATE_SUCESS = "ARTICLE_UDPATE_SUCESS";
 export const ARTICLE_UDPATE_FAILED = "ARTICLE_UDPATE_FAILED"
+export const PLAYER_FETCH_SUCESS = "PLAYER_FETCH_SUCESS";
+export const PLAYER_FETCH_FAILED = "PLAYER_FETCH_FAILED";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -195,4 +197,18 @@ export function updateArticle(id, data, token, callback){
 		})
 	}
 
+}
+
+
+export function fetchPlayer(nickname){
+	const axiosInstance = axios.create({baseURL: baseUrl});
+	const request = axiosInstance.get(`/user/${nickname}`);
+
+	return dispatch => {
+		request.then(res => {
+			dispatch({type: PLAYER_FETCH_SUCESS, payload:res});
+		}).catch(err=>{
+			dispatch({type: PLAYER_FETCH_FAILED, payload:err});
+		})
+	}
 }

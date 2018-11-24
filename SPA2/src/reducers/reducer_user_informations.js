@@ -1,15 +1,21 @@
-import { GET_DATA_TOKEN, LOGIN_SUCESS } from "../actions";
+import { GET_DATA_TOKEN} from "../actions";
 
 export default function(state = { acquired: false }, action) {
 	switch (action.type) {
 		case GET_DATA_TOKEN:
-			// action.callback();
+			const { data } = action.payload;
 
-			const { payload } = action;
-			const newState = { admin: payload.data.Admin, nickname: payload.data.Nickname, firstname: payload.data.Firstname,
-				 lastname: payload.data.Lastname, email: payload.data.Email, phone: payload.data.Phone, team: payload.data.Team ,acquired: true };
+			const newState = {
+				admin: data.Admin,
+				nickname: data.Nickname,
+				firstname: data.Firstname,
+				lastname: data.Lastname,
+				email: data.Email,
+				phone: data.Phone,
+				team: data.Team,
+				acquired: true
+			};
 			return newState;
-
 		default:
 			return state;
 	}
