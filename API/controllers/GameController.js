@@ -7,28 +7,10 @@ const getGameByKeyname = require('../helpers/GameHelpers/getGameByKeyname');
 const getPublisherName = require('../helpers/PublisherHelpers/getPublisherName');
 const getGameGenres = require('../helpers/GameGenreHelpers/getGameGenres');
 const updateGame = require('../helpers/GameHelpers/updateGame');
+const insertGame = require('../helpers/GameHelpers/insertGame');
 
 module.exports = app => {
     const db = app.db;
-
-    function saveGameToDb(body, genres) {
-        return new Promise((resolve, reject) => {
-            body.Deleted = 0;
-            db.query('INSERT INTO GAME SET ?', body, (err, result) => {
-                if (err) {
-                    throw err;
-                } else {
-                    saveGameGenreGameTableData(result.insertId, genres)
-                        .then(result1 => {
-                            resolve();
-                        })
-                        .catch(error => {
-                            throw error;
-                        });
-                }
-            });
-        });
-    }
 
     app.get('/games', (req, res) => {
         selectAllGames(db)
@@ -45,6 +27,11 @@ module.exports = app => {
 
         getGameByKeyname(keyname, db)
             .then(game => {
+                if (!game) {
+                    res.sendStatus(ResultCodes.NO_CONTENT);
+                    return;
+                }
+                
                 Promise.all([getPublisherName(game.PublisherId, db), getGameGenres(game.Id, db)])
                     .then(results => {
                         if (results[0]) {
@@ -63,116 +50,96 @@ module.exports = app => {
             });
     });
 
-    app.post('/games', (req, res) => {
+    app.post('/game', (req, res) => {
         var body = req.body;
-        var genres = body.Genres;
-        delete body.Genres;
 
-        if (gameValidator.addGameValidation(body)) {
-            db.beginTransaction(err => {
-                if (err) {
-                    throw err;
-                }
-                db.query('SELECT Id FROM Game WHERE ? AND Deleted = 0', { Keyname: body.Keyname }, (err, result) => {
-                    if (result.length === 0) {
-                        savePublisherToDb(body.Publisher)
-                            .then(result => {
-                                delete body.Publisher;
-
-                                if (result) {
-                                    body.PublisherId = result;
-                                }
-
-                                saveGameToDb(body, genres)
-                                    .then(result => {
-                                        db.commit();
-                                        res.send(new Result(ResultCodes.OK, body.Keyname));
-                                    })
-                                    .catch(error => {
-                                        db.rollback();
-                                        res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                                    });
-                            })
-                            .catch(err => {
-                                console.log(err);
-                                db.rollback();
-                                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                            });
-                    } else {
-                        db.rollback();
-                        res.send(new Result(ResultCodes.SEE_OTHER));
-                    }
-                });
-            });
-        } else {
-            res.send(new Result(ResultCodes.BAD_REQUEST));
+        if (!req.user) {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+            return;
         }
+
+        if (req.user.Admin === 0) {
+            res.sendStatus(ResultCodes.FORBIDDEN);
+            return;
+        }
+
+        if (!gameValidator.addGameValidation(body)) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
+            return;
+        }
+        insertGame(req.body, db)
+            .then(result => {
+                res.send(result.toString());
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.put('/games/:keyname', (req, res) => {
-        var body = req.body;
-        var id = req.params.keyname;
-        if (gameValidator.addGameValidation(body)) {
-            db.query('SELECT Id FROM GAME WHERE Keyname = ? AND DELETED = ?', [id, 0], (err, result0) => {
-                if (err) {
-                    console.log(err);
-                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                } else {
-                    if (result0.length === 0) {
-                        res.send(new Result(ResultCodes.NO_CONTENT));
-                    } else {
-                        var gameId = result0[0].Id;
-                        db.query(
-                            'SELECT Keyname FROM GAME WHERE Keyname = ? AND Deleted = ? AND Id <> ?',
-                            [body.Keyname, 0, gameId],
-                            (err, result) => {
-                                if (err) {
-                                    console.log(err);
-                                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                                } else {
-                                    if (result.length === 0) {
-                                        savePublisherToDb(body.Publisher)
-                                            .then(result => {
-                                                delete body.Publisher;
-                                                if (result) {
-                                                    body.PublisherId = result;
-                                                }
-                                                saveGameGenreGameTableData(gameId, body.Genres)
-                                                    .then(result1 => {
-                                                        delete body.Genres;
-                                                        db.query(
-                                                            'UPDATE GAME SET ? WHERE Keyname = ? AND Deleted = ?',
-                                                            [body, id, 0],
-                                                            (err, result2) => {
-                                                                if (err) {
-                                                                    console.log(err);
-                                                                    res.send(
-                                                                        new Result(ResultCodes.INTERNAL_SERVER_ERROR)
-                                                                    );
-                                                                }
-                                                                res.send(new Result(ResultCodes.OK, body.Keyname));
-                                                            }
-                                                        );
-                                                    })
-                                                    .catch(error =>
-                                                        res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR))
-                                                    );
-                                            })
-                                            .catch(err => {
-                                                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                                            });
-                                    } else {
-                                        res.send(new Result(ResultCodes.SEE_OTHER));
-                                    }
-                                }
-                            }
-                        );
-                    }
-                }
-            });
-        } else {
-            res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-        }
+        // var body = req.body;
+        // var id = req.params.keyname;
+        // if (gameValidator.addGameValidation(body)) {
+        //     db.query('SELECT Id FROM GAME WHERE Keyname = ? AND DELETED = ?', [id, 0], (err, result0) => {
+        //         if (err) {
+        //             console.log(err);
+        //             res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+        //         } else {
+        //             if (result0.length === 0) {
+        //                 res.send(new Result(ResultCodes.NO_CONTENT));
+        //             } else {
+        //                 var gameId = result0[0].Id;
+        //                 db.query(
+        //                     'SELECT Keyname FROM GAME WHERE Keyname = ? AND Deleted = ? AND Id <> ?',
+        //                     [body.Keyname, 0, gameId],
+        //                     (err, result) => {
+        //                         if (err) {
+        //                             console.log(err);
+        //                             res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+        //                         } else {
+        //                             if (result.length === 0) {
+        //                                 savePublisherToDb(body.Publisher)
+        //                                     .then(result => {
+        //                                         delete body.Publisher;
+        //                                         if (result) {
+        //                                             body.PublisherId = result;
+        //                                         }
+        //                                         saveGameGenreGameTableData(gameId, body.Genres)
+        //                                             .then(result1 => {
+        //                                                 delete body.Genres;
+        //                                                 db.query(
+        //                                                     'UPDATE GAME SET ? WHERE Keyname = ? AND Deleted = ?',
+        //                                                     [body, id, 0],
+        //                                                     (err, result2) => {
+        //                                                         if (err) {
+        //                                                             console.log(err);
+        //                                                             res.send(
+        //                                                                 new Result(ResultCodes.INTERNAL_SERVER_ERROR)
+        //                                                             );
+        //                                                         }
+        //                                                         res.send(new Result(ResultCodes.OK, body.Keyname));
+        //                                                     }
+        //                                                 );
+        //                                             })
+        //                                             .catch(error =>
+        //                                                 res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR))
+        //                                             );
+        //                                     })
+        //                                     .catch(err => {
+        //                                         res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+        //                                     });
+        //                             } else {
+        //                                 res.send(new Result(ResultCodes.SEE_OTHER));
+        //                             }
+        //                         }
+        //                     }
+        //                 );
+        //             }
+        //         }
+        //     });
+        // } else {
+        //     res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
+        // }
     });
 
     app.delete('/game/:id', (req, res) => {

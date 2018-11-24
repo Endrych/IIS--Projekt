@@ -34,4 +34,40 @@ connection.promiseQuery = (sql, parameters) => {
     });
 };
 
+connection.promiseBeginTransaction = () => {
+    return new Promise((resolve, reject) => {
+        connection.beginTransaction(err => {
+            if (err) {
+                reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
+            } else {
+                resolve();
+            }
+        });
+    });
+};
+
+connection.promiseCommit = () => {
+    return new Promise((resolve, reject) => {
+        connection.commit(err => {
+            if (err) {
+                reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
+            } else {
+                resolve();
+            }
+        });
+    });
+};
+
+connection.promiseRollback = () => {
+    return new Promise((resolve, reject) => {
+        connection.rollback(err => {
+            if (err) {
+                reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
+            } else {
+                resolve();
+            }
+        });
+    });
+};
+
 module.exports = connection;

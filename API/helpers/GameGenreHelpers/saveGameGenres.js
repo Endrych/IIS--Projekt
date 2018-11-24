@@ -3,12 +3,12 @@ module.exports = (gameId, genres, db) => {
         if (genres) {
             var items = [];
 
-            data.forEach(element => {
+            genres.forEach(element => {
                 items.push([gameId, element]);
             });
 
-            db.promiseQuery('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', items)
-                .then(_ => {
+            db.promiseQuery('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [items])
+                .then(() => {
                     resolve();
                 })
                 .catch(err => {
