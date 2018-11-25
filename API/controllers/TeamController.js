@@ -6,6 +6,7 @@ const processError = require('../helpers/processError');
 const getTeamProfile = require('../helpers/TeamsHelpers/getTeamProfile');
 const deleteTeam = require('../helpers/TeamsHelpers/deleteTeam');
 const checkTeamEditPermission = require('../helpers/TeamsHelpers/checkTeamEditPermission');
+const insertTeam = require('../helpers/TeamsHelpers/insertTeam');
 
 module.exports = app => {
     const db = app.db;
@@ -39,61 +40,32 @@ module.exports = app => {
 
     app.post('/team', (req, res) => {
         var body = req.body;
-        if (teamValidator.addTeamValidation(body)) {
-            body.Created = new Date();
-            body.Deleted = 0;
-            db.beginTransaction(err => {
-                if (err) {
-                    console.log(err);
-                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                } else {
-                    db.query('INSERT INTO TEAM SET ?', body, (err, team) => {
-                        if (err) {
-                            console.log(err);
-                            db.rollback(err => {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                                }
-                            });
-                        }
-                        db.query(
-                            'UPDATE User SET ? WHERE Nickname = ?',
-                            [{ Team: team.insertId }, body.Owner, 0],
-                            err => {
-                                if (err) {
-                                    console.log(err);
-                                    db.rollback(err => {
-                                        if (err) {
-                                            console.log(err);
-                                        }
-                                        res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                                    });
-                                } else {
-                                    db.commit(err => {
-                                        if (err) {
-                                            console.log(err);
-                                            db.rollback(err => {
-                                                if (err) {
-                                                    console.log(err);
-                                                } else {
-                                                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                                                }
-                                            });
-                                        } else {
-                                            res.send(new Result(ResultCodes.OK, team.insertId));
-                                        }
-                                    });
-                                }
-                            }
-                        );
-                    });
-                }
-            });
-        } else {
-            res.send(new Result(ResultCodes.BAD_REQUEST));
+
+        if (!req.user) {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+            return;
         }
+
+        if (req.user.Team) {
+            res.sendStatus(ResultCodes.FORBIDDEN);
+            return;
+        }
+
+        if (!teamValidator.addTeamValidation(body)) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
+            return;
+        }
+
+        body.Created = new Date();
+        body.Deleted = 0;
+
+        insertTeam(body, req.user, db)
+            .then(teamId => {
+                res.send(teamId);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.put('/team/:id', (req, res) => {
@@ -130,7 +102,7 @@ module.exports = app => {
 
         checkTeamEditPermission(req.user, id, db)
             .then(() => {
-                deleteTeam(id, req.user.Nickname, db)
+                deleteTeam(id, db)
                     .then(() => {
                         res.sendStatus(ResultCodes.OK);
                     })
