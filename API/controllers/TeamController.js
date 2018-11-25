@@ -1,12 +1,13 @@
 const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
-const db = require('../config/dbconnection');
 const teamValidator = require('../validators/TeamValidator');
 const getAllTeams = require('../helpers/TeamsHelpers/getAllTeams');
 const processError = require('../helpers/processError');
-
+const getTeamProfile = require('../helpers/TeamsHelpers/getTeamProfile');
 
 module.exports = app => {
+    const db = app.db;
+
     app.get('/teams', (req, res) => {
         getAllTeams(db)
             .then(teams => {
@@ -19,18 +20,14 @@ module.exports = app => {
 
     app.get('/team/:id', (req, res) => {
         var id = parseInt(req.params.id);
-        db.query('SELECT * FROM TEAM WHERE Deleted = 0 AND Id = ?', id, (err, team) => {
-            if (err) {
-                console.log(err);
-                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-            } else {
-                if (team.length > 0) {
-                    res.send(new Result(ResultCodes.OK, team));
-                } else {
-                    res.send(new Result(ResultCodes.NO_CONTENT));
-                }
-            }
-        });
+
+        getTeamProfile(id, db)
+            .then(team => {
+                res.send(team);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.post('/team', (req, res) => {
@@ -92,7 +89,7 @@ module.exports = app => {
         }
     });
 
-    app.post('/team/:id', (req, res) => {
+    app.put('/team/:id', (req, res) => {
         var id = parseInt(req.params.id);
         var body = req.body;
 
