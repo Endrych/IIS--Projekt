@@ -21,6 +21,11 @@ module.exports = app => {
     app.get('/team/:id', (req, res) => {
         var id = parseInt(req.params.id);
 
+        if(isNaN(id)){
+            res.sendStatus(ResultCodes.BAD_REQUEST)
+            return;
+        }
+
         getTeamProfile(id, db)
             .then(team => {
                 res.send(team);
@@ -120,7 +125,7 @@ module.exports = app => {
 
     app.delete('/team/:id', (req, res) => {
         var id = parseInt(req.params.id);
-        db.query('UPDATE TEAM SET Deleted = ? WHERE Id = ? AND Deleted = ?', [1, id, 0], (err, result) => {
+        db.query('UPDATE TEAM SET ? WHERE Id = ? AND Deleted = 0', [{Deleted: 1}, id], (err, result) => {
             if (err) {
                 console.log(err);
                 res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
