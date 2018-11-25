@@ -155,8 +155,8 @@ module.exports = app => {
             });
     });
 
-    app.delete('/game/:id', (req, res) => {
-        var id = req.params.id;
+    app.delete('/game/:keyname', (req, res) => {
+        var keyname = req.params.keyname;
 
         if (!req.user) {
             res.sendStatus(ResultCodes.UNAUTHORIZED);
@@ -168,7 +168,7 @@ module.exports = app => {
             return;
         }
 
-        updateGame(id, { Deleted: 1 }, db)
+        updateGame(keyname, { Deleted: 1 }, db)
             .then(() => {
                 res.sendStatus(ResultCodes.OK);
             })
