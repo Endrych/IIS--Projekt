@@ -29,9 +29,9 @@ module.exports = app => {
         }
 
         checkAdminEditPermission(req.user, nickname, db)
-            .then(_ => {
+            .then(() => {
                 setUserAdminState(adminLevel, nickname, db)
-                    .then(_ => {
+                    .then(() => {
                         res.sendStatus(ResultCodes.OK);
                     })
                     .catch(err => {

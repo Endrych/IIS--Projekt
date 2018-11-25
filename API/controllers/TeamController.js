@@ -4,6 +4,8 @@ const teamValidator = require('../validators/TeamValidator');
 const getAllTeams = require('../helpers/TeamsHelpers/getAllTeams');
 const processError = require('../helpers/processError');
 const getTeamProfile = require('../helpers/TeamsHelpers/getTeamProfile');
+const deleteTeam = require('../helpers/TeamsHelpers/deleteTeam');
+const checkTeamEditPermission = require('../helpers/TeamsHelpers/checkTeamEditPermission');
 
 module.exports = app => {
     const db = app.db;
@@ -21,8 +23,8 @@ module.exports = app => {
     app.get('/team/:id', (req, res) => {
         var id = parseInt(req.params.id);
 
-        if(isNaN(id)){
-            res.sendStatus(ResultCodes.BAD_REQUEST)
+        if (isNaN(id)) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
 
@@ -125,13 +127,19 @@ module.exports = app => {
 
     app.delete('/team/:id', (req, res) => {
         var id = parseInt(req.params.id);
-        db.query('UPDATE TEAM SET ? WHERE Id = ? AND Deleted = 0', [{Deleted: 1}, id], (err, result) => {
-            if (err) {
-                console.log(err);
-                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-            } else {
-                res.send(new Result(ResultCodes.OK));
-            }
-        });
+
+        checkTeamEditPermission(req.user, id, db)
+            .then(() => {
+                deleteTeam(id, db)
+                    .then(() => {
+                        res.sendStatus(ResultCodes.OK);
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 };
