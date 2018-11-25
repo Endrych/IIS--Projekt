@@ -5,7 +5,7 @@ module.exports = (nickname, db) => {
                 if (user.length > 0) {
                     resolve(true);
                 } else {
-                    reject(false);
+                    resolve(false);
                 }
             })
             .catch(err => {
