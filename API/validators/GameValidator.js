@@ -14,7 +14,7 @@ var basicObj = {
         ],
         required: true
     },
-  
+
     Description: {
         validators: [
             {
@@ -38,11 +38,6 @@ var basicObj = {
         required: false
     },
     ReleaseDate: {
-        validators: [
-            {
-                validator: ValidatorsEnum.DATE
-            }
-        ],
         required: false
     },
     Image: {
@@ -62,17 +57,6 @@ var basicObj = {
         required: false
     },
     Video: {
-        validators: [
-            {
-                validator: ValidatorsEnum.MAX,
-                options: {
-                    max: 255
-                }
-            },
-            {
-                validator: ValidatorsEnum.YOUTUBE
-            }
-        ],
         required: false
     },
     Genres: {
