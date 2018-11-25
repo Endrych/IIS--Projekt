@@ -12,7 +12,9 @@ import ArticlesShowAll from "./Articles/articles_show_all";
 import ArticleListAdmin from "./Articles/articles_list_admin";
 import ArticleEdit from "./Articles/article_edit";
 import ArticleShow from "./Articles/article_show";
-import UserPublicProfile from './Profile/user_public_profile'
+import UserPublicProfile from './Profile/user_public_profile';
+import GameNew from './Games/game_new';
+
 class Game extends Component {
 	constructor(props) {
 		super();
@@ -152,8 +154,11 @@ const AllRoutes = () => {
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
 			<Route path="/admin/articles" component={ArticleListAdmin} exact strict />
 			<Route path="/admin/articles/edit/:articleid" render={({ match, history }) => {
-					return <ArticleEdit history={history} articleid={match.params.articleid} />;
-				}} exact strict />
+				return <ArticleEdit history={history} articleid={match.params.articleid} />;
+			}} exact strict />
+
+			<Route path="/admin/game/new" component={GameNew} exact strict />
+
 
 			<Route
 				render={() => {

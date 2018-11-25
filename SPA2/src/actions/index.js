@@ -18,6 +18,8 @@ export const ARTICLE_UDPATE_SUCESS = "ARTICLE_UDPATE_SUCESS";
 export const ARTICLE_UDPATE_FAILED = "ARTICLE_UDPATE_FAILED"
 export const PLAYER_FETCH_SUCESS = "PLAYER_FETCH_SUCESS";
 export const PLAYER_FETCH_FAILED = "PLAYER_FETCH_FAILED";
+export const GAME_CREAT_SUCESS = "GAME_CREAT_SUCESS";
+export const GAME_CREAT_FAILED = "GAME_CREAT_FAILED";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -199,7 +201,6 @@ export function updateArticle(id, data, token, callback){
 
 }
 
-
 export function fetchPlayer(nickname){
 	const axiosInstance = axios.create({baseURL: baseUrl});
 	const request = axiosInstance.get(`/user/${nickname}`);
@@ -211,4 +212,22 @@ export function fetchPlayer(nickname){
 			dispatch({type: PLAYER_FETCH_FAILED, payload:err});
 		})
 	}
+}
+
+export function createNewGame(values, token, callback){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	const request = axiosInstance.post("/game",values);
+
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: GAME_CREAT_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: GAME_CREAT_FAILED, payload: err });
+			});
+	};
 }
