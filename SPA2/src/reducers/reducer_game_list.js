@@ -1,7 +1,6 @@
 import { GAME_ALL_FETCH_SUCESS, GAME_ALL_FETCH_FAILED } from '../actions';
 
 export default function(state = {fetched: false, fetchSucess:false}, action){
-	console.log(action)
 	switch(action.type){
 		case GAME_ALL_FETCH_SUCESS:
 			console.log(action.payload);

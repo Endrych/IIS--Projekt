@@ -4,9 +4,29 @@ import { Field, reduxForm } from 'redux-form';
 import  { Link } from 'react-router-dom';
 // import GeneralValidators from "../../validators/general_validators";
 import Cookies from "universal-cookie";
-import {createNewGame} from '../../actions';
+import {fetchGame, updateGame} from '../../actions';
 
-class GameNew extends Component{
+class GameEdit extends Component{
+	componentDidMount(){
+		this.props.fetchGame(this.props.keyname, this.handleInitialize.bind(this))
+	}
+
+
+	handleInitialize() {
+		const { gameInfo } = this.props;
+
+		const initData  = {
+			Name: gameInfo.Name,
+			ReleaseDate: gameInfo.ReleaseDate,
+			Description: gameInfo.Description,
+			Publisher: gameInfo.PublisherId,
+			Icon: gameInfo.Icon,
+			Image: gameInfo.Image,
+			Video: gameInfo.Video
+		}
+
+		this.props.initialize(initData);
+	}
 
 	renderGameDescriptionField(field) {
 		const {
@@ -65,7 +85,7 @@ class GameNew extends Component{
 		const token = cookie.get("user");
 
 		console.log(data, "<-------DATA")
-		this.props.createNewGame(data, token, ()=>{this.props.history.push("/admin/games")}); //pridat landing page game sucess
+		this.props.updateGame(this.props.keyname, data, token, ()=>{this.props.history.push("/admin/games")}); //pridat landing page game sucess
 	}
 
 	render(){
@@ -74,14 +94,13 @@ class GameNew extends Component{
 			<div>
 				<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
 					<Field name="Name" label="Název" component={this.renderInputField} />
-					<Field name="Keyname" label="Klíčové jméno" component={this.renderInputField} />
 					<Field name="ReleaseDate" label="Datum vydání" component={this.renderInputField} />
 					<Field name="Description" label="Popis hry" component={this.renderGameDescriptionField} />
 					<Field name="Publisher" label="Vydavatel" component={this.renderInputField} />
 					<Field name="Icon" label="Ikona" type="file" component={this.renderImageField} />
 					<Field name="Image" label="Obrázek" type="file" component={this.renderImageField} />
 					<Field name="Video" label="Odkaz na video" component={this.renderInputField} />
-					<button className="btn btn-primary">Vytvořit</button>
+					<button className="btn btn-primary">Uložit</button>
 					<Link to="/admin/games"><button  className="btn btn-danger">Zrušit</button></Link>
 				</form>
 			</div>
@@ -92,8 +111,6 @@ class GameNew extends Component{
 
 function validate(values) {
 	const errors = {};
-	// const validator = new GeneralValidators();
-	// validate inputs here
 	if (!values.Name) {
 		errors.Name = "Zadejte název hry";
 	}
@@ -101,12 +118,14 @@ function validate(values) {
 	if (!values.Keyname) {
 		errors.Keyname = "Zadejte klíčové jméno";
 	}
-	//if errors is empty form is fine to submit
 	return errors;
 }
 
+function mapStateToProps({ gameInfo }){
+	return{gameInfo};
+}
 
 export default reduxForm({
 	validate,
-	form: "NewGame"
-})(connect(null, {createNewGame})(GameNew));
+	form: "EditGame"
+})(connect(mapStateToProps, {updateGame, fetchGame})(GameEdit));

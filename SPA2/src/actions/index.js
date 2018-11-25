@@ -240,7 +240,7 @@ export function createNewGame(values, token, callback){
 	};
 }
 
-export function fetchGame(keyname){
+export function fetchGame(keyname, callback = () => {}){
 	const axiosInstance = axios.create({ baseURL: baseUrl });
 	const request = axiosInstance.get(`/game/${keyname}`);
 
@@ -248,6 +248,9 @@ export function fetchGame(keyname){
 		request
 			.then(res => {
 				dispatch({ type: GAME_FETCH_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
 			})
 			.catch(err => {
 				dispatch({ type: GAME_FETCH_FAILED, payload: err });
