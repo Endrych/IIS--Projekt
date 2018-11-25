@@ -14,6 +14,7 @@ import ArticleEdit from "./Articles/article_edit";
 import ArticleShow from "./Articles/article_show";
 import UserPublicProfile from './Profile/user_public_profile';
 import GameNew from './Games/game_new';
+import GameAdminList from "./Games/game_admin_list";
 
 class Game extends Component {
 	constructor(props) {
@@ -158,7 +159,7 @@ const AllRoutes = () => {
 			}} exact strict />
 
 			<Route path="/admin/game/new" component={GameNew} exact strict />
-
+			<Route path="/admin/games" component={GameAdminList} exact strict />
 
 			<Route
 				render={() => {
