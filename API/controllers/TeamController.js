@@ -130,7 +130,7 @@ module.exports = app => {
 
         checkTeamEditPermission(req.user, id, db)
             .then(() => {
-                deleteTeam(id, db)
+                deleteTeam(id, req.user.Nickname, db)
                     .then(() => {
                         res.sendStatus(ResultCodes.OK);
                     })

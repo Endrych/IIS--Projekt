@@ -38,11 +38,6 @@ var basicObj = {
         required: false
     },
     ReleaseDate: {
-        validators: [
-            {
-                validator: ValidatorsEnum.DATE
-            }
-        ],
         required: false
     },
     Image: {
