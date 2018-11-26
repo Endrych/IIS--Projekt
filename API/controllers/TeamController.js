@@ -8,6 +8,7 @@ const deleteTeam = require('../helpers/TeamsHelpers/deleteTeam');
 const checkTeamEditPermission = require('../helpers/TeamsHelpers/checkTeamEditPermission');
 const insertTeam = require('../helpers/TeamsHelpers/insertTeam');
 const updateTeam = require('../helpers/TeamsHelpers/updateTeam');
+const leaveTeam = require('../helpers/TeamsHelpers/leaveTeam');
 
 module.exports = app => {
     const db = app.db;
@@ -114,10 +115,16 @@ module.exports = app => {
         }
 
         if (!req.user.Team) {
-            res.sendStatus(ResultCodes.FORBIDDEN);
+            res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
 
-        
+        leaveTeam(req.user, db)
+            .then(() => {
+                res.sendStatus(ResultCodes.OK);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 };
