@@ -1,86 +1,78 @@
 const ResultCodes = require('../enums/ResultCodes');
-const db = require('../config/dbconnection');
 const processError = require('../helpers/processError');
 const deleteInvite = require('../helpers/InviteConrollerHelpers/deleteInvite');
-
+const checkTeamEditPermission = require('../helpers/TeamsHelpers/checkTeamEditPermission');
 
 module.exports = app => {
+    const db = app.db;
+
     app.post('/invite', (req, res) => {
-        var body = req.body;
-        var dataObj = {};
+        var user = req.query.user;
 
-        if (!body.User || !body.Team) {
-            res.sendStatus(ResultCodes.BAD_REQUEST);
-        }
+        var team = req.user ? req.user.Team : null;
 
+        checkTeamEditPermission(req.user, team, db)
+            .then(() => {
+                var dataObj = { Team: req.user.Team, User: user };
+
+                db.promiseQuery('INSERT INTO INVITE SET ?', dataObj)
+                    .then(() => {
+                        res.sendStatus(ResultCodes.OK);
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
+    });
+
+    app.get('/invites', (req, res) => {
         if (!req.user) {
             res.sendStatus(ResultCodes.UNAUTHORIZED);
             return;
         }
 
-        dataObj.User = body.User;
-        dataObj.Team = body.Team;
+        db.promiseQuery('SELECT Id, Team FROM INVITE WHERE User = ?', req.user.Nickname)
+            .then(invites => {
+                if (invites.length > 0) {
+                    db.promiseQuery(
+                        'SELECT Id, Name, Logo FROM Team WHERE Deleted = 0 AND Id IN (' +
+                            Array(invites.length + 1)
+                                .join('?')
+                                .split('')
+                                .join(',') +
+                            ')',
+                        invites.map(p => p.Team)
+                    )
+                        .then(teams => {
+                            var resObj = [];
+                            teams.forEach(element => {
+                                var invite = invites.find(invite => {
+                                    return invite.Team === element.Id;
+                                });
+                                resObj.push({ Id: invite.Id, Team: element });
+                            });
 
-        db.query('SELECT Owner FROM Team WHERE Id = ? AND Deleted = 0', dataObj.Team, (err, team) => {
-            if (err) {
-                console.log(err);
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                return;
-            }
-
-            if (team.length > 0) {
-                if (!team[0].Owner === req.user.Nickname) {
-                    res.sendStatus(ResultCodes.FORBIDDEN);
-                    return;
+                            res.send(resObj);
+                        })
+                        .catch(err => {
+                            processError(res, err);
+                        });
+                } else {
+                    res.send([]);
                 }
-                db.query('INSERT INTO INVITE SET ?', dataObj, (err, _) => {
-                    if (err) {
-                        console.log(err);
-                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                        return;
-                    }
-                    res.sendStatus(ResultCodes.OK);
-                });
-            }
-        });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
-    app.get('/user/:id/invites', (req, res) => {
-        var id = req.params.id;
+    app.post('/invite/accept', (req, res) => {
+        var id = req.query.id;
 
-        db.query('SELECT Team FROM INVITE WHERE User = ?', id, (err, invites) => {
-            if (err) {
-                console.log(err);
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                return;
-            }
-            if (invites.length > 0) {
-                db.query(
-                    'SELECT Id, Name, Logo FROM Team WHERE Deleted = 0 AND Id IN (' +
-                        Array(invites.length + 1)
-                            .join('?')
-                            .split('')
-                            .join(',') +
-                        ')',
-                    invites.map(p => p.Team),
-                    function(err, teams) {
-                        if (err) {
-                            console.log(err);
-                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                        }
-                        res.send(teams);
-                    }
-                );
-            } else {
-                res.send([]);
-            }
-        });
-    });
-
-    app.post('/invite/:team/accept', (req, res) => {
-        var team = req.params.team;
-
-        if (!team) {
+        if (!id) {
             res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
@@ -89,7 +81,6 @@ module.exports = app => {
             res.sendStatus(ResultCodes.UNAUTHORIZED);
             return;
         }
-        var nickname = req.user.Nickname;
 
         db.beginTransaction(err => {
             if (err) {
@@ -148,10 +139,10 @@ module.exports = app => {
         });
     });
 
-    app.post('/invite/:team/decline', (req, res) => {
-        var team = req.params.team;
+    app.post('/invite/decline', (req, res) => {
+        var id = parseInt(req.query.id);
 
-        if (!team) {
+        if (isNaN(id)) {
             res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
@@ -161,15 +152,12 @@ module.exports = app => {
             return;
         }
 
-        var nickname = req.user.Nickname;
-
-        deleteInvite(nickname, team)
+        deleteInvite(req.user.Nickname, id, db)
             .then(() => {
-                res.send(ResultCodes.OK);
+                res.sendStatus(ResultCodes.OK);
             })
             .catch(err => {
-                console.log('err', err);
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
+                processError(res, err);
             });
     });
 };

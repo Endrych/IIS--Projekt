@@ -3,6 +3,10 @@ const ResultCodes = require('../../enums/ResultCodes');
 
 module.exports = (user, id, db) => {
     return new Promise((resolve, reject) => {
+        if (!id) {
+            reject(new RejectError(ResultCodes.FORBIDDEN));
+            return;
+        }
         db.promiseQuery('Select Owner FROM TEAM WHERE Id = ? AND Deleted = 0', id)
             .then(team => {
                 if (team.length === 0) {
