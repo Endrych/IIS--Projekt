@@ -7,6 +7,7 @@ const getTeamProfile = require('../helpers/TeamsHelpers/getTeamProfile');
 const deleteTeam = require('../helpers/TeamsHelpers/deleteTeam');
 const checkTeamEditPermission = require('../helpers/TeamsHelpers/checkTeamEditPermission');
 const insertTeam = require('../helpers/TeamsHelpers/insertTeam');
+const updateTeam = require('../helpers/TeamsHelpers/updateTeam');
 
 module.exports = app => {
     const db = app.db;
@@ -56,12 +57,13 @@ module.exports = app => {
             return;
         }
 
+        body.Owner = req.user.Nickname;
         body.Created = new Date();
         body.Deleted = 0;
 
         insertTeam(body, req.user, db)
             .then(teamId => {
-                res.send(teamId);
+                res.send(teamId.toString());
             })
             .catch(err => {
                 processError(res, err);
@@ -72,29 +74,19 @@ module.exports = app => {
         var id = parseInt(req.params.id);
         var body = req.body;
 
-        db.query('SELECT Id FROM Team WHERE Id = ? AND Deleted = 0', id, (err, team) => {
-            if (err) {
-                console.log(err);
-                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-            } else {
-                if (team.length > 0) {
-                    if (!teamValidator.addTeamValidation(body)) {
-                        res.send(new Result(ResultCodes.BAD_REQUEST));
-                    } else {
-                        db.query('UPDATE Team SET ? WHERE Id = ? AND DELETED = 0', [body, id], (err, _) => {
-                            if (err) {
-                                console.log(err);
-                                res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                            } else {
-                                res.send(new Result(ResultCodes.OK));
-                            }
-                        });
-                    }
-                } else {
-                    res.send(new Result(ResultCodes.NO_CONTENT));
-                }
-            }
-        });
+        checkTeamEditPermission(req.user, id, db)
+            .then(() => {
+                updateTeam(body, id, db)
+                    .then(() => {
+                        res.sendStatus(ResultCodes.OK);
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.delete('/team/:id', (req, res) => {
@@ -113,5 +105,19 @@ module.exports = app => {
             .catch(err => {
                 processError(res, err);
             });
+    });
+
+    app.post('/team/leave', (req, res) => {
+        if (!req.user) {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+            return;
+        }
+
+        if (!req.user.Team) {
+            res.sendStatus(ResultCodes.FORBIDDEN);
+            return;
+        }
+
+        
     });
 };

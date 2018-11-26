@@ -1,55 +1,34 @@
+const RejectError = require('../../models/RejectError');
+const ResultCodes = require('../../enums/ResultCodes');
+
 module.exports = (team, user, db) => {
     return new Promise((resolve, reject) => {
         db.promiseBeginTransaction()
-            .then(() => {})
+            .then(() => {
+                db.promiseQuery('INSERT INTO TEAM SET ?', team)
+                    .then(res => {
+                        db.promiseQuery('UPDATE User SET ? WHERE Nickname = ?', [{ Team: res.insertId }, user.Nickname])
+                            .then(() => {
+                                db.commit(err => {
+                                    if (err) {
+                                        db.promiseRollback();
+                                        reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR));
+                                    }
+                                    resolve(res.insertId);
+                                });
+                            })
+                            .catch(err => {
+                                db.promiseRollback();
+                                reject(err);
+                            });
+                    })
+                    .catch(err => {
+                        db.promiseRollback();
+                        reject(err);
+                    });
+            })
             .catch(err => {
                 reject(err);
             });
     });
 };
-
-db.beginTransaction(err => {
-    if (err) {
-        console.log(err);
-        res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-    } else {
-        db.query('INSERT INTO TEAM SET ?', body, (err, team) => {
-            if (err) {
-                console.log(err);
-                db.rollback(err => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                    }
-                });
-            }
-            db.query('UPDATE User SET ? WHERE Nickname = ?', [{ Team: team.insertId }, req.user.Nickname, 0], err => {
-                if (err) {
-                    console.log(err);
-                    db.rollback(err => {
-                        if (err) {
-                            console.log(err);
-                        }
-                        res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                    });
-                } else {
-                    db.commit(err => {
-                        if (err) {
-                            console.log(err);
-                            db.rollback(err => {
-                                if (err) {
-                                    console.log(err);
-                                } else {
-                                    res.send(new Result(ResultCodes.INTERNAL_SERVER_ERROR));
-                                }
-                            });
-                        } else {
-                            res.send(new Result(ResultCodes.OK, team.insertId));
-                        }
-                    });
-                }
-            });
-        });
-    }
-});
