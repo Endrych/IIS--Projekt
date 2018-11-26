@@ -74,6 +74,11 @@ module.exports = app => {
         var id = parseInt(req.params.id);
         var body = req.body;
 
+        if (!teamValidator.addTeamValidation(body)) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
+            return;
+        }
+
         checkTeamEditPermission(req.user, id, db)
             .then(() => {
                 updateTeam(body, id, db)

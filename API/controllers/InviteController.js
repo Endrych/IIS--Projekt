@@ -164,7 +164,7 @@ module.exports = app => {
         var nickname = req.user.Nickname;
 
         deleteInvite(nickname, team)
-            .then(_ => {
+            .then(() => {
                 res.send(ResultCodes.OK);
             })
             .catch(err => {
