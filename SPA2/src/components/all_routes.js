@@ -12,7 +12,13 @@ import ArticlesShowAll from "./Articles/articles_show_all";
 import ArticleListAdmin from "./Articles/articles_list_admin";
 import ArticleEdit from "./Articles/article_edit";
 import ArticleShow from "./Articles/article_show";
-import UserPublicProfile from './Profile/user_public_profile'
+import UserPublicProfile from './Profile/user_public_profile';
+import GameNew from './Games/game_new';
+import GameAdminList from "./Games/game_admin_list";
+import GameEdit from "./Games/game_edit";
+import GameList from "./Games/game_list";
+import GameShow from './Games/game_show';
+
 class Game extends Component {
 	constructor(props) {
 		super();
@@ -22,9 +28,6 @@ class Game extends Component {
 	}
 }
 
-const GameList = (props) => {
-	return <h2>Seznam her</h2>;
-};
 
 const PlayerList = () => {
 	return <h2>Seznam hracu</h2>;
@@ -93,9 +96,9 @@ const AllRoutes = () => {
 			<Route path="/games" component={GameList} exact strict />
 			{/* <Route to="/" component={LandingPage} exact strict /> */}
 			<Route
-				path="/games/:gametitle"
-				render={({ match }) => {
-					return <Game gametitle={match.params.gametitle} />;
+				path="/games/:keyname"
+				render={({ match, history }) => {
+					return <GameShow history={history} keyname={match.params.keyname} />;
 				}}
 				exact
 				strict
@@ -152,15 +155,19 @@ const AllRoutes = () => {
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
 			<Route path="/admin/articles" component={ArticleListAdmin} exact strict />
 			<Route path="/admin/articles/edit/:articleid" render={({ match, history }) => {
-					return <ArticleEdit history={history} articleid={match.params.articleid} />;
-				}} exact strict />
+				return <ArticleEdit history={history} articleid={match.params.articleid} />;
+			}} exact strict />
 
+			<Route path="/admin/game/new" component={GameNew} exact strict />
+			<Route path="/admin/games" component={GameAdminList} exact strict />
+			<Route path="/admin/game/edit/:keyname" render={({ match, history }) => {
+				return <GameEdit history={history} keyname={match.params.keyname} />;
+			}} exact strict />
 			<Route
 				render={() => {
 					return "ERROR 404";
 				}}
 			/>
-
 
 		</Switch>
 	);

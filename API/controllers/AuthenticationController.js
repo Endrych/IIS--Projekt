@@ -6,7 +6,7 @@ const config = require('../config/config');
 const checkIfUserExists = require('../helpers/UsersHelpers/checkIfUserExists');
 const selectLoginUserInfo = require('../helpers/AuthenticationHelpers/selectLoginUserInfo');
 const processError = require('../helpers/processError');
-
+const registerUser = require("../helpers/AuthenticationHelpers/registerUser");
 
 module.exports = app => {
     const db = app.db;
@@ -14,17 +14,19 @@ module.exports = app => {
     app.post('/register', (req, res) => {
         var body = req.body;
 
-        if (!UserValidator.registerValidation(body)) {
-            res.sendStatus(ResultCodes.BAD_REQUEST);
+		if (!UserValidator.registerValidation(body)) {
+			res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
 
         checkIfUserExists(body.Nickname, db)
             .then(exists => {
+
                 if (exists) {
                     res.sendStatus(ResultCodes.SEE_OTHER);
                     return;
-                }
+				}
+
                 hashPassword(body.Password)
                     .then(hashAndSalt => {
                         delete body.PasswordConfirm;
@@ -38,11 +40,11 @@ module.exports = app => {
                             });
                     })
                     .catch(err => {
-                        console.log(err);
                         res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
                     });
             })
             .catch(err => {
+
                 processError(res, err);
             });
     });
@@ -74,7 +76,6 @@ module.exports = app => {
                             }
                         })
                         .catch(err => {
-                            console.log(err);
                             res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
                         });
                 }

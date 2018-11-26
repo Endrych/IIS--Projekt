@@ -18,6 +18,16 @@ export const ARTICLE_UDPATE_SUCESS = "ARTICLE_UDPATE_SUCESS";
 export const ARTICLE_UDPATE_FAILED = "ARTICLE_UDPATE_FAILED"
 export const PLAYER_FETCH_SUCESS = "PLAYER_FETCH_SUCESS";
 export const PLAYER_FETCH_FAILED = "PLAYER_FETCH_FAILED";
+export const GAME_CREAT_SUCESS = "GAME_CREAT_SUCESS";
+export const GAME_CREAT_FAILED = "GAME_CREAT_FAILED";
+export const GAME_FETCH_SUCESS = "GAME_FETCH_SUCESS";
+export const GAME_FETCH_FAILED = "GAME_FETCH_FAILED";
+export const GAME_ALL_FETCH_SUCESS = "GAME_ALL_FETCH_SUCESS";
+export const GAME_ALL_FETCH_FAILED = "GAME_ALL_FETCH_FAILED";
+export const GAME_UPDATE_SUCESS = "GAME_UPDATE_SUCESS";
+export const GAME_UPDATE_FAILED = "GAME_UPDATE_FAILED";
+export const GAME_REMOVE_SUCESS = "GAME_REMOVE_SUCESS";
+export const GAME_REMOVE_FAILED = "GAME_REMOVE_SUCESS";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -199,7 +209,6 @@ export function updateArticle(id, data, token, callback){
 
 }
 
-
 export function fetchPlayer(nickname){
 	const axiosInstance = axios.create({baseURL: baseUrl});
 	const request = axiosInstance.get(`/user/${nickname}`);
@@ -211,4 +220,94 @@ export function fetchPlayer(nickname){
 			dispatch({type: PLAYER_FETCH_FAILED, payload:err});
 		})
 	}
+}
+
+export function createNewGame(values, token, callback){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	const request = axiosInstance.post("/game",values);
+
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: GAME_CREAT_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: GAME_CREAT_FAILED, payload: err });
+			});
+	};
+}
+
+export function fetchGame(keyname, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+	const request = axiosInstance.get(`/game/${keyname}`);
+
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: GAME_FETCH_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: GAME_FETCH_FAILED, payload: err });
+			});
+	};
+}
+
+export function fetchGameList(){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+	const request = axiosInstance.get(`/games`);
+
+	console.log(request)
+
+	return dispatch => {
+		request
+			.then(res => {
+				console.log(res)
+				dispatch({ type: GAME_ALL_FETCH_SUCESS, payload: res });
+			})
+			.catch(err => {
+				dispatch({ type: GAME_ALL_FETCH_FAILED, payload: err });
+			});
+	};
+}
+
+export function updateGame(keyname, values, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	const request = axiosInstance.put(`/game/${keyname}`,values);
+
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: GAME_UPDATE_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: GAME_UPDATE_FAILED, payload: err });
+			});
+	};
+}
+
+export function deleteGame(keyname, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	const request = axiosInstance.delete(`/game/${keyname}`);
+
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: GAME_REMOVE_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: GAME_REMOVE_FAILED, payload: err });
+			});
+	};
 }

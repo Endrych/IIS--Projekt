@@ -6,6 +6,8 @@ import UserInformationsReducer from './reducer_user_informations';
 import ArticlesAllReducer from './reducer_articles_all';
 import ArticleInfoReducer from './reducer_article_info';
 import PlayerInformationReducer from './reducer_player_info';
+import ReducerGameList from './reducer_game_list';
+import ReducerGameInfo from './reducer_game_info';
 
 const rootReducer = combineReducers({
 	registrationResultCode: RegisterReducer,
@@ -14,6 +16,8 @@ const rootReducer = combineReducers({
 	playerInfo: PlayerInformationReducer,
 	articlesAll: ArticlesAllReducer,
 	articleInfo: ArticleInfoReducer,
+	gameList: ReducerGameList,
+	gameInfo: ReducerGameInfo,
 	form: formReducer
 });
 

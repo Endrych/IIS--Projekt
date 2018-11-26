@@ -14,6 +14,15 @@ class UserPrivateProfile extends Component {
 		this.props.getUserInfoFromToken(token);
 	}
 
+	renderAdminButtons(){
+		return(
+			<div>
+				<Link to="/admin/articles"><button className="btn btn-primary">Správa článků</button> </Link>
+				<Link to="/admin/games"><button className="btn btn-primary">Správa her</button> </Link>
+			</div>
+		)
+	}
+
 	render() {
 		let toRender;
 		if(this.props.loginStatus.loggedIn){
@@ -26,7 +35,7 @@ class UserPrivateProfile extends Component {
 			<div>Email: <span>{this.props.userInformations.email}</span></div>
 			<div>Telefon: <span>{this.props.userInformations.phone}</span></div>
 			<Link to="/user/edit"><button className="btn btn-primary">Upravit údaje</button></Link>
-			{this.props.loginStatus.admin > 0 ? <Link to="/admin/articles"><button className="btn btn-primary">Správa článků</button> </Link>: ""}
+			{this.props.loginStatus.admin > 0 ? this.renderAdminButtons() : ""}
 		</div>;
 		}else{
 			toRender =  <Redirect  to="/" />

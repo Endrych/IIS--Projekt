@@ -27,7 +27,7 @@ module.exports = app => {
     app.get('/game/:keyname', (req, res) => {
         var keyname = req.params.keyname;
 
-        getGameByKeyname(keyname, db)
+		getGameByKeyname(keyname, db)
             .then(game => {
                 if (!game) {
                     res.sendStatus(ResultCodes.NO_CONTENT);
@@ -110,7 +110,7 @@ module.exports = app => {
                         savePublisher(body.Publisher, db)
                             .then(publisher => {
                                 delete body.Publisher;
-                                
+
                                 if (publisher) {
                                     body.PublisherId = publisher;
                                 }
@@ -122,7 +122,7 @@ module.exports = app => {
 
                                         Promise.all([
                                             saveGameGenres(game.Id, genres, db),
-                                            updateGame(game.Id, body, db)
+                                            updateGame(keyname, body, db)
                                         ])
                                             .then(() => {
                                                 db.commit();
