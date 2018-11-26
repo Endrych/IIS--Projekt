@@ -30,6 +30,8 @@ export const GAME_REMOVE_SUCESS = "GAME_REMOVE_SUCESS";
 export const GAME_REMOVE_FAILED = "GAME_REMOVE_SUCESS";
 export const GRANT_RIGHTS_SUCESS = "GRANT_RIGHTS_SUCESS";
 export const GRANT_RIGHTS_FAILED = "GRANT_RIGHTS_FAILED";
+export const TEAM_CREATE_SUCESS = "TEAM_CREATE_SUCESS";
+export const TEAM_CREATE_FAILED = "TEAM_CREATE_FAILED";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -350,6 +352,26 @@ export function removeAdminRights(nickname, token, callback = ()=>{}){
 			.catch(err => {
 				dispatch({ type: GRANT_RIGHTS_FAILED, payload: err });
 			});
+	};
+
+}
+
+export function createTeam(values, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/team`, values);
+	console.log("<<<>>>>><<<>>>")
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TEAM_CREATE_SUCESS, payload: res });
+			setTimeout(() => {
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TEAM_CREATE_FAILED, payload: err });
+		});
 	};
 
 }

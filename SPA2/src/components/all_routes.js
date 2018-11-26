@@ -19,6 +19,7 @@ import GameEdit from "./Games/game_edit";
 import GameList from "./Games/game_list";
 import GameShow from './Games/game_show';
 import AdminGrantRights from './Admin/admin_grant_rights';
+import TeamCreateNew from './Teams/team_create_new';
 
 class Game extends Component {
 	constructor(props) {
@@ -127,6 +128,7 @@ const AllRoutes = () => {
 			<Route path="/article/new" component={ArticleNew} exact strict />
 			<Route path="/article/new/sucess" component={ArticleNewSuccess} exact strict />
 			<Route path="/teams" component={TeamList} exact strict />
+			<Route path="/team/new" component={TeamCreateNew} exact strict />
 			<Route
 				path="/teams/:teamname"
 				render={({ match }) => {
