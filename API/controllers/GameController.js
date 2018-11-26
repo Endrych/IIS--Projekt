@@ -122,7 +122,7 @@ module.exports = app => {
 
                                         Promise.all([
                                             saveGameGenres(game.Id, genres, db),
-                                            updateGame(game.Id, body, db)
+                                            updateGame(keyname, body, db)
                                         ])
                                             .then(() => {
                                                 db.commit();
