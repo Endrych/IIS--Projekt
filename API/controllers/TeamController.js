@@ -1,4 +1,3 @@
-const Result = require('../models/Result');
 const ResultCodes = require('../enums/ResultCodes');
 const teamValidator = require('../validators/TeamValidator');
 const getAllTeams = require('../helpers/TeamsHelpers/getAllTeams');
