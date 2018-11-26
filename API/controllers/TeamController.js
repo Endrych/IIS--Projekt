@@ -131,4 +131,41 @@ module.exports = app => {
                 processError(res, err);
             });
     });
+
+    app.post('/team/kick', (req, res) => {
+        var user = req.query.user;
+
+        if (!user || user === req.user.Nickname) {
+            res.sendStatus(ResultCodes.FORBIDDEN);
+            return;
+        }
+
+        checkTeamEditPermission(req.user, req.user.Team, db)
+            .then(() => {
+                db.promiseQuery('Select Team FROM USER WHERE Nickname = ? ', user)
+                    .then(retUser => {
+                        if (retUser.length === 0) {
+                            res.sendStatus(ResultCodes.NO_CONTENT);
+                            return;
+                        }
+                        if (retUser[0].Team !== req.user.Team) {
+                            res.sendStatus(ResultCodes.FORBIDDEN);
+                            return;
+                        }
+                        db.promiseQuery('UPDATE User SET ? WHERE Nickname = ? ', [{ Team: null }, user])
+                            .then(() => {
+                                res.sendStatus(ResultCodes.OK);
+                            })
+                            .catch(err => {
+                                processError(res, err);
+                            });
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
+    });
 };
