@@ -70,9 +70,9 @@ module.exports = app => {
     });
 
     app.post('/invite/accept', (req, res) => {
-        var id = req.query.id;
+        var id = parseInt(req.query.id);
 
-        if (!id) {
+        if (isNaN(id)) {
             res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
@@ -82,61 +82,48 @@ module.exports = app => {
             return;
         }
 
-        db.beginTransaction(err => {
-            if (err) {
-                console.log(err);
-                res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-            } else {
-                db.query('SELECT * From Invite Where User = ? AND Team = ?', [nickname, team], (err, invite) => {
-                    if (err) {
-                        console.log(err);
-                        res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                        return;
-                    }
-                    if (invite.length > 0) {
-                        db.query('UPDATE User SET ? WHERE Nickname = ?', [{ Team: team }, nickname], (err, _) => {
-                            if (err) {
-                                console.log(err);
-                                db.rollback(err => {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                                });
-                            } else {
-                                deleteInvite(nickname, team)
-                                    .then(_ => {
-                                        db.commit(err => {
-                                            if (err) {
-                                                console.log(err);
-                                                db.rollback(err => {
-                                                    if (err) {
-                                                        console.log(err);
-                                                    }
-                                                    res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                                                });
-                                            } else {
-                                                res.sendStatus(ResultCodes.OK);
-                                            }
-                                        });
+        if (req.user.Team) {
+            res.sendStatus(ResultCodes.FORBIDDEN);
+            return;
+        }
+
+        db.promiseBeginTransaction()
+            .then(() => {
+                db.promiseQuery('SELECT * From Invite Where User = ? AND Id = ?', [req.user.Nickname, id])
+                    .then(invite => {
+                        if (invite.length === 0) {
+                            res.sendStatus(ResultCodes.NO_CONTENT);
+                            return;
+                        }
+
+                        db.promiseQuery('UPDATE User SET ? WHERE Nickname = ?', [
+                            { Team: invite[0].Team },
+                            req.user.Nickname
+                        ])
+                            .then(() => {
+                                deleteInvite(req.user.Nickname, id, db)
+                                    .then(() => {
+                                        db.commit();
+                                        res.sendStatus(ResultCodes.OK);
                                     })
                                     .catch(err => {
-                                        console.log(err);
-                                        db.rollback(err => {
-                                            if (err) {
-                                                console.log(err);
-                                            }
-                                            res.sendStatus(ResultCodes.INTERNAL_SERVER_ERROR);
-                                        });
+                                        db.promiseRollback();
+                                        processError(res, err);
                                     });
-                            }
-                        });
-                    } else {
-                        res.sendStatus(ResultCodes.NO_CONTENT);
-                    }
-                });
-            }
-        });
+                            })
+                            .catch(err => {
+                                db.promiseRollback();
+                                processError(res, err);
+                            });
+                    })
+                    .catch(err => {
+                        db.promiseRollback();
+                        processError(res, err);
+                    });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
     });
 
     app.post('/invite/decline', (req, res) => {
