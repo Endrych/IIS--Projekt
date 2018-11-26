@@ -19,6 +19,7 @@ class UserPrivateProfile extends Component {
 			<div>
 				<Link to="/admin/articles"><button className="btn btn-primary">Správa článků</button> </Link>
 				<Link to="/admin/games"><button className="btn btn-primary">Správa her</button> </Link>
+				{this.props.loginStatus.admin > 1 ? <Link to="/admin/rights"><button className="btn btn-primary">Upravit práva uživatele</button> </Link> : ""}
 			</div>
 		)
 	}

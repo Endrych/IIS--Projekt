@@ -18,6 +18,7 @@ import GameAdminList from "./Games/game_admin_list";
 import GameEdit from "./Games/game_edit";
 import GameList from "./Games/game_list";
 import GameShow from './Games/game_show';
+import AdminGrantRights from './Admin/admin_grant_rights';
 
 class Game extends Component {
 	constructor(props) {
@@ -153,6 +154,7 @@ const AllRoutes = () => {
 			/>
 			<Route path="/register" component={RegistrationForm} exact strict />
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
+			<Route path="/admin/rights" component={AdminGrantRights} exact strict />
 			<Route path="/admin/articles" component={ArticleListAdmin} exact strict />
 			<Route path="/admin/articles/edit/:articleid" render={({ match, history }) => {
 				return <ArticleEdit history={history} articleid={match.params.articleid} />;
