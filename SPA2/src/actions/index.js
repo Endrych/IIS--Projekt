@@ -28,6 +28,8 @@ export const GAME_UPDATE_SUCESS = "GAME_UPDATE_SUCESS";
 export const GAME_UPDATE_FAILED = "GAME_UPDATE_FAILED";
 export const GAME_REMOVE_SUCESS = "GAME_REMOVE_SUCESS";
 export const GAME_REMOVE_FAILED = "GAME_REMOVE_SUCESS";
+export const GRANT_RIGHTS_SUCESS = "GRANT_RIGHTS_SUCESS";
+export const GRANT_RIGHTS_FAILED = "GRANT_RIGHTS_FAILED";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -310,4 +312,44 @@ export function deleteGame(keyname, token, callback = ()=>{}){
 				dispatch({ type: GAME_REMOVE_FAILED, payload: err });
 			});
 	};
+}
+
+export function grantAdminRights(nickname, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	console.log(nickname, token)
+	const request = axiosInstance.post(`/admin/${nickname}?level=1`)
+
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: GRANT_RIGHTS_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: GRANT_RIGHTS_FAILED, payload: err });
+			});
+	};
+
+}
+
+export function removeAdminRights(nickname, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	console.log(nickname, token)
+	const request = axiosInstance.post(`/admin/${nickname}?level=0`)
+
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: GRANT_RIGHTS_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: GRANT_RIGHTS_FAILED, payload: err });
+			});
+	};
+
 }
