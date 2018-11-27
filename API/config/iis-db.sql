@@ -79,7 +79,8 @@ CREATE TABLE `user` (
   `Password` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL,
   `Salt` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NOT NULL,
   `Team` int(11) DEFAULT NULL,
-  `Admin` tinyint(4) NOT NULL
+  `Admin` tinyint(4) NOT NULL,
+  `Deactivated` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_czech_ci;
 
 
