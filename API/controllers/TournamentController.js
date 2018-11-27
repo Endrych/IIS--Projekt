@@ -138,6 +138,47 @@ module.exports = app => {
             });
     });
 
+    app.post('/tournament/:id/unregister', (req, res) => {
+        var id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
+            return;
+        }
+
+        if (!req.user) {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+            return;
+        }
+
+        db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id)
+            .then(tournament => {
+                if (tournament.length === 0) {
+                    res.sendStatus(ResultCodes.NO_CONTENT);
+                    return;
+                }
+
+                if (tournament[0].State !== 0) {
+                    res.sendStatus(ResultCodes.FORBIDDEN);
+                    return;
+                }
+
+                db.promiseQuery('Delete from tournament_user Where TournamentId = ? AND UserId = ?', [
+                    id,
+                    req.user.Nickname
+                ])
+                    .then(() => {
+                        res.sendStatus(ResultCodes.OK);
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
+    });
+
     app.post('/tournament/:id/register', (req, res) => {
         var id = parseInt(req.params.id);
 
