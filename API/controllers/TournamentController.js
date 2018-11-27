@@ -4,7 +4,7 @@ const TournamentValidator = require('../validators/TournamentValidator');
 const insertTournament = require('../helpers/TournamentHelpers/insertTournament');
 
 module.exports = app => {
-    const db = app.db;
+    const db = app.db;    
 
     app.get('/tournament/:id', (req, res) => {
         var id = parseInt(req.params.id);
@@ -20,8 +20,20 @@ module.exports = app => {
                     res.sendStatus(ResultCodes.NO_CONTENT);
                     return;
                 }
+                tournament = tournament[0];
 
-                res.send(tournament[0]);
+                db.promiseQuery('Select UserId FROM tournament_user WHERE TournamentId = ?', id)
+                    .then(users => {
+                        tournament.Users = [];
+                        users.forEach(element => {
+                            tournament.Users.push(element.UserId);
+                        });
+
+                        res.send(tournament);
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
             })
             .catch(err => {
                 processError(res, err);
