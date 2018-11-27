@@ -42,4 +42,20 @@ module.exports = app => {
                 processError(res, err);
             });
     });
+
+    app.post('/admin/deactivate/:nickname', (req, res) => {
+        var nickname = req.params.nickname;
+
+        checkAdminEditPermission(req.user, nickname, db)
+            .then(() => {
+                db.promiseQuery('UPDATE User SET ? WHERE Nickname = ?', [{ Deactivated: true }, nickname]).then(()=>{
+                    res.sendStatus(ResultCodes.OK);
+                }).catch(err => {
+                    processError(res, err);
+                });
+            })
+            .catch(err => {
+                processError(res, err);
+            });
+    });
 };
