@@ -1,14 +1,24 @@
-const db = require('../../config/dbconnection');
+const RejectError = require('../../models/RejectError');
+const ResultCodes = require('../../enums/ResultCodes');
 
-module.exports = (user, team) => {
+module.exports = (user, id, db) => {
     return new Promise((resolve, reject) => {
-        db.query('DELETE FROM Invite WHERE User = ? AND Team = ? ', [user, team], (err, _) => {
-            if (err) {
-                console.log(err);
+        db.promiseQuery('Select * FROM Invite WHERE Id = ? ', id)
+            .then(invite => {
+                if (invite.length > 0 && invite[0].User === user) {
+                    db.promiseQuery('DELETE FROM Invite WHERE Id = ? ', id)
+                        .then(() => {
+                            resolve();
+                        })
+                        .catch(err => {
+                            reject(err);
+                        });
+                } else {
+                    reject(new RejectError(ResultCodes.NO_CONTENT));
+                }
+            })
+            .catch(err => {
                 reject(err);
-            } else {
-                resolve();
-            }
-        });
+            });
     });
 };

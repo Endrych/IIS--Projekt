@@ -53,6 +53,14 @@ const userValidationOptions = {
             }
         ],
         required: true
+    },
+    Image: {
+        validators: [
+            {
+                validator: ValidatorsEnum.IMAGE
+            }
+        ],
+        required: false
     }
 };
 

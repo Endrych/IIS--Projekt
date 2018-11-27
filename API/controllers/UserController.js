@@ -3,6 +3,7 @@ const userValidator = require('../validators/UserValidator');
 const updateUserToDb = require('../helpers/UsersHelpers/updateUserToDb');
 const getPublicUserProfile = require('../helpers/UsersHelpers/getPublicUserProfile');
 const processError = require('../helpers/processError');
+const getTeam = require('../helpers/TeamsHelpers/getTeamFromId');
 
 module.exports = app => {
     const db = app.db;
@@ -12,7 +13,10 @@ module.exports = app => {
             var user = req.user;
             delete user.Password;
             delete user.Salt;
-            res.send(req.user);
+            getTeam(user.Team,db).then(team=>{
+                user.Team = team;
+                res.send(user);
+            })
         } else {
             res.sendStatus(ResultCodes.UNAUTHORIZED);
         }
