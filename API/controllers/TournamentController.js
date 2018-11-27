@@ -2,9 +2,11 @@ const ResultCodes = require('../enums/ResultCodes');
 const processError = require('../helpers/processError');
 const TournamentValidator = require('../validators/TournamentValidator');
 const insertTournament = require('../helpers/TournamentHelpers/insertTournament');
+const startTournament = require('../helpers/TournamentHelpers/startTournament');
+
 
 module.exports = app => {
-    const db = app.db;    
+    const db = app.db;
 
     app.get('/tournament/:id', (req, res) => {
         var id = parseInt(req.params.id);
@@ -58,24 +60,15 @@ module.exports = app => {
             return;
         }
 
-        db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id)
-            .then(tournament => {
-                if (tournament.length === 0) {
-                    res.sendStatus(ResultCodes.NO_CONTENT);
-                    return;
-                }
-
-                db.promiseQuery('UPDATE Tournament SET ? Where Id = ?', [{ State: 1, Round: 1 }, id])
-                    .then(() => {
-                        res.sendStatus(ResultCodes.OK);
-                    })
-                    .catch(err => {
-                        processError(res, err);
-                    });
+        startTournament(id, db)
+            .then(() => {
+                res.sendStatus(ResultCodes.OK);
             })
             .catch(err => {
                 processError(res, err);
             });
+
+        
     });
 
     app.delete('/tournament/:id', (req, res) => {
