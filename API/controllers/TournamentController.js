@@ -6,6 +6,22 @@ const insertTournament = require('../helpers/TournamentHelpers/insertTournament'
 module.exports = app => {
     const db = app.db;
 
+    app.get('/tournament/:id', (req, res) => {
+        var id = req.params.id;
+
+        db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id)
+            .then(tournament => {
+                if (tournament.length === 0) {
+                    res.sendStatus(ResultCodes.NO_CONTENT);
+                    return;
+                }
+                res.send(tournament[0]);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
+    });
+
     app.post('/tournament', (req, res) => {
         var body = req.body;
 
