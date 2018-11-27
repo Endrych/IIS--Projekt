@@ -4,7 +4,6 @@ const TournamentValidator = require('../validators/TournamentValidator');
 const insertTournament = require('../helpers/TournamentHelpers/insertTournament');
 const startTournament = require('../helpers/TournamentHelpers/startTournament');
 
-
 module.exports = app => {
     const db = app.db;
 
@@ -16,26 +15,50 @@ module.exports = app => {
             return;
         }
 
-        db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id)
-            .then(tournament => {
+        Promise.all([
+            db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id),
+            db.promiseQuery('Select UserId FROM tournament_user WHERE TournamentId = ?', id),
+            db.promiseQuery(
+                'SELECT * FROM tournament_match JOIN tmatch ON tournament_match.tmatch = tmatch.id WHERE Tournament = ?',
+                id
+            )
+        ])
+
+            .then(results => {
+                var tournament = results[0];
+
                 if (tournament.length === 0) {
                     res.sendStatus(ResultCodes.NO_CONTENT);
                     return;
                 }
+
                 tournament = tournament[0];
+                var users = results[1];
+                tournament.Users = [];
 
-                db.promiseQuery('Select UserId FROM tournament_user WHERE TournamentId = ?', id)
-                    .then(users => {
-                        tournament.Users = [];
-                        users.forEach(element => {
-                            tournament.Users.push(element.UserId);
-                        });
+                users.forEach(element => {
+                    tournament.Users.push(element.UserId);
+                });
 
-                        res.send(tournament);
-                    })
-                    .catch(err => {
-                        processError(res, err);
+                var matches = results[2];
+                var resMatch = {};
+
+                matches.forEach(element => {
+                    if (!resMatch[element.Round]) {
+                        resMatch[element.Round] = [];
+                    }
+
+                    resMatch[element.Round].push({
+                        Id: element.Id,
+                        User1: element.User1,
+                        User2: element.User2,
+                        Score1: element.Score1,
+                        Score2: element.Score2
                     });
+                });
+
+                tournament.Matches = resMatch;
+                res.send(tournament);
             })
             .catch(err => {
                 processError(res, err);
@@ -67,8 +90,6 @@ module.exports = app => {
             .catch(err => {
                 processError(res, err);
             });
-
-        
     });
 
     app.delete('/tournament/:id', (req, res) => {
