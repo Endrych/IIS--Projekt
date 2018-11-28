@@ -40,8 +40,18 @@ CREATE TABLE `game_genre` (
 
 INSERT INTO `game_genre` (`Id`, `Name`) VALUES
 (1, 'FPS'),
-(2, 'Strategy'),
-(3, 'Sport');
+(2, 'Strategie'),
+(3, 'Sportovní'),
+(4, 'Adventura'),
+(5, 'Akční'),
+(6, 'Arkáda'),
+(7, 'Karetní'),
+(8, 'Logická hra'),
+(9, 'RPG'),
+(10, 'Simulátor'),
+(11, 'Horor'),
+(12, 'Závodní'),
+(13, 'MMORPG');
 
 CREATE TABLE `game_genre_games` (
   `GameId` int(11) NOT NULL,
@@ -67,6 +77,36 @@ CREATE TABLE `team` (
   `Logo` longtext COLLATE utf8_czech_ci,
   `Created` date NOT NULL,
   `Deleted` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+CREATE TABLE `tmatch` (
+  `Id` int(11) NOT NULL,
+  `User1` varchar(45) COLLATE utf8_czech_ci NOT NULL,
+  `User2` varchar(45) COLLATE utf8_czech_ci DEFAULT NULL,
+  `Score1` int(11) DEFAULT NULL,
+  `Score2` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+CREATE TABLE `tournament` (
+  `Id` int(11) NOT NULL,
+  `Name` tinytext COLLATE utf8_czech_ci NOT NULL,
+  `Description` text COLLATE utf8_czech_ci NOT NULL,
+  `State` int(11) NOT NULL,
+  `Created` datetime NOT NULL,
+  `CreatedBy` varchar(45) COLLATE utf8_czech_ci NOT NULL,
+  `Round` int(11) NOT NULL DEFAULT '0',
+  `Winner` varchar(45) COLLATE utf8_czech_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+CREATE TABLE `tournament_match` (
+  `Tournament` int(11) NOT NULL,
+  `Round` int(11) NOT NULL,
+  `TMatch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+CREATE TABLE `tournament_user` (
+  `TournamentId` int(11) NOT NULL,
+  `UserId` varchar(45) COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 CREATE TABLE `user` (
@@ -111,6 +151,24 @@ ALTER TABLE `publisher`
 ALTER TABLE `team`
   ADD PRIMARY KEY (`Id`);
 
+ALTER TABLE `tmatch`
+  ADD PRIMARY KEY (`Id`);
+
+ALTER TABLE `tournament`
+  ADD PRIMARY KEY (`Id`);
+
+ALTER TABLE `tournament_match`
+  ADD PRIMARY KEY (`Tournament`,`Round`,`TMatch`),
+  ADD KEY `Tournament` (`Tournament`),
+  ADD KEY `Round_2` (`Round`),
+  ADD KEY `Round_3` (`Round`),
+  ADD KEY `TMatch` (`TMatch`);
+
+ALTER TABLE `tournament_user`
+  ADD PRIMARY KEY (`TournamentId`,`UserId`),
+  ADD KEY `TournamentId` (`TournamentId`),
+  ADD KEY `UserId` (`UserId`);
+
 ALTER TABLE `user`
   ADD PRIMARY KEY (`Nickname`),
   ADD KEY `Team` (`Team`);
@@ -123,7 +181,7 @@ ALTER TABLE `game`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `game_genre`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 ALTER TABLE `invite`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
@@ -132,6 +190,12 @@ ALTER TABLE `publisher`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `team`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `tmatch`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `tournament`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
 
 
@@ -149,6 +213,14 @@ ALTER TABLE `game_genre_games`
 ALTER TABLE `invite`
   ADD CONSTRAINT `invite_ibfk_1` FOREIGN KEY (`Team`) REFERENCES `team` (`Id`),
   ADD CONSTRAINT `invite_ibfk_2` FOREIGN KEY (`User`) REFERENCES `user` (`Nickname`);
+
+ALTER TABLE `tournament_match`
+  ADD CONSTRAINT `tournament_match_ibfk_1` FOREIGN KEY (`TMatch`) REFERENCES `tmatch` (`Id`),
+  ADD CONSTRAINT `tournament_match_ibfk_2` FOREIGN KEY (`Tournament`) REFERENCES `tournament` (`Id`);
+
+ALTER TABLE `tournament_user`
+  ADD CONSTRAINT `tournament_user_ibfk_1` FOREIGN KEY (`TournamentId`) REFERENCES `tournament` (`Id`),
+  ADD CONSTRAINT `tournament_user_ibfk_2` FOREIGN KEY (`UserId`) REFERENCES `user` (`Nickname`);
 
 ALTER TABLE `user`
   ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`Team`) REFERENCES `team` (`Id`);
