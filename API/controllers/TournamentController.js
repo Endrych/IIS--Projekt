@@ -8,6 +8,16 @@ const continueTournament = require('../helpers/TournamentHelpers/continueTournam
 module.exports = app => {
     const db = app.db;
 
+    app.get('/tournaments', (req, res) => {
+        db.promiseQuery('SELECT Id, Name, State, Created FROM tournament order by Created DESC')
+            .then(tournaments => {
+                res.send(tournaments);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
+    });
+
     app.get('/tournament/:id', (req, res) => {
         var id = parseInt(req.params.id);
 
