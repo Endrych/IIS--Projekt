@@ -9,7 +9,7 @@ module.exports = app => {
         var score1 = parseInt(req.query.score1);
         var score2 = parseInt(req.query.score2);
 
-        if (isNaN(id) || isNaN(score1) || isNaN(score2)) {
+        if (isNaN(id) || isNaN(score1) || isNaN(score2) || score1 === score2 || score1 < 0 || score2 < 0) {
             res.sendStatus(ResultCodes.BAD_REQUEST);
             return;
         }
