@@ -15,8 +15,22 @@ module.exports = app => {
             .then(() => {
                 var dataObj = { Team: req.user.Team, User: user };
 
-                db.promiseQuery('SELECT Nickname FROM User WHERE Nickname = ?', user)
-                    .then(user => {
+                var checkInvitePromise = db.promiseQuery('SELECT Id FROM Invite Where Team = ? AND User = ? ', [
+                    req.user.Team,
+                    user
+                ]);
+                var checkUserPromise = db.promiseQuery('SELECT Nickname FROM User WHERE Nickname = ?', user);
+
+                Promise.all([checkInvitePromise, checkUserPromise])
+                    .then(results => {
+                        invite = results[0];
+                        user = results[1];
+
+                        if (invite.length > 0) {
+                            res.sendStatus(ResultCodes.SEE_OTHER);
+                            return;
+                        }
+
                         if (user.length === 0) {
                             res.sendStatus(ResultCodes.NO_CONTENT);
                             return;
