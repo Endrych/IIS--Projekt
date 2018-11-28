@@ -3,6 +3,7 @@ const processError = require('../helpers/processError');
 const TournamentValidator = require('../validators/TournamentValidator');
 const insertTournament = require('../helpers/TournamentHelpers/insertTournament');
 const startTournament = require('../helpers/TournamentHelpers/startTournament');
+const continueTournament = require('../helpers/TournamentHelpers/continueTournament');
 
 module.exports = app => {
     const db = app.db;
@@ -86,6 +87,33 @@ module.exports = app => {
         startTournament(id, db)
             .then(() => {
                 res.sendStatus(ResultCodes.OK);
+            })
+            .catch(err => {
+                processError(res, err);
+            });
+    });
+
+    app.post('/tournament/:id/continue', (req, res) => {
+        var id = parseInt(req.params.id);
+
+        if (isNaN(id)) {
+            res.sendStatus(ResultCodes.BAD_REQUEST);
+            return;
+        }
+
+        if (!req.user) {
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
+            return;
+        }
+
+        if (req.user.Admin === 0) {
+            res.sendStatus(ResultCodes.FORBIDDEN);
+            return;
+        }
+
+        continueTournament(id, db)
+            .then(result => {
+                res.sendStatus(result);
             })
             .catch(err => {
                 processError(res, err);
