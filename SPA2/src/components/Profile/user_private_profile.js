@@ -27,15 +27,20 @@ class UserPrivateProfile extends Component {
 	render() {
 		let toRender;
 		if(this.props.loginStatus.loggedIn){
+			console.log(this.props)
+			const { userInformations } = this.props;
+			// const team = this.props.team || {Name: "", Id: ""};
 			toRender = <div className="row">
 			{/* <Redirect  to="/" /> */}
-			<div>Přezdívka: <span>{this.props.userInformations.nickname}</span></div>
-			<div>Tým: <span>{this.props.userInformations.team ? this.props.userInformations.team : "Nejste členem žádnéo týmu"}</span></div>
-			<div>Jméno: <span>{this.props.userInformations.firstname}</span></div>
-			<div>Příjmení: <span>{this.props.userInformations.lastname}</span></div>
-			<div>Email: <span>{this.props.userInformations.email}</span></div>
-			<div>Telefon: <span>{this.props.userInformations.phone}</span></div>
+			<div>Přezdívka: <span>{userInformations.nickname}</span></div>
+			<div>Tým: <span>{userInformations.team ? <Link to={`/team/${userInformations.team.Id}`}>{ userInformations.team.Name }</Link>: "Nejste členem žádnéo týmu"}</span></div>
+			<div>Jméno: <span>{userInformations.firstname}</span></div>
+			<div>Příjmení: <span>{userInformations.lastname}</span></div>
+			<div>Email: <span>{userInformations.email}</span></div>
+			<div>Telefon: <span>{userInformations.phone}</span></div>
+			<div> Úroveň práv: {userInformations.admin === 2 ? "Hlavní administrátor" : userInformations.admin === 1 ? "Administrátor" : "Uživatel"}</div>
 			<Link to="/user/edit"><button className="btn btn-primary">Upravit údaje</button></Link>
+			{userInformations.team ? <Link to={`/team/${userInformations.team.Id}`}><button className="btn btn-primary">Zobrazit tým</button></Link> : <Link to="/team/new"><button className="btn btn-primary">Založit tým</button></Link>}
 			{this.props.loginStatus.admin > 0 ? this.renderAdminButtons() : ""}
 		</div>;
 		}else{

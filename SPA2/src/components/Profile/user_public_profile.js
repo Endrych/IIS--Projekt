@@ -11,7 +11,7 @@ class UserPublicProfile extends Component{
 		return(
 			<div>
 				<h2>{playerInfo.nickname}</h2>
-				<div>Tým: {playerInfo.team ? playerInfo.team : "Není členem žádného týmu"} </div>
+				<div>Tým: {playerInfo.team ? playerInfo.team.Name : "Není členem žádného týmu"} </div>
 				<div>Jméno: {playerInfo.firstname} {playerInfo.lastname}</div>
 			</div>
 		)

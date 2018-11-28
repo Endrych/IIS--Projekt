@@ -32,6 +32,16 @@ export const GRANT_RIGHTS_SUCESS = "GRANT_RIGHTS_SUCESS";
 export const GRANT_RIGHTS_FAILED = "GRANT_RIGHTS_FAILED";
 export const TEAM_CREATE_SUCESS = "TEAM_CREATE_SUCESS";
 export const TEAM_CREATE_FAILED = "TEAM_CREATE_FAILED";
+export const TEAM_GET_INFO_SUCESS = "TEAM_GET_INFO_SUCESS";
+export const TEAM_GET_INFO_FAILED = "TEAM_GET_INFO_FAILED";
+export const TEAM_UPDATE_SUCESS = "TEAM_UPDATE_SUCESS";
+export const TEAM_UPDATE_FAILED = "TEAM_UPDATE_FAILED";
+export const TEAM_KICK_MEMBER_SUCESS = "TEAM_KICK_MEMBER_SUCESS";
+export const TEAM_KICK_MEMBER_FAILED = "TEAM_KICK_MEMBER_FAILED";
+export const TEAM_LEAVE_SUCESS = "TEAM_LEAVE_SUCESS";
+export const TEAM_LEAVE_FAILED = "TEAM_LEAVE_FAILED";
+export const TEAM_DELETE_SUCESS = "TEAM_DELETE_SUCESS";
+export const TEAM_DELETE_FAILED = "TEAM_DELETE_FAILED";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -92,11 +102,11 @@ export function updateUserInformations(values, token, callback){
 					dispatch({ type: "USERERROR", payload: err });
 				});
 		};
-
-
 }
 
-export function setTokenCookies(token) {}
+export function setTokenCookies(token) {
+
+}
 
 export function getLoggedInStatus(token){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
@@ -374,4 +384,105 @@ export function createTeam(values, token, callback = ()=>{}){
 		});
 	};
 
+}
+
+export function getTeamInfo(id, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+
+	const request = axiosInstance.get(`/team/${id}`);
+
+	return dispatch => {
+		request.then( res => {
+			dispatch({ type: TEAM_GET_INFO_SUCESS, payload: res});
+			setTimeout(() => {
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TEAM_GET_INFO_FAILED, payload: err});
+		})
+	}
+}
+
+export function updateTeamInfo(id, values, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.put(`/team/${id}`, values);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TEAM_UPDATE_SUCESS, payload: res });
+			setTimeout(() => {
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TEAM_UPDATE_FAILED, payload: err });
+		});
+	};
+
+}
+
+export function kickTeamMember(player, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/team/kick?user=${player}`);
+
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TEAM_KICK_MEMBER_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res);
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TEAM_KICK_MEMBER_FAILED, payload: err });
+		});
+	};
+}
+
+export function leaveTeam(token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/team/leave`);
+
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TEAM_LEAVE_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res);
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TEAM_LEAVE_FAILED, payload: err });
+		});
+	};
+}
+
+export function deleteTeam(id, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.delete(`/team/${id}`);
+
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TEAM_DELETE_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res);
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TEAM_DELETE_FAILED, payload: err });
+		});
+	};
 }
