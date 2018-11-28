@@ -13,7 +13,7 @@ module.exports = (id, db) => {
                 tournament = tournament[0];
 
                 if (tournament.State !== 1) {
-                    reject(new RejectError(ResultCodes.METHOD_NOT_ALLOWED));
+                    resolve('Bad state of tournament');
                     return;
                 }
 
@@ -23,34 +23,40 @@ module.exports = (id, db) => {
                 ).then(matches => {
                     if (matches.length > 1) {
                         var users = [];
+                        var correct = true;
+
                         matches.forEach(element => {
-                            if (element.Score1) {
-                                if (element.Score1 > element.Score2) {
-                                    users.push(element.User1);
+                            if (correct) {
+                                if (element.Score1) {
+                                    if (element.Score1 > element.Score2) {
+                                        users.push(element.User1);
+                                    } else {
+                                        users.push(element.User2);
+                                    }
                                 } else {
-                                    users.push(element.User2);
+                                    correct = false;
                                 }
-                            } else {
-                                reject(ResultCodes.FORBIDDEN);
-                                return;
                             }
                         });
-
-                        db.promiseBeginTransaction()
-                            .then(() => {
-                                generateRound(users, tournament.Round + 1, id, db)
-                                    .then(() => {
-                                        db.commit();
-                                        resolve(ResultCodes.CREATED);
-                                    })
-                                    .catch(err => {
-                                        db.rollback();
-                                        reject(err);
-                                    });
-                            })
-                            .catch(err => {
-                                reject(err);
-                            });
+                        if (correct) {
+                            db.promiseBeginTransaction()
+                                .then(() => {
+                                    generateRound(users, tournament.Round + 1, id, db)
+                                        .then(() => {
+                                            db.commit();
+                                            resolve('Round generated');
+                                        })
+                                        .catch(err => {
+                                            db.rollback();
+                                            reject(err);
+                                        });
+                                })
+                                .catch(err => {
+                                    reject(err);
+                                });
+                        } else {
+                            resolve('Not done');
+                        }
                     } else {
                         var match = matches[0];
 
@@ -59,15 +65,15 @@ module.exports = (id, db) => {
                             if (match.Score2 > match.Score1) {
                                 winner = match.User2;
                             }
-                            db.promiseQuery('UPDATE Tournament SET ? Where Id = ?', [{ Winner: winner, State: 3 }, id])
+                            db.promiseQuery('UPDATE Tournament SET ? Where Id = ?', [{ Winner: winner, State: 2 }, id])
                                 .then(() => {
-                                    resolve(ResultCodes.OK);
+                                    resolve('Tournament completed');
                                 })
                                 .catch(err => {
                                     reject(err);
                                 });
                         } else {
-                            reject(new RejectError(ResultCodes.FORBIDDEN));
+                            resolve('Not done');
                             return;
                         }
                     }

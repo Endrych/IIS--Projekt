@@ -85,8 +85,12 @@ module.exports = app => {
         }
 
         startTournament(id, db)
-            .then(() => {
-                res.sendStatus(ResultCodes.OK);
+            .then(state => {
+                if (state) {
+                    res.status(ResultCodes.OK).send(state);
+                } else {
+                    res.sendStatus(ResultCodes.OK);
+                }
             })
             .catch(err => {
                 processError(res, err);
@@ -113,7 +117,7 @@ module.exports = app => {
 
         continueTournament(id, db)
             .then(result => {
-                res.sendStatus(result);
+                res.status(ResultCodes.OK).send(result);
             })
             .catch(err => {
                 processError(res, err);

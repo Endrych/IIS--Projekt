@@ -15,7 +15,12 @@ module.exports = (id, db) => {
                         var users = results[1];
 
                         if (tournament.length === 0) {
-                            res.sendStatus(ResultCodes.NO_CONTENT);
+                            reject(new RejectError(ResultCodes.NO_CONTENT));
+                            return;
+                        }
+
+                        if (tournament[0].State !== 0) {
+                            resolve('Bad state of tournament');
                             return;
                         }
 
