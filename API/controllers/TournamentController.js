@@ -95,12 +95,8 @@ module.exports = app => {
         }
 
         startTournament(id, db)
-            .then(state => {
-                if (state) {
-                    res.status(ResultCodes.OK).send(state);
-                } else {
-                    res.sendStatus(ResultCodes.OK);
-                }
+            .then(() => {
+                res.sendStatus(ResultCodes.OK);
             })
             .catch(err => {
                 processError(res, err);

@@ -20,7 +20,7 @@ module.exports = (id, db) => {
                         }
 
                         if (tournament[0].State !== 0) {
-                            resolve('Bad state of tournament');
+                            reject(new RejectError(ResultCodes.METHOD_NOT_ALLOWED));
                             return;
                         }
 
