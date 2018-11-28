@@ -15,9 +15,19 @@ module.exports = app => {
             .then(() => {
                 var dataObj = { Team: req.user.Team, User: user };
 
-                db.promiseQuery('INSERT INTO INVITE SET ?', dataObj)
-                    .then(() => {
-                        res.sendStatus(ResultCodes.OK);
+                db.promiseQuery('SELECT Nickname FROM User WHERE Nickname = ?', user)
+                    .then(user => {
+                        if (user.length === 0) {
+                            res.sendStatus(ResultCodes.NO_CONTENT);
+                            return;
+                        }
+                        db.promiseQuery('INSERT INTO INVITE SET ?', dataObj)
+                            .then(() => {
+                                res.sendStatus(ResultCodes.OK);
+                            })
+                            .catch(err => {
+                                processError(res, err);
+                            });
                     })
                     .catch(err => {
                         processError(res, err);
