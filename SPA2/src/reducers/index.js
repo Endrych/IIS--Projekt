@@ -10,6 +10,8 @@ import ReducerGameList from './reducer_game_list';
 import ReducerGameInfo from './reducer_game_info';
 import ReducerGrantRights from './reducer_grant_rights';
 import ReducerTeamInfo from './reducer_team_info';
+import ReducerSendInvite from './reducer_send_invite';
+import ReducerAllInvites from './reducer_all_invites';
 
 const rootReducer = combineReducers({
 	registrationResultCode: RegisterReducer,
@@ -22,6 +24,8 @@ const rootReducer = combineReducers({
 	gameInfo: ReducerGameInfo,
 	grantRights: ReducerGrantRights,
 	teamInfo: ReducerTeamInfo,
+	sendInviteInfo: ReducerSendInvite,
+	userInvites: ReducerAllInvites,
 	form: formReducer
 });
 

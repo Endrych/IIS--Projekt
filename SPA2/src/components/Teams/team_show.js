@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { getTeamInfo, kickTeamMember, leaveTeam, deleteTeam } from "../../actions";
+import { getTeamInfo, kickTeamMember, leaveTeam, deleteTeam, sendInvite, resetInviteStatus } from "../../actions";
 import Cookies from 'universal-cookie';
 // var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 //
+import { Field, reduxForm , reset} from 'redux-form';
 
 class TeamShow extends Component {
 	componentDidMount() {
@@ -19,6 +20,24 @@ class TeamShow extends Component {
 			</div>
 		);
 	};
+
+	renderInputField(field) {
+		const {
+			meta: { touched, error }
+		} = field;
+		let hasError = "";
+		let className = `form-group ${touched && error ? "has-danger" : ""}`;
+
+		return (
+			<div className={className}>
+				<label>{field.label}</label>
+				<input className="form-control" type={field.type} {...field.input} />
+				{hasError}
+				<div className="text-help">{touched ? error : ""}</div>
+			</div>
+		);
+	}
+
 
 	removeTeamMember = player =>{
 		console.log(player);
@@ -35,9 +54,23 @@ class TeamShow extends Component {
 		return arrOfPlayers;
 	};
 
+	onSubmit = (values) => {
+		console.log(values)
+		const cookie = new Cookies();
+		const token = cookie.get("user");
+		this.props.sendInvite(token, values.player, this.props.resetInviteStatus);
+		this.props.dispatch(reset("invitedPlayer"));
+	}
+
 	renderOwnerButtons = () =>{
+		const { sendInviteInfo } = this.props;
 		return(
 			<div>
+				<form onSubmit={this.props.handleSubmit(this.onSubmit.bind(this))}>
+					<Field name="player" label="Pozvat hráče do týmu:" component={this.renderInputField} />
+					<button className="btn btn-secondary">Poslat pozvanku</button>
+				</form>
+				{!sendInviteInfo.send ? "" : sendInviteInfo.sendSucess ? <div>Pozvánka odeslána</div> : <div>Odeslání pozvánky se nezdařilo</div>}
 				<Link to={`/team/edit/${this.props.id}`}><button className="btn btn-primary">Editovat informace</button></Link>
 				<button onClick={this.onDeleteTeam.bind(this)} className="btn btn-danger">Smazat tým</button>
 			</div>
@@ -78,7 +111,7 @@ class TeamShow extends Component {
 
 				<div>Seznam členů</div>
 				<div>{this.generateListOfPlayers(info.Users)}</div>
-				{this.props.loginStatus.nickname === this.props.teamInfo.Owner ? this.renderOwnerButtons() : this.checkUser(info.Users)  ? this.renderMemberButton() : ""}
+				{this.props.loginStatus.nickname === this.props.teamInfo.Owner ? this.renderOwnerButtons(this) : this.checkUser(info.Users)  ? this.renderMemberButton() : ""}
 			</div>
 		);
 	};
@@ -114,12 +147,14 @@ class TeamShow extends Component {
 	}
 }
 
-function mapStateToProps({ teamInfo, loginStatus }) {
+function mapStateToProps({ teamInfo, loginStatus, sendInviteInfo }) {
 	console.log(teamInfo);
-	return { teamInfo, loginStatus };
+	return { teamInfo, loginStatus, sendInviteInfo };
 }
 
-export default connect(
+export default reduxForm({
+	form: "invitedPlayer"
+}) (connect(
 	mapStateToProps,
-	{ getTeamInfo, kickTeamMember, leaveTeam, deleteTeam }
-)(TeamShow);
+	{ getTeamInfo, kickTeamMember, leaveTeam, deleteTeam, sendInvite, resetInviteStatus }
+)(TeamShow));

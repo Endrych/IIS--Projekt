@@ -42,6 +42,19 @@ export const TEAM_LEAVE_SUCESS = "TEAM_LEAVE_SUCESS";
 export const TEAM_LEAVE_FAILED = "TEAM_LEAVE_FAILED";
 export const TEAM_DELETE_SUCESS = "TEAM_DELETE_SUCESS";
 export const TEAM_DELETE_FAILED = "TEAM_DELETE_FAILED";
+export const INVITE_SEND_SUCESS ="INVITE_SEND_SUCESS";
+export const INVITE_SEND_FAILED ="INVITE_SEND_FAILED";
+export const INVITE_ACCEPT_SUCESS ="INVITE_ACCEPT_SUCESS";
+export const INVITE_ACCEPT_FAILED ="INVITE_ACCEPT_FAILED";
+export const INVITE_DECLINE_SUCESS = "INVITE_DECLINE_SUCESS";
+export const INVITE_DECLINE_FAILED = "INVITE_DECLINE_FAILED";
+export const INVITES_GET_ALL_SUCESS = "INVITES_GET_ALL_SUCESS";
+export const INVITES_GET_ALL_FAILED = "INVITES_GET_ALL_FAILED";
+export const INVITES_ALL_SHOW = "INVITES_ALL_SHOW";
+export const INVITES_ALL_HIDE = "INVITES_ALL_HIDE";
+
+
+export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
 const baseUrl = `http://localhost:5050`;
 
@@ -118,13 +131,26 @@ export function getLoggedInStatus(token){
 	};
 }
 
-export function getUserInfoFromToken(token) {
+export function getUserInfoFromToken(token, callback = () => {}) {
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 
 	const request = axiosInstance.get("/user");
-	return {
-		type: GET_DATA_TOKEN,
-		payload: request
+	// return {
+	// 	type: GET_DATA_TOKEN,
+	// 	payload: request
+	// };
+
+	return dispatch => {
+		request
+			.then((res,token) => {
+				dispatch({ type: GET_DATA_TOKEN, payload: res });
+				setTimeout(() => {
+					callback(token);
+				}, 0);
+			})
+			.catch(err => {
+				dispatch({ type: "USERERROR", payload: err });
+			});
 	};
 }
 
@@ -485,4 +511,111 @@ export function deleteTeam(id, token, callback = ()=>{}){
 			dispatch({ type: TEAM_DELETE_FAILED, payload: err });
 		});
 	};
+}
+
+export function sendInvite(token, user, callback=() => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/invite?user=${user}`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: INVITE_SEND_SUCESS, payload: res });
+			setTimeout(() => {
+				callback();
+			}, 2000);
+		})
+		.catch(err => {
+			dispatch({ type: INVITE_SEND_FAILED, payload: err });
+			setTimeout(() => {
+				callback();
+			}, 2000);
+		});
+	}
+}
+
+export  function resetInviteStatus(){
+	console.log("ASD")
+	return {
+		type: RESET_INVITE_REDUCER_VALUES
+	}
+}
+
+export function getInvites(token){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	console.log(token)
+	const request = axiosInstance.get(`/invites`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: INVITES_GET_ALL_SUCESS, payload: res });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		})
+		.catch(err => {
+			dispatch({ type: INVITES_GET_ALL_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+}
+
+export  function invitesShow(){
+	console.log("")
+	return {
+		type: INVITES_ALL_SHOW
+	}
+}
+
+export  function invitesHide(){
+	console.log("")
+	return {
+		type: INVITES_ALL_HIDE
+	}
+}
+
+export function acceptInvite(token, id, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/invite/accept?id=${id}`);
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: INVITE_ACCEPT_SUCESS, payload: res });
+			setTimeout(() => {
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: INVITE_ACCEPT_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+}
+
+export function declineInvite(token, id, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/invite/decline?id=${id}`);
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: INVITE_DECLINE_SUCESS, payload: res });
+			setTimeout(() => {
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: INVITE_DECLINE_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
 }
