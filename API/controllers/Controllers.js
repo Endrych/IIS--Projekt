@@ -9,7 +9,8 @@ const inviteController = require('./InviteController');
 const adminController = require('./AdminController');
 const authenticationController = require('./AuthenticationController');
 const tournamentController = require('./TournamentController');
-const matchTournament = require('./MatchController');
+const matchController = require('./MatchController');
+const searchController = require('./SearchController');
 
 module.exports = app => {
     authenticationController(app);
@@ -21,7 +22,8 @@ module.exports = app => {
     publisherController(app);
     teamController(app);
     tournamentController(app);
-    matchTournament(app);
+    matchController(app);
     inviteController(app);
+    searchController(app);
     errorController(app);
 };
