@@ -21,6 +21,10 @@ module.exports = {
                     Description: {
                         validators: [],
                         required: true
+                    },
+                    Game:{
+                        validators: [],
+                        required: true
                     }
                 },
                 tournament

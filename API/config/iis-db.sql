@@ -91,6 +91,7 @@ CREATE TABLE `tournament` (
   `Id` int(11) NOT NULL,
   `Name` tinytext COLLATE utf8_czech_ci NOT NULL,
   `Description` text COLLATE utf8_czech_ci NOT NULL,
+  `Game` int(11) NOT NULL,
   `State` int(11) NOT NULL,
   `Created` datetime NOT NULL,
   `CreatedBy` varchar(45) COLLATE utf8_czech_ci NOT NULL,
@@ -155,7 +156,8 @@ ALTER TABLE `tmatch`
   ADD PRIMARY KEY (`Id`);
 
 ALTER TABLE `tournament`
-  ADD PRIMARY KEY (`Id`);
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `Game` (`Game`);
 
 ALTER TABLE `tournament_match`
   ADD PRIMARY KEY (`Tournament`,`Round`,`TMatch`),
@@ -213,6 +215,9 @@ ALTER TABLE `game_genre_games`
 ALTER TABLE `invite`
   ADD CONSTRAINT `invite_ibfk_1` FOREIGN KEY (`Team`) REFERENCES `team` (`Id`),
   ADD CONSTRAINT `invite_ibfk_2` FOREIGN KEY (`User`) REFERENCES `user` (`Nickname`);
+
+ALTER TABLE `tournament`
+  ADD CONSTRAINT `tournament_ibfk_1` FOREIGN KEY (`Game`) REFERENCES `game` (`Id`);
 
 ALTER TABLE `tournament_match`
   ADD CONSTRAINT `tournament_match_ibfk_1` FOREIGN KEY (`TMatch`) REFERENCES `tmatch` (`Id`),
