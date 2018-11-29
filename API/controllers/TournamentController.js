@@ -9,7 +9,9 @@ module.exports = app => {
     const db = app.db;
 
     app.get('/tournaments', (req, res) => {
-        db.promiseQuery('SELECT Id, Name, State, Created FROM tournament order by Created DESC')
+        db.promiseQuery(
+            'SELECT tournament.Id, tournament.Name, State, tournament.Game, game.Name as GameName, Created FROM tournament LEFT JOIN Game ON tournament.game = game.id order by Created DESC'
+        )
             .then(tournaments => {
                 res.send(tournaments);
             })
@@ -27,7 +29,10 @@ module.exports = app => {
         }
 
         Promise.all([
-            db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id),
+            db.promiseQuery(
+                'SELECT tournament.Id, tournament.Name, tournament.Description, State, Created, CreatedBy,Round, Winner, tournament.Game, game.Name as GameName FROM Tournament LEFT JOIN Game ON tournament.game = game.id WHERE tournament.Id = ?',
+                id
+            ),
             db.promiseQuery('Select UserId FROM tournament_user WHERE TournamentId = ?', id),
             db.promiseQuery(
                 'SELECT * FROM tournament_match JOIN tmatch ON tournament_match.tmatch = tmatch.id WHERE Tournament = ?',
@@ -44,6 +49,8 @@ module.exports = app => {
                 }
 
                 tournament = tournament[0];
+                tournament.Game = { Id: tournament.Game, Name: tournament.GameName };
+                delete tournament.GameName;
                 var users = results[1];
                 tournament.Users = [];
 
@@ -193,9 +200,20 @@ module.exports = app => {
 
         body.CreatedBy = req.user.Nickname;
 
-        insertTournament(body, db)
-            .then(teamId => {
-                res.send(teamId.toString());
+        db.promiseQuery('Select Id From Game Where Id = ?')
+            .then(game => {
+                if (game.length === 0) {
+                    res.sendStatus(ResultCodes.BAD_REQUEST);
+                    return;
+                }
+
+                insertTournament(body, db)
+                    .then(teamId => {
+                        res.send(teamId.toString());
+                    })
+                    .catch(err => {
+                        processError(res, err);
+                    });
             })
             .catch(err => {
                 processError(res, err);
