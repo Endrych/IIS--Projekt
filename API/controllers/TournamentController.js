@@ -200,7 +200,7 @@ module.exports = app => {
 
         body.CreatedBy = req.user.Nickname;
 
-        db.promiseQuery('Select Id From Game Where Id = ?')
+        db.promiseQuery('Select Id From Game Where Id = ?',body.Game)
             .then(game => {
                 if (game.length === 0) {
                     res.sendStatus(ResultCodes.BAD_REQUEST);
