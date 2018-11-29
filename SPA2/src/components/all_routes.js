@@ -22,6 +22,8 @@ import AdminGrantRights from './Admin/admin_grant_rights';
 import TeamCreateNew from './Teams/team_create_new';
 import TeamShow from './Teams/team_show';
 import TeamEdit from './Teams/team_edit';
+import TournamentNew from './Tournament/tournament_new';
+import TournamentsList from './Tournament/tournaments_list';
 
 class Game extends Component {
 	constructor(props) {
@@ -143,7 +145,7 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
-			<Route path="/tournaments" component={TournamentList} exact strict />
+			<Route path="/tournaments" component={TournamentsList} exact strict />
 			<Route
 				path="/tournaments/:tournamentname"
 				render={({ match }) => {
@@ -160,6 +162,10 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
+
+			<Route path="/tournament/new" component={TournamentNew} exact strict />
+
+
 			<Route path="/register" component={RegistrationForm} exact strict />
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
 			<Route path="/admin/rights" component={AdminGrantRights} exact strict />

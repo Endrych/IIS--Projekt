@@ -52,7 +52,10 @@ export const INVITES_GET_ALL_SUCESS = "INVITES_GET_ALL_SUCESS";
 export const INVITES_GET_ALL_FAILED = "INVITES_GET_ALL_FAILED";
 export const INVITES_ALL_SHOW = "INVITES_ALL_SHOW";
 export const INVITES_ALL_HIDE = "INVITES_ALL_HIDE";
-
+export const TOURNAMENT_CREATE_SUCESS = "TOURNAMENT_CREATE_SUCESS";
+export const TOURNAMENT_CREATE_FAILED = "TOURNAMENT_CREATE_FAILED";
+export const TOURNAMENTS_FETCH_ALL_SUCESS ="TOURNAMENTS_FETCH_ALL_SUCESS";
+export const TOURNAMENTS_FETCH_ALL_FAILED = "TOURNAMENTS_FETCH_ALL_FAILED";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -613,6 +616,54 @@ export function declineInvite(token, id, callback = () => {}){
 		})
 		.catch(err => {
 			dispatch({ type: INVITE_DECLINE_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+}
+
+export function createTournament(values, token, callback = ()=>{}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/tournament`, values);
+	console.log(values, token)
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TOURNAMENT_CREATE_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res)
+
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TOURNAMENT_CREATE_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+}
+
+export function fetchTournamentsList(){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+
+	const request = axiosInstance.get(`/tournaments`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TOURNAMENTS_FETCH_ALL_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res)
+
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TOURNAMENTS_FETCH_ALL_FAILED, payload: err });
 			// setTimeout(() => {
 			// 	callback();
 			// }, 0);
