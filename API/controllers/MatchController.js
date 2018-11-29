@@ -20,7 +20,7 @@ module.exports = app => {
         }
 
         if (req.user.Admin === 0) {
-            res.sendStatus(ResultCodes.FORBIDDEN);
+            res.sendStatus(ResultCodes.UNAUTHORIZED);
             return;
         }
 
