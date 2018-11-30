@@ -124,6 +124,9 @@ CREATE TABLE `user` (
   `Deactivated` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_czech_ci;
 
+INSERT INTO `user` (`Nickname`, `Firstname`, `Lastname`, `Email`, `Phone`, `Image`, `Password`, `Salt`, `Team`, `Admin`, `Deactivated`) VALUES
+('Admin', 'John', 'Doe', 'admin@admin.cz', NULL, NULL, '$2a$10$NVAMtZl6UFYR.dkiOL1Rw.A4NjM/tyNCQPomldGGFHw2C5eziwyU2', '$2a$10$NVAMtZl6UFYR.dkiOL1Rw.', NULL, 2, 0);
+
 
 ALTER TABLE `article`
   ADD PRIMARY KEY (`Id`),
