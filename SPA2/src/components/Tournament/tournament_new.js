@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
-import { createTournament, RESET_INVITE_REDUCER_VALUES } from './../../actions';
+import { createTournament } from './../../actions';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+
+//musi zakladat admin
 
 class TournamentNew extends Component{
 	// componentDidMount(){
@@ -13,6 +15,7 @@ class TournamentNew extends Component{
 	onSubmit = (values) => {
 		const cookie = new Cookies();
 		const token = cookie.get("user");
+		values.Game = 1;
 		this.props.createTournament(values, token);
 	}
 
@@ -43,6 +46,7 @@ class TournamentNew extends Component{
 				<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
 					<Field name="Name" label="Jméno turnaje" component={this.renderInputField} />
 					<Field name="Description" label="Popis turnaje" component={this.renderInputField} />
+					<Field name="Game" label="Hra" component={this.renderInputField} />
 					<button className="btn btn-primary">Založit</button>
 					<Link to="/tournaments"><button className="btn btn-danger">Zpět</button></Link>
 				</form>

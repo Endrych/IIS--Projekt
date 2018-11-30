@@ -147,6 +147,8 @@ const AllRoutes = () => {
 				strict
 			/>
 			<Route path="/tournaments" component={TournamentsList} exact strict />
+			<Route path="/tournament/new" component={TournamentNew} exact strict />
+
 			<Route
 				path="/tournament/:id"
 				render={({ match }) => {
@@ -164,7 +166,6 @@ const AllRoutes = () => {
 				strict
 			/>
 
-			<Route path="/tournament/new" component={TournamentNew} exact strict />
 
 
 			<Route path="/register" component={RegistrationForm} exact strict />
