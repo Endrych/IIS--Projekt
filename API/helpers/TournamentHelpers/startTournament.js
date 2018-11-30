@@ -29,6 +29,11 @@ module.exports = (id, db) => {
                             usersObj.push(element.UserId);
                         });
 
+                        if (users.length < 2) {
+                            reject(new RejectError(ResultCodes.METHOD_NOT_ALLOWED));
+                            return;
+                        }
+
                         generateRound(usersObj, 1, id, db)
                             .then(() => {
                                 db.commit();
