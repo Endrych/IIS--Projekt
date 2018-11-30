@@ -16,8 +16,6 @@ class TournamentShow extends Component{
 
 	render(){
 		const {tournamentInfo} = this.props;
-		console.log("CCCCCCCCCCCCCCCCCCCC", this.props.loginStatus)
-		console.log(tournamentInfo)
 		let toRender;
 		if(tournamentInfo.fetched){
 			if(tournamentInfo.fetchSucess){
@@ -39,7 +37,6 @@ class TournamentShow extends Component{
 }
 
 function mapStateToProps({tournamentInfo, loginStatus}){
-	console.log("BBBBBBBBBB",loginStatus)
 	return {tournamentInfo, loginStatus};
 }
 

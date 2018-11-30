@@ -268,7 +268,6 @@ export function updateArticle(id, data, token, callback){
 
 export function fetchPlayer(nickname){
 	const axiosInstance = axios.create({baseURL: baseUrl});
-	console.log(nickname, "<<<<<>>>>>?????", `/user/${nickname}`)
 	const request = axiosInstance.get(`/user/${nickname}`);
 
 	return dispatch => {
@@ -320,12 +319,10 @@ export function fetchGameList(){
 	const axiosInstance = axios.create({ baseURL: baseUrl });
 	const request = axiosInstance.get(`/games`);
 
-	console.log(request)
 
 	return dispatch => {
 		request
 			.then(res => {
-				console.log(res)
 				dispatch({ type: GAME_ALL_FETCH_SUCESS, payload: res });
 			})
 			.catch(err => {
@@ -372,7 +369,6 @@ export function deleteGame(keyname, token, callback = ()=>{}){
 
 export function grantAdminRights(nickname, token, callback = ()=>{}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
-	console.log(nickname, token)
 	const request = axiosInstance.post(`/admin/${nickname}?level=1`)
 
 	return dispatch => {
@@ -392,7 +388,6 @@ export function grantAdminRights(nickname, token, callback = ()=>{}){
 
 export function removeAdminRights(nickname, token, callback = ()=>{}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
-	console.log(nickname, token)
 	const request = axiosInstance.post(`/admin/${nickname}?level=0`)
 
 	return dispatch => {
@@ -414,7 +409,6 @@ export function createTeam(values, token, callback = ()=>{}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 
 	const request = axiosInstance.post(`/team`, values);
-	console.log("<<<>>>>><<<>>>")
 	return dispatch => {
 		request
 		.then(res => {
@@ -479,7 +473,6 @@ export function kickTeamMember(player, token, callback = ()=>{}){
 		.then(res => {
 			dispatch({ type: TEAM_KICK_MEMBER_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res);
 				callback();
 			}, 0);
 		})
@@ -500,7 +493,6 @@ export function leaveTeam(token, callback = ()=>{}){
 		.then(res => {
 			dispatch({ type: TEAM_LEAVE_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res);
 				callback();
 			}, 0);
 		})
@@ -521,7 +513,6 @@ export function deleteTeam(id, token, callback = ()=>{}){
 		.then(res => {
 			dispatch({ type: TEAM_DELETE_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res);
 				callback();
 			}, 0);
 		})
@@ -554,7 +545,6 @@ export function sendInvite(token, user, callback=() => {}){
 }
 
 export  function resetInviteStatus(){
-	console.log("ASD")
 	return {
 		type: RESET_INVITE_REDUCER_VALUES
 	}
@@ -562,7 +552,6 @@ export  function resetInviteStatus(){
 
 export function getInvites(token){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
-	console.log(token)
 	const request = axiosInstance.get(`/invites`);
 
 	return dispatch => {
@@ -583,14 +572,12 @@ export function getInvites(token){
 }
 
 export  function invitesShow(){
-	console.log("")
 	return {
 		type: INVITES_ALL_SHOW
 	}
 }
 
 export  function invitesHide(){
-	console.log("")
 	return {
 		type: INVITES_ALL_HIDE
 	}
@@ -642,14 +629,11 @@ export function createTournament(values, token, callback = ()=>{}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 
 	const request = axiosInstance.post(`/tournament`, values);
-	console.log(values, token)
 	return dispatch => {
 		request
 		.then(res => {
 			dispatch({ type: TOURNAMENT_CREATE_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res)
-
 				callback();
 			}, 0);
 		})
@@ -672,7 +656,6 @@ export function fetchTournamentsList(){
 		.then(res => {
 			dispatch({ type: TOURNAMENTS_FETCH_ALL_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res)
 
 				// callback();
 			}, 0);
@@ -696,8 +679,6 @@ export function getTournamentDetails(id){
 		.then(res => {
 			dispatch({ type: TOURNAMENT_GET_DETAILS_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res)
-
 				// callback();
 			}, 0);
 		})
@@ -721,8 +702,6 @@ export function registerInTournament(token, tournamentId, callback = () => {}){
 		.then(res => {
 			dispatch({ type: TOURNAMENT_REGISTER_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res)
-
 				callback();
 			}, 0);
 		})
@@ -746,8 +725,6 @@ export function unregisterFromTournament(token, tournamentId, callback = () => {
 		.then(res => {
 			dispatch({ type: TOURNAMENT_UNREGISTER_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res)
-
 				callback();
 			}, 0);
 		})
@@ -771,8 +748,6 @@ export function startTournament(token , tournamentId, callback = () => {}){
 		.then(res => {
 			dispatch({ type: TOURNAMENT_START_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res)
-
 				callback();
 			}, 0);
 		})

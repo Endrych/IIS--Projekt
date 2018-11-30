@@ -25,7 +25,6 @@ class UserPrivateProfile extends Component {
 	}
 
 	handleAcceptInvite = (id)=>{
-		console.log(id)
 		var cookies = new Cookies;
 
 		var token = cookies.get("user");
@@ -33,7 +32,6 @@ class UserPrivateProfile extends Component {
 	}
 
 	handleDeclineInvite = (id) => {
-		console.log(id)
 		var cookies = new Cookies;
 
 		var token = cookies.get("user");
@@ -41,7 +39,6 @@ class UserPrivateProfile extends Component {
 	}
 
 	generateInvite = (invite) => {
-		console.log(invite)
 		return(
 			<div key={invite.Id}>
 				<div><Link to={`/team/${invite.Team.Id}`}>{invite.Team.Name}</Link> <button className="btn btn-primary" onClick={this.handleAcceptInvite.bind(this, invite.Id)}> Přijmout</button><button onClick={this.handleDeclineInvite.bind(this, invite.Id)} className="btn btn-danger">Odmítnout</button></div>
@@ -55,13 +52,11 @@ class UserPrivateProfile extends Component {
 		for(let i = 0; i < invites.length; i++){
 			arrayInvites.push(this.generateInvite(invites[i]));
 		}
-		console.log(arrayInvites, invites, invites.length)
 		return arrayInvites;
 	}
 
 	handleInvites = ()=>{
 		let toRender;
-		console.log(this.props.userInvites, "<<<<<<<=================")
 		if(this.props.userInvites.show){
 			toRender = this.getListOfInvites(this.props.userInvites);
 			// toRender.push()
@@ -83,7 +78,6 @@ class UserPrivateProfile extends Component {
 	render() {
 		let toRender;
 		if(this.props.loginStatus.loggedIn){
-			console.log(this.props)
 			const { userInformations } = this.props;
 			// const team = this.props.team || {Name: "", Id: ""};
 			toRender = <div className="row">

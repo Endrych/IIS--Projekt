@@ -6,7 +6,6 @@ class TournamentOpen extends Component{
 
 
 	render(){
-		console.log(this.props);
 		return(
 			<div>
 				SAASDASDASD

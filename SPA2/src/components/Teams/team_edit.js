@@ -74,7 +74,6 @@ class TeamEdit extends Component{
 	}
 
 	onSubmit = (values)=>{
-		console.log(values)
 		const cookie = new Cookies();
 		const token = cookie.get("user");
 		this.props.updateTeamInfo(this.props.id, values, token, ()=>{this.props.history.push(`/team/${this.props.id}`)});

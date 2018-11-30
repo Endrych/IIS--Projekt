@@ -40,7 +40,6 @@ class TeamShow extends Component {
 
 
 	removeTeamMember = player =>{
-		console.log(player);
 		const cookie = new Cookies();
 		const token = cookie.get("user");
 		this.props.kickTeamMember(player, token, this.props.getTeamInfo.bind(this, this.props.id));
@@ -55,7 +54,6 @@ class TeamShow extends Component {
 	};
 
 	onSubmit = (values) => {
-		console.log(values)
 		const cookie = new Cookies();
 		const token = cookie.get("user");
 		this.props.sendInvite(token, values.player, this.props.resetInviteStatus);
@@ -99,7 +97,6 @@ class TeamShow extends Component {
 
 	getTeamDom = info => {
 		const options = { year: "numeric", month: "long", day: "numeric" };
-		console.log(this.props.loginStatus)
 		return (
 			<div>
 				<h2>{info.Name}</h2>
@@ -131,10 +128,8 @@ class TeamShow extends Component {
 	render() {
 		const { teamInfo } = this.props;
 		let toRender;
-		console.log(teamInfo);
 		if (teamInfo.fetched) {
 			if (teamInfo.fetchSucess) {
-				console.log("?????")
 				toRender = this.getTeamDom(teamInfo);
 			} else {
 				toRender = <div>Tým neexistuje!</div>;
@@ -148,7 +143,6 @@ class TeamShow extends Component {
 }
 
 function mapStateToProps({ teamInfo, loginStatus, sendInviteInfo }) {
-	console.log(teamInfo);
 	return { teamInfo, loginStatus, sendInviteInfo };
 }
 

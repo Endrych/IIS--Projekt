@@ -13,7 +13,6 @@ class TournamentNew extends Component{
 	onSubmit = (values) => {
 		const cookie = new Cookies();
 		const token = cookie.get("user");
-		console.log(values)
 		this.props.createTournament(values, token);
 	}
 

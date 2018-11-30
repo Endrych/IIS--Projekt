@@ -3,12 +3,8 @@ import { TEAM_GET_INFO_SUCESS, TEAM_GET_INFO_FAILED } from "./../actions";
 export default function(state = { fetched: false, fetchSucess: false}, action){
 	switch(action.type){
 		case TEAM_GET_INFO_SUCESS:
-			console.log(action.payload);
 			if(action.payload.status === 200){
 				const newState = {...action.payload.data, fetched:true, fetchSucess:true};
-			console.log("2")
-
-			console.log(newState)
 
 				return newState;
 			}else{
@@ -20,7 +16,6 @@ export default function(state = { fetched: false, fetchSucess: false}, action){
 			const failState = {  fetchSucess: false, fetched: true};
 			return failState;
 		default:
-		console.log("1", state)
 			return state;
 	}
 }

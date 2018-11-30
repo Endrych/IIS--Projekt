@@ -69,10 +69,8 @@ class TournamentsList extends Component {
 	}
 
 	render() {
-		console.log(this.props.tournamentsAll);
 		const { tournamentsAll } = this.props;
 		let toRender;
-		console.log(this.props.loginStatus)
 		if (tournamentsAll.fetched) {
 			if (tournamentsAll.fetchSucess) {
 				toRender = this.getTournamentList(tournamentsAll.tournaments);

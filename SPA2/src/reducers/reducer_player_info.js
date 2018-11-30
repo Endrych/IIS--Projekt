@@ -13,11 +13,8 @@ export default function(state = {fetched: false, fetchSucess: false}, action){
 				fetchSucess: true,
 				fetched: true
 			}
-			console.log("FETCH SUCESS", playerDataState);
 			return playerDataState;
 		case PLAYER_FETCH_FAILED:
-		console.log("FETCH FAILED");
-			console.log(action.payload.data, action.payload);
 			return {
 				fetchSucess: false,
 				fetched: true
