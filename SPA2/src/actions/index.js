@@ -64,6 +64,8 @@ export const TOURNAMENT_REGISTER_SUCESS = "TOURNAMENT_REGISTER_SUCESS";
 export const TOURNAMENT_REGISTER_FAILED = "TOURNAMENT_REGISTER_FAILED";
 export const TOURNAMENT_UNREGISTER_SUCESS = "TOURNAMENT_UNREGISTER_SUCESS";
 export const TOURNAMENT_UNREGISTER_FAILED = "TOURNAMENT_UNREGISTER_SUCESS";
+export const TOURNAMENT_START_SUCESS = "TOURNAMENT_START_SUCESS";
+export const TOURNAMENT_START_FAILED = "TOURNAMENT_START_FAILED";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -754,6 +756,31 @@ export function unregisterFromTournament(token, tournamentId, callback = () => {
 			// setTimeout(() => {
 			// 	callback();
 			// }, 0);
+		});
+	}
+}
+
+export function startTournament(token , tournamentId, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/tournament/${tournamentId}/start`);
+
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TOURNAMENT_START_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res)
+
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TOURNAMENT_START_FAILED, payload: err });
+			setTimeout(() => {
+				callback();
+			}, 0);
 		});
 	}
 }
