@@ -24,10 +24,13 @@ export default function(state = { nickname: "", admin: "", token: "", loggedIn: 
 		// 	console.log(action, "MOVED 234");
 			const { payload } = action;
 			const newStateGet = { admin: payload.data.Admin, nickname: payload.data.Nickname, loggedIn: true };
+			 console.log("WOWOOWOWOWOWOWOWO", newStateGet)
 
 			return newStateGet;
 		case LOG_OUT:
 			const newStateLogOut = { nickname: "", admin: "", token: "", loggedIn: false, statusCode: "" };
+			console.log("222222222222222222222", newStateLogOut)
+
 			return newStateLogOut;
 		default:
 			return state;

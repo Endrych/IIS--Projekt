@@ -24,6 +24,7 @@ import TeamShow from './Teams/team_show';
 import TeamEdit from './Teams/team_edit';
 import TournamentNew from './Tournament/tournament_new';
 import TournamentsList from './Tournament/tournaments_list';
+import TournamentShow from './Tournament/tournament_show';
 
 class Game extends Component {
 	constructor(props) {
@@ -147,9 +148,9 @@ const AllRoutes = () => {
 			/>
 			<Route path="/tournaments" component={TournamentsList} exact strict />
 			<Route
-				path="/tournaments/:tournamentname"
+				path="/tournament/:id"
 				render={({ match }) => {
-					return <Tournament tournamentname={match.params.tournamentname} />;
+					return <TournamentShow history={history} id={match.params.id} />;
 				}}
 				exact
 				strict

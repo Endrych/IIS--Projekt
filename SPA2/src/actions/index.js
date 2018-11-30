@@ -56,6 +56,14 @@ export const TOURNAMENT_CREATE_SUCESS = "TOURNAMENT_CREATE_SUCESS";
 export const TOURNAMENT_CREATE_FAILED = "TOURNAMENT_CREATE_FAILED";
 export const TOURNAMENTS_FETCH_ALL_SUCESS ="TOURNAMENTS_FETCH_ALL_SUCESS";
 export const TOURNAMENTS_FETCH_ALL_FAILED = "TOURNAMENTS_FETCH_ALL_FAILED";
+export const TOURNAMENT_GET_DETAILS_SUCESS = "TOURNAMENT_GET_DETAILS_SUCESS";
+export const TOURNAMENT_GET_DETAILS_FAILED = "TOURNAMENT_GET_DETAILS_FAILED";
+export const  TOURNAMENT_DELETE_SUCESS = "TOURNAMENT_DELETE_SUCESS";
+export const TOURNAMENT_DELETE_FAILED ="TOURNAMENT_DELETE_FAILED";
+export const TOURNAMENT_REGISTER_SUCESS = "TOURNAMENT_REGISTER_SUCESS";
+export const TOURNAMENT_REGISTER_FAILED = "TOURNAMENT_REGISTER_FAILED";
+export const TOURNAMENT_UNREGISTER_SUCESS = "TOURNAMENT_UNREGISTER_SUCESS";
+export const TOURNAMENT_UNREGISTER_FAILED = "TOURNAMENT_UNREGISTER_SUCESS";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -128,6 +136,7 @@ export function getLoggedInStatus(token){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 
 	const request = axiosInstance.get("/user");
+
 	return {
 		type: LOGGED_IN,
 		payload: request
@@ -153,6 +162,9 @@ export function getUserInfoFromToken(token, callback = () => {}) {
 			})
 			.catch(err => {
 				dispatch({ type: "USERERROR", payload: err });
+				setTimeout(() => {
+					callback();
+				}, 0);
 			});
 	};
 }
@@ -254,6 +266,7 @@ export function updateArticle(id, data, token, callback){
 
 export function fetchPlayer(nickname){
 	const axiosInstance = axios.create({baseURL: baseUrl});
+	console.log(nickname, "<<<<<>>>>>?????", `/user/${nickname}`)
 	const request = axiosInstance.get(`/user/${nickname}`);
 
 	return dispatch => {
@@ -659,11 +672,85 @@ export function fetchTournamentsList(){
 			setTimeout(() => {
 				console.log(res)
 
-				callback();
+				// callback();
 			}, 0);
 		})
 		.catch(err => {
 			dispatch({ type: TOURNAMENTS_FETCH_ALL_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+}
+
+export function getTournamentDetails(id){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+
+	const request = axiosInstance.get(`/tournament/${id}`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TOURNAMENT_GET_DETAILS_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res)
+
+				// callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TOURNAMENT_GET_DETAILS_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+}
+
+export function registerInTournament(token, tournamentId, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/tournament/${tournamentId}/register`);
+
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TOURNAMENT_REGISTER_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res)
+
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TOURNAMENT_REGISTER_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+}
+
+export function unregisterFromTournament(token, tournamentId, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/tournament/${tournamentId}/unregister`);
+
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TOURNAMENT_UNREGISTER_SUCESS, payload: res });
+			setTimeout(() => {
+				console.log(res)
+
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TOURNAMENT_UNREGISTER_FAILED, payload: err });
 			// setTimeout(() => {
 			// 	callback();
 			// }, 0);

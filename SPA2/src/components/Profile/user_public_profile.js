@@ -4,6 +4,7 @@ import { fetchPlayer } from '../../actions';
 
 class UserPublicProfile extends Component{
 	componentDidMount(){
+		console.log(this.props.playername)
 		this.props.fetchPlayer(this.props.playername)
 	}
 
@@ -21,6 +22,7 @@ class UserPublicProfile extends Component{
 		const {playerInfo} = this.props;
 
 		let toRender;
+		console.log(playerInfo, "<<<<------------------------")
 		if(playerInfo.fetched){
 			if(playerInfo.fetchSucess){
 				toRender = this.fetchSucessfull(playerInfo);

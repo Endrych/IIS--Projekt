@@ -6,16 +6,18 @@ export default function(state = {fetched: false, fetchSucess: false}, action){
 		case PLAYER_FETCH_SUCESS:
 			const { data } = action.payload;
 			const playerDataState = {
-				nickname: data[0].Nickname,
-				firstname: data[0].Firstname,
-				lastname: data[0].Lastname,
-				team: data[0].Team,
+				nickname: data.Nickname,
+				firstname: data.Firstname,
+				lastname: data.Lastname,
+				team: data.Team,
 				fetchSucess: true,
 				fetched: true
 			}
-
+			console.log("FETCH SUCESS", playerDataState);
 			return playerDataState;
 		case PLAYER_FETCH_FAILED:
+		console.log("FETCH FAILED");
+			console.log(action.payload.data, action.payload);
 			return {
 				fetchSucess: false,
 				fetched: true
