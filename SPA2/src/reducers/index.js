@@ -14,6 +14,7 @@ import ReducerSendInvite from './reducer_send_invite';
 import ReducerAllInvites from './reducer_all_invites';
 import ReducerAllTournaments from './reducer_all_tournaments';
 import ReducerTournamentInfo from './reducer_tournament_info';
+import ReducerTournamentModal from './reducer_tournament_modal';
 
 const rootReducer = combineReducers({
 	registrationResultCode: RegisterReducer,
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
 	userInvites: ReducerAllInvites,
 	tournamentsAll: ReducerAllTournaments,
 	tournamentInfo: ReducerTournamentInfo,
+	tournamentModal: ReducerTournamentModal,
 	form: formReducer
 });
 

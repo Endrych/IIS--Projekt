@@ -1,4 +1,4 @@
-import { TOURNAMENTS_FETCH_ALL_SUCESS, TOURNAMENTS_FETCH_ALL_FAILED} from './../actions';
+import { TOURNAMENTS_FETCH_ALL_SUCESS, TOURNAMENTS_FETCH_ALL_FAILED} from '../actions';
 
 export default function(state = {fetched: false, fetchSucess: false}, action){
 	switch(action.type){

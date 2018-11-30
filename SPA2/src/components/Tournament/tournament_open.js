@@ -37,6 +37,7 @@ class TournamentOpen extends Component{
 			<div>
 				<div><h2>{tournamentInfo.Name}</h2></div>
 				<div>{tournamentInfo.Description}</div>
+				<div><Link to={`/games/${tournamentInfo.Game.Keyname}`}>Hra: {tournamentInfo.Game.Name}</Link></div>
 				<div>{loginStatus.loggedIn ? tournamentInfo.Users.includes(loginStatus.nickname) ?  <button className="btn btn-danger" onClick={this.handleUnregister.bind(this)}>Odhlásit se z turnaje</button> : <button className="btn btn-second" onClick={this.handleRegister.bind(this)}>Registrovat se do turnaje</button> : ""}
 				{loginStatus.loggedIn ? loginStatus.admin  > 0 ? <button className="btn btn-primary" onClick={this.handleStartTournament.bind(this)}>Spustit turnaj</button> : "" : ""}
 				</div>

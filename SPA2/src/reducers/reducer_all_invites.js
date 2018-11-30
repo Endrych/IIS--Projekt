@@ -1,4 +1,4 @@
-import {INVITES_GET_ALL_SUCESS, INVITES_GET_ALL_FAILED, INVITES_ALL_SHOW, INVITES_ALL_HIDE} from './../actions';
+import {INVITES_GET_ALL_SUCESS, INVITES_GET_ALL_FAILED, INVITES_ALL_SHOW, INVITES_ALL_HIDE} from '../actions';
 
 export default function(state = {invites: [], show: false}, action){
 	switch(action.type){

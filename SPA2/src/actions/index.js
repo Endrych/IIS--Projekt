@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from "universal-cookie";
+import Cookies from "universal-cookie/cjs";
 
 export const REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS";
 export const REGISTER_USER_FAILED = "REGISTER_USER_FAILED";
@@ -66,6 +66,12 @@ export const TOURNAMENT_UNREGISTER_SUCESS = "TOURNAMENT_UNREGISTER_SUCESS";
 export const TOURNAMENT_UNREGISTER_FAILED = "TOURNAMENT_UNREGISTER_SUCESS";
 export const TOURNAMENT_START_SUCESS = "TOURNAMENT_START_SUCESS";
 export const TOURNAMENT_START_FAILED = "TOURNAMENT_START_FAILED";
+export const TOURNAMENT_MODAL_SET_DATA = "TOURNAMENT_MODAL_SET_DATA";
+export const TOURNAMENT_MODAL_UNSET_DATA = "TOURNAMENT_MODAL_UNSET_DATA";
+export const MATCH_SET_RESULT_SUCESS = "MATCH_SET_RESULT_SUCESS";
+export const MATCH_SET_RESULT_FAILED = "MATCH_SET_RESULT_FAILED";
+export const TOURNAMENT_CONTINUE_SUCESS = "TOURNAMENT_CONTINUE_SUCESS";
+export const TOURNAMENT_CONTINUE_FAILED = "TOURNAMENT_CONTINUE_FAILED";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -760,3 +766,70 @@ export function startTournament(token , tournamentId, callback = () => {}){
 		});
 	}
 }
+
+//nakonec jen prepina ezi true a false na viditelnost
+export function setTournamentModalValues(values){
+	return {
+		type: TOURNAMENT_MODAL_SET_DATA,
+		payload: values
+	}
+}
+
+export function unsetTournamentModalValues(values){
+	return {
+		type: TOURNAMENT_MODAL_UNSET_DATA,
+		// payload: values
+	}
+}
+
+export function setMatchResult(token, values, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/match/${values.Id}?score1=${values.Score1}&score2=${values.Score2}`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: MATCH_SET_RESULT_SUCESS, payload: res });
+			setTimeout(() => {
+				callback(values.tournamentId);
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: MATCH_SET_RESULT_FAILED, payload: err });
+			setTimeout(() => {
+				callback(values.tournamentId);
+			}, 0);
+		});
+	}
+
+}
+
+export function startNextRound(token, id, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+
+	const request = axiosInstance.post(`/tournament/${id}/continue`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TOURNAMENT_CONTINUE_SUCESS, payload: res });
+			setTimeout(() => {
+				callback(id);
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TOURNAMENT_CONTINUE_FAILED, payload: err });
+			setTimeout(() => {
+				callback(id);
+			}, 0);
+		});
+	}
+
+}
+
+// export function showModal(){
+
+// }
+
+// export hideModal()

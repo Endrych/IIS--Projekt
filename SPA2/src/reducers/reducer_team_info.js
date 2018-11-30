@@ -1,4 +1,4 @@
-import { TEAM_GET_INFO_SUCESS, TEAM_GET_INFO_FAILED } from "./../actions";
+import { TEAM_GET_INFO_SUCESS, TEAM_GET_INFO_FAILED } from "../actions";
 
 export default function(state = { fetched: false, fetchSucess: false}, action){
 	switch(action.type){
