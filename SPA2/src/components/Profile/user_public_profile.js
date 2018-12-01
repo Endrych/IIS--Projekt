@@ -11,7 +11,7 @@ class UserPublicProfile extends Component{
 		return(
 			<div>
 				<h2>{playerInfo.nickname}</h2>
-				<div>Tým: {playerInfo.team ? playerInfo.team : "Není členem žádného týmu"} </div>
+				<div>Tým: {playerInfo.team ? playerInfo.team.Name : "Není členem žádného týmu"} </div>
 				<div>Jméno: {playerInfo.firstname} {playerInfo.lastname}</div>
 			</div>
 		)
@@ -31,7 +31,6 @@ class UserPublicProfile extends Component{
 			toRender = <div>Loading data...</div>
 		}
 
-		console.log(this.props, "<------PLAYER PROPS");
 		return(
 			<div>
 				{toRender}
@@ -41,7 +40,6 @@ class UserPublicProfile extends Component{
 }
 
 function mapStateToProps({playerInfo}){
-	console.log(playerInfo)
 	return {playerInfo};
 }
 

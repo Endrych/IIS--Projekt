@@ -19,6 +19,12 @@ import GameEdit from "./Games/game_edit";
 import GameList from "./Games/game_list";
 import GameShow from './Games/game_show';
 import AdminGrantRights from './Admin/admin_grant_rights';
+import TeamCreateNew from './Teams/team_create_new';
+import TeamShow from './Teams/team_show';
+import TeamEdit from './Teams/team_edit';
+import TournamentNew from './Tournament/tournament_new';
+import TournamentsList from './Tournament/tournaments_list';
+import TournamentShow from './Tournament/tournament_show';
 
 class Game extends Component {
 	constructor(props) {
@@ -127,19 +133,26 @@ const AllRoutes = () => {
 			<Route path="/article/new" component={ArticleNew} exact strict />
 			<Route path="/article/new/sucess" component={ArticleNewSuccess} exact strict />
 			<Route path="/teams" component={TeamList} exact strict />
+			<Route path="/team/new" component={TeamCreateNew} exact strict />
+			<Route path="/team/edit/:id"
+			render={({ match , history}) => {
+				return <TeamEdit history={history} id={match.params.id} />;
+			}} exact strict />
 			<Route
-				path="/teams/:teamname"
-				render={({ match }) => {
-					return <Team teamname={match.params.teamname} />;
+				path="/team/:id"
+				render={({ match , history}) => {
+					return <TeamShow history={history} id={match.params.id} />;
 				}}
 				exact
 				strict
 			/>
-			<Route path="/tournaments" component={TournamentList} exact strict />
+			<Route path="/tournaments" component={TournamentsList} exact strict />
+			<Route path="/tournament/new" component={TournamentNew} exact strict />
+
 			<Route
-				path="/tournaments/:tournamentname"
+				path="/tournament/:id"
 				render={({ match }) => {
-					return <Tournament tournamentname={match.params.tournamentname} />;
+					return <TournamentShow history={history} id={match.params.id} />;
 				}}
 				exact
 				strict
@@ -152,6 +165,9 @@ const AllRoutes = () => {
 				exact
 				strict
 			/>
+
+
+
 			<Route path="/register" component={RegistrationForm} exact strict />
 			<Route path="/register/sucess" component={RegistrationSucess} exact strict />
 			<Route path="/admin/rights" component={AdminGrantRights} exact strict />

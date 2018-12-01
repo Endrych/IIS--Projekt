@@ -38,11 +38,9 @@ class AdminGrantRights extends Component{
 		const cookie = new Cookies();
 		const token = cookie.get("user");
 
-		console.log(data,remove, "<-------DATA")
 		if(remove){
 			this.props.removeAdminRights(data.Nickname, token); //pridat landing page game sucess
 		}else{
-			console.log("ASDADDWADAWD,", data)
 			this.props.grantAdminRights(data.Nickname, token); //pridat landing page game sucess
 		}
 	}

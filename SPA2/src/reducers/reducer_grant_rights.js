@@ -4,7 +4,6 @@ export default function(state = {waiting: true}, action){
 	switch(action.type){
 		case GRANT_RIGHTS_SUCESS:
 			const newState = {waiting: false, rightsGranted: true, status: action.payload.status};
-			console.log(newState, "console.");
 
 			return newState;
 		case GRANT_RIGHTS_FAILED:

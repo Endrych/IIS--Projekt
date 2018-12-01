@@ -64,7 +64,6 @@ class GameNew extends Component{
 		const cookie = new Cookies();
 		const token = cookie.get("user");
 
-		console.log(data, "<-------DATA")
 		this.props.createNewGame(data, token, ()=>{this.props.history.push("/admin/games")}); //pridat landing page game sucess
 	}
 

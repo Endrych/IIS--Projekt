@@ -32,12 +32,9 @@ class GameAdminList extends Component {
 	createList = () => {
 		const { data } = this.props.gameList;
 		let arrayOfGames = [];
-		console.log;
 		for (let i = 0; i < data.length; i++) {
-			console.log(data, "LIST");
 			arrayOfGames.push(this.generateListItem(data[i]));
 		}
-		console.log(arrayOfGames, data, "<======");
 		return arrayOfGames;
 	};
 
@@ -45,7 +42,6 @@ class GameAdminList extends Component {
 		let toRender;
 		if (this.props.gameList.fetched) {
 			toRender = this.createList();
-			console.log(toRender, "RENDER");
 		} else {
 			toRender = <div>Fetchind list of games</div>;
 		}

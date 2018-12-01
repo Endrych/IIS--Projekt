@@ -13,6 +13,18 @@ class GeneralValidators{
 		}
 	}
 
+	NumericCharacters = (value, options) => {
+		if (value) {
+			if (options && options.allowSpace) {
+				return /^[0-9|\s]+$/.test(value);
+			} else {
+				return /^[0-9]+$/.test(value);
+			}
+		} else {
+			return false;
+		}
+	}
+
 	AlphaNumericCharacters = (value, options) => {
 		if (value) {
 			if (options && options.allowSpace) {

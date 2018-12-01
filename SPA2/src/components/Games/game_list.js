@@ -23,12 +23,9 @@ class GameList extends Component{
 	createList = () => {
 		const { data } = this.props.gameList;
 		let arrayOfGames = [];
-		console.log;
 		for (let i = 0; i < data.length; i++) {
-			console.log(data, "LIST");
 			arrayOfGames.push(this.generateListItem(data[i]));
 		}
-		console.log(arrayOfGames, data, "<======");
 		return arrayOfGames;
 	};
 

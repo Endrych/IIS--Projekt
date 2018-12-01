@@ -28,6 +28,7 @@ export default function(state = { nickname: "", admin: "", token: "", loggedIn: 
 			return newStateGet;
 		case LOG_OUT:
 			const newStateLogOut = { nickname: "", admin: "", token: "", loggedIn: false, statusCode: "" };
+
 			return newStateLogOut;
 		default:
 			return state;

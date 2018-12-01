@@ -27,9 +27,8 @@ class GameShow extends Component{
 	}
 	render(){
 		const { gameInfo } = this.props;
-		console.log(this.props.gameInfo);
 		let toRender;
-		console.log(gameInfo)
+
 		if(gameInfo.fetched){
 			if(gameInfo.fetchSucess){
 				toRender = this.gameDom(gameInfo);
