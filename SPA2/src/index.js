@@ -9,7 +9,7 @@ import "babel-polyfill";
 import reducers from "./reducers";
 
 import AllRoutes from "./components/all_routes.js";
-import Header from "./components/Header/Header.js";
+import Header from "./components/Header/header.js";
 
 const createStoreWithMiddleware = applyMiddleware(promise, thunk)(createStore);
 
