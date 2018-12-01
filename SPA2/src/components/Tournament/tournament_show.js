@@ -38,11 +38,11 @@ class TournamentShow extends Component{
 					toRenderRemove = (this.props.loginStatus.admin > 0 ? <div><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Zrušit turnaj</button></div> : "")
 				}else if(tournamentInfo.State === 1){
 					toRender = <TournamentActive tournamentInfo={tournamentInfo} loginStatus={this.props.loginStatus} tournamentId={this.props.id} />;
-					toRenderRemove = (this.props.loginStatus.admin > 0 ? <div><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Zrušit turnaj</button></div> : "")
+					// toRenderRemove = (this.props.loginStatus.admin > 0 ? <div><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Zrušit turnaj</button></div> : "")
 
 				}else if(tournamentInfo.State === 2){
 					toRender = <TournamentFinished tournamentInfo={tournamentInfo} loginStatus={this.props.loginStatus} tournamentId={this.props.id} />;
-					toRenderRemove = (this.props.loginStatus.admin > 0 ? <div><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Odstranit turnaj z historie</button></div> : "")
+					// toRenderRemove = (this.props.loginStatus.admin > 0 ? <div><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Odstranit turnaj z historie</button></div> : "")
 
 				}else{
 					toRender = <div>Získané informace jsou poškozeny. Kontaktujte správce.</div>;

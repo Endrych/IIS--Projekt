@@ -80,6 +80,7 @@ class UserPrivateProfile extends Component {
 		if(this.props.loginStatus.loggedIn){
 			const { userInformations } = this.props;
 			// const team = this.props.team || {Name: "", Id: ""};
+			console.log(userInformations)
 			toRender = <div className="row">
 			{/* <Redirect  to="/" /> */}
 			<div>Přezdívka: <span>{userInformations.nickname}</span></div>
@@ -93,6 +94,22 @@ class UserPrivateProfile extends Component {
 			{userInformations.team ? <Link to={`/team/${userInformations.team.Id}`}><button className="btn btn-primary">Zobrazit tým</button></Link> : <Link to="/team/new"><button className="btn btn-primary">Založit tým</button></Link>}
 			{this.props.loginStatus.admin > 0 ? this.renderAdminButtons() : ""}
 			{!userInformations.team ? this.handleInvites() : "" }
+			{userInformations.tournaments.length > 0 ? (
+					<div>
+						<h3>Vyhrané turnaje</h3>
+						<div>
+							{userInformations.tournaments.map(tournament => {
+								return (
+									<div key={tournament.Id}>
+										<Link to={`/tournament/${tournament.Id}`}>{tournament.Name}</Link>{" "}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				) : (
+					""
+				)}
 		</div>;
 		}else{
 			toRender =  <Redirect  to="/" />
