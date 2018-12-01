@@ -25,6 +25,7 @@ import TeamEdit from './Teams/team_edit';
 import TournamentNew from './Tournament/tournament_new';
 import TournamentsList from './Tournament/tournaments_list';
 import TournamentShow from './Tournament/tournament_show';
+import SearchResults from './Searcher/search_results';
 
 class Game extends Component {
 	constructor(props) {
@@ -95,6 +96,7 @@ const RegistrationPage = () => {
 };
 
 const AllRoutes = () => {
+
 	return (
 		<Switch>
 			<Route path="/" exact strict component={LandingPage} />
@@ -181,6 +183,9 @@ const AllRoutes = () => {
 			<Route path="/admin/game/edit/:keyname" render={({ match, history }) => {
 				return <GameEdit history={history} keyname={match.params.keyname} />;
 			}} exact strict />
+
+			<Route path="/search/results" component={SearchResults} exact strict />
+
 			<Route
 				render={() => {
 					return "ERROR 404";

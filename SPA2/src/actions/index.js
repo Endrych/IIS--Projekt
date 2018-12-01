@@ -74,6 +74,8 @@ export const MATCH_SET_RESULT_FAILED = "MATCH_SET_RESULT_FAILED";
 export const TOURNAMENT_CONTINUE_SUCESS = "TOURNAMENT_CONTINUE_SUCESS";
 export const TOURNAMENT_CONTINUE_FAILED = "TOURNAMENT_CONTINUE_FAILED";
 export const TOURNAMENT_CONTINUE_RESET = "TOURNAMENT_CONTINUE_RESET";
+export const SEARCH_RESULT_SUCESS = "SEARCH_RESULT_SUCESS";
+export const SEARCH_RESULT_FAILED = "SEARCH_RESULT_FAILED";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -845,3 +847,25 @@ export function resetStartState(){
 // }
 
 // export hideModal()
+
+export function getSearchResults(expression, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+
+	const request = axiosInstance.get(`/search?expression=${expression}`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: SEARCH_RESULT_SUCESS, payload: res });
+			setTimeout(() => {
+				callback();
+			}, 0);
+		})
+		.catch(err => {
+			dispatch({ type: SEARCH_RESULT_FAILED, payload: err });
+			setTimeout(() => {
+				callback();
+			}, 0);
+		});
+	}
+}
