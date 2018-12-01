@@ -77,7 +77,7 @@ export const TOURNAMENT_CONTINUE_RESET = "TOURNAMENT_CONTINUE_RESET";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
-const baseUrl = `http://localhost:5050`;
+const baseUrl = `https://obscure-shelf-42241.herokuapp.com`;
 
 export function registerUser(values, callback) {
 	const axiosInstance = axios.create({ baseURL: baseUrl });

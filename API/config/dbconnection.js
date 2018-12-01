@@ -3,71 +3,88 @@ const RejectError = require('../models/RejectError');
 const ResultCodes = require('../enums/ResultCodes');
 
 var options = {
-    host: 'localhost',
-    user: 'root',
-    database: 'iis-db',
+    host: 'us-cdbr-iron-east-01.cleardb.net',
+    user: 'b24006ab000d01',
+    password: 'f7fe8d95',
+    database: 'heroku_81ced608b5b3877',
     dateStrings: true
 };
 
-if (process.platform === 'win32') {
-    options.password = '';
-} else {
-    (options.password = 'root'), (options.socketPath = '/Applications/MAMP/tmp/mysql/mysql.sock');
+var connection;
+
+function handleDisconnect() {
+    connection = mysql.createConnection(options); // Recreate the connection, since
+    // the old one cannot be reused.
+
+    connection.connect(function(err) {
+        // The server is either down
+        if (err) {
+            // or restarting (takes a while sometimes).
+            console.log('error when connecting to db:', err);
+            setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+        } // to avoid a hot loop, and to allow our node script to
+    }); // process asynchronous requests in the meantime.
+    // If you're also serving http, display a 503 error.
+    connection.on('error', function(err) {
+        console.log('db error', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            // Connection to the MySQL server is usually
+            handleDisconnect(); // lost due to either server restart, or a
+        } else {
+            // connnection idle timeout (the wait_timeout
+            throw err; // server variable configures this)
+        }
+    });
+
+    connection.promiseQuery = (sql, parameters) => {
+        return new Promise((resolve, reject) => {
+            connection.query(sql, parameters, (err, res) => {
+                if (err) {
+                    reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
+                } else {
+                    resolve(res);
+                }
+            });
+        });
+    };
+
+    connection.promiseBeginTransaction = () => {
+        return new Promise((resolve, reject) => {
+            connection.beginTransaction(err => {
+                if (err) {
+                    reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
+                } else {
+                    resolve();
+                }
+            });
+        });
+    };
+
+    connection.promiseCommit = () => {
+        return new Promise((resolve, reject) => {
+            connection.commit(err => {
+                if (err) {
+                    reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
+                } else {
+                    resolve();
+                }
+            });
+        });
+    };
+
+    connection.promiseRollback = () => {
+        return new Promise((resolve, reject) => {
+            connection.rollback(err => {
+                if (err) {
+                    reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
+                } else {
+                    resolve();
+                }
+            });
+        });
+    };
 }
 
-var connection = mysql.createConnection(options);
-
-connection.connect(function(err) {
-    if (err) throw err;
-    console.log('You are now connected to Database...');
-});
-
-connection.promiseQuery = (sql, parameters) => {
-    return new Promise((resolve, reject) => {
-        connection.query(sql, parameters, (err, res) => {
-            if (err) {
-                reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
-            } else {
-                resolve(res);
-            }
-        });
-    });
-};
-
-connection.promiseBeginTransaction = () => {
-    return new Promise((resolve, reject) => {
-        connection.beginTransaction(err => {
-            if (err) {
-                reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
-            } else {
-                resolve();
-            }
-        });
-    });
-};
-
-connection.promiseCommit = () => {
-    return new Promise((resolve, reject) => {
-        connection.commit(err => {
-            if (err) {
-                reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
-            } else {
-                resolve();
-            }
-        });
-    });
-};
-
-connection.promiseRollback = () => {
-    return new Promise((resolve, reject) => {
-        connection.rollback(err => {
-            if (err) {
-                reject(new RejectError(ResultCodes.INTERNAL_SERVER_ERROR, err));
-            } else {
-                resolve();
-            }
-        });
-    });
-};
+handleDisconnect();
 
 module.exports = connection;
