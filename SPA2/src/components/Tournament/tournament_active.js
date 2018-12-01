@@ -27,8 +27,8 @@ class TournamentActive extends Component{
 		this.props.setTournamentModalValues(match.Id);
 	}
 
-	generateRound= (round, currentRound = false) => {
-		const roundArr = ["sda"];
+	generateRound= (round, key) => {
+		const roundArr = [<div key={key}><h4>{key}. Kolo</h4></div>];
 		for(let i = 0; i < round.length; i++){
 			roundArr.push(this.createMatch(round[i]))
 		}
@@ -42,7 +42,7 @@ class TournamentActive extends Component{
 		const _this = this;
 		Object.keys(matches).forEach(function(key) {
 			console.log(key, matches[key]);
-			roundsArr.push(_this.generateRound(matches[key]))
+			roundsArr.push(_this.generateRound(matches[key], key))
 
 		  });		// for(){
 		// 	if(i === round){

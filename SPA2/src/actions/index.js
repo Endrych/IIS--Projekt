@@ -72,6 +72,7 @@ export const MATCH_SET_RESULT_SUCESS = "MATCH_SET_RESULT_SUCESS";
 export const MATCH_SET_RESULT_FAILED = "MATCH_SET_RESULT_FAILED";
 export const TOURNAMENT_CONTINUE_SUCESS = "TOURNAMENT_CONTINUE_SUCESS";
 export const TOURNAMENT_CONTINUE_FAILED = "TOURNAMENT_CONTINUE_FAILED";
+export const TOURNAMENT_CONTINUE_RESET = "TOURNAMENT_CONTINUE_RESET";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -807,7 +808,7 @@ export function setMatchResult(token, values, callback = () => {}){
 
 export function startNextRound(token, id, callback = () => {}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
-
+	console.log(id)
 	const request = axiosInstance.post(`/tournament/${id}/continue`);
 
 	return dispatch => {
@@ -815,6 +816,7 @@ export function startNextRound(token, id, callback = () => {}){
 		.then(res => {
 			dispatch({ type: TOURNAMENT_CONTINUE_SUCESS, payload: res });
 			setTimeout(() => {
+				console.log(res)
 				callback(id);
 			}, 0);
 		})
@@ -828,6 +830,11 @@ export function startNextRound(token, id, callback = () => {}){
 
 }
 
+export function resetNextRoundState(){
+	return{
+		type: TOURNAMENT_CONTINUE_RESET
+	}
+}
 // export function showModal(){
 
 // }
