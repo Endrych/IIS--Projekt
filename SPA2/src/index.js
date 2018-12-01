@@ -18,7 +18,7 @@ ReactDOM.render(
 		<div>
 			<BrowserRouter>
 				<div>
-					<Header />
+					<Header history={history}/>
 					<AllRoutes />
 				</div>
 			</BrowserRouter>
