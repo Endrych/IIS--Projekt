@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
-import { registerInTournament, unregisterFromTournament, getTournamentDetails, startTournament } from '../../actions';
+import { registerInTournament, unregisterFromTournament, getTournamentDetails, startTournament, resetStartState } from '../../actions';
 
 class TournamentOpen extends Component{
 
@@ -26,7 +26,7 @@ class TournamentOpen extends Component{
 		var cookies = new Cookies;
 		var token = cookies.get("user");
 
-		this.props.startTournament(token, this.props.tournamentID,  this.props.getTournamentDetails.bind(this,this.props.tournamentID));
+		this.props.startTournament(token, this.props.tournamentID,  this.props.getTournamentDetails.bind(this,this.props.tournamentID), this.props.resetStartState);
 	}
 
 	render(){
@@ -40,6 +40,7 @@ class TournamentOpen extends Component{
 				<div><Link to={`/games/${tournamentInfo.Game.Keyname}`}>Hra: {tournamentInfo.Game.Name}</Link></div>
 				<div>{loginStatus.loggedIn ? tournamentInfo.Users.includes(loginStatus.nickname) ?  <button className="btn btn-danger" onClick={this.handleUnregister.bind(this)}>Odhlásit se z turnaje</button> : <button className="btn btn-second" onClick={this.handleRegister.bind(this)}>Registrovat se do turnaje</button> : ""}
 				{loginStatus.loggedIn ? loginStatus.admin  > 0 ? <button className="btn btn-primary" onClick={this.handleStartTournament.bind(this)}>Spustit turnaj</button> : "" : ""}
+				{this.props.tournamentStart.try ? !this.props.tournamentStart.failed ? <div className="error">V turnaji musí být alespoň 2 hráči!</div> : "" : ""}
 				</div>
 				<div>Seznam hračů</div>
 				{tournamentInfo.Users.map(user => <div key={user}><Link to={`/players/${user}`}>{user}</Link></div>)}
@@ -49,8 +50,8 @@ class TournamentOpen extends Component{
 	}
 }
 
-// function mapStateToProps(state){
-// 	return state;
-// }
+function mapStateToProps({tournamentStart}){
+	return {tournamentStart};
+}
 
-export default connect(null, {registerInTournament, unregisterFromTournament, getTournamentDetails, startTournament})(TournamentOpen)
+export default connect(mapStateToProps, {registerInTournament, unregisterFromTournament, getTournamentDetails, startTournament, resetStartState})(TournamentOpen)

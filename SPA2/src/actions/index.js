@@ -66,6 +66,7 @@ export const TOURNAMENT_UNREGISTER_SUCESS = "TOURNAMENT_UNREGISTER_SUCESS";
 export const TOURNAMENT_UNREGISTER_FAILED = "TOURNAMENT_UNREGISTER_SUCESS";
 export const TOURNAMENT_START_SUCESS = "TOURNAMENT_START_SUCESS";
 export const TOURNAMENT_START_FAILED = "TOURNAMENT_START_FAILED";
+export const TOURNAMENT_START_RESET = "TOURNAMENT_START_RESET";
 export const TOURNAMENT_MODAL_SET_DATA = "TOURNAMENT_MODAL_SET_DATA";
 export const TOURNAMENT_MODAL_UNSET_DATA = "TOURNAMENT_MODAL_UNSET_DATA";
 export const MATCH_SET_RESULT_SUCESS = "MATCH_SET_RESULT_SUCESS";
@@ -745,7 +746,7 @@ export function unregisterFromTournament(token, tournamentId, callback = () => {
 	}
 }
 
-export function startTournament(token , tournamentId, callback = () => {}){
+export function startTournament(token , tournamentId, callback = () => {}, callback2 = () => {}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 
 	const request = axiosInstance.post(`/tournament/${tournamentId}/start`);
@@ -764,6 +765,9 @@ export function startTournament(token , tournamentId, callback = () => {}){
 			setTimeout(() => {
 				callback();
 			}, 0);
+			setTimeout(()=>{
+				callback2();
+			}, 2000)
 		});
 	}
 }
@@ -830,9 +834,10 @@ export function startNextRound(token, id, callback = () => {}){
 
 }
 
-export function resetNextRoundState(){
+export function resetStartState(){
+	// console.log("HULALLALALALL")
 	return{
-		type: TOURNAMENT_CONTINUE_RESET
+		type: TOURNAMENT_START_RESET
 	}
 }
 // export function showModal(){
