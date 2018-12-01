@@ -18,16 +18,17 @@ module.exports = (id, db) => {
                 }
 
                 db.promiseQuery(
-                    'SELECT * FROM tournament_match JOIN tmatch ON tournament_match.tmatch = tmatch.id WHERE Round = ?',
+                    `SELECT * FROM tournament_match JOIN tmatch ON tournament_match.tmatch = tmatch.id WHERE Round = ? And tournament=${id}`,
                     tournament.Round
                 ).then(matches => {
                     if (matches.length > 1) {
                         var users = [];
                         var correct = true;
-
+						console.log("____________________\n\n MATCHES", matches);
                         matches.forEach(element => {
                             if (correct) {
-                                if (element.Score1) {
+								console.log("USERS", users)
+								if (element.Score1 !== null) {
                                     if (element.Score1 > element.Score2) {
                                         users.push(element.User1);
                                     } else {
@@ -59,8 +60,7 @@ module.exports = (id, db) => {
                         }
                     } else {
                         var match = matches[0];
-
-                        if (match.Score1 && match.Score2) {
+                        if (match.Score1 !== null && match.Score2 != null) {
                             var winner = match.User1;
                             if (match.Score2 > match.Score1) {
                                 winner = match.User2;
