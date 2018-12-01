@@ -126,7 +126,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`Nickname`, `Firstname`, `Lastname`, `Email`, `Phone`, `Image`, `Password`, `Salt`, `Team`, `Admin`, `Deactivated`) VALUES
 ('Admin', 'John', 'Doe', 'admin@admin.cz', NULL, NULL, '$2a$10$NVAMtZl6UFYR.dkiOL1Rw.A4NjM/tyNCQPomldGGFHw2C5eziwyU2', '$2a$10$NVAMtZl6UFYR.dkiOL1Rw.', NULL, 2, 0),
-('BaseAdmin', 'John', 'Doe', 'admin@admin.cz', NULL, NULL, '$2a$10$aDZtWFyrDGpTcu3kJc2R5uB/yUfvHuXI.sgGPODsHq.XrlOI0usoy', '$2a$10$aDZtWFyrDGpTcu3kJc2R5u', NULL, 0, 0),
+('BaseAdmin', 'John', 'Doe', 'admin@admin.cz', NULL, NULL, '$2a$10$aDZtWFyrDGpTcu3kJc2R5uB/yUfvHuXI.sgGPODsHq.XrlOI0usoy', '$2a$10$aDZtWFyrDGpTcu3kJc2R5u', NULL, 1, 0),
 ('User', 'John', 'Doe', 'user@user.com', NULL, NULL, '$2a$10$HAeRt9uK3OCYZotREAmzR.knm2WVejnOKgxk/Vz9o2npDtGXVtceO', '$2a$10$HAeRt9uK3OCYZotREAmzR.', NULL, 0, 0);
 
 
