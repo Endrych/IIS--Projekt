@@ -76,6 +76,11 @@ export const TOURNAMENT_CONTINUE_FAILED = "TOURNAMENT_CONTINUE_FAILED";
 export const TOURNAMENT_CONTINUE_RESET = "TOURNAMENT_CONTINUE_RESET";
 export const SEARCH_RESULT_SUCESS = "SEARCH_RESULT_SUCESS";
 export const SEARCH_RESULT_FAILED = "SEARCH_RESULT_FAILED";
+export const REMOVE_RIGHTS_SUCESS = "REMOVE_RIGHTS_SUCESS";
+export const REMOVE_RIGHTS_FAILED = "REMOVE_RIGHTS_FAILED";
+export const DEACTIVATE_ACCOUNT_SUCESS = "DEACTIVATE_ACCOUNT_SUCESS";
+export const DEACTIVATE_ACCOUNT_FAILED = "DEACTIVATE_ACCOUNT_FAILED";
+export const RESET_ACCOUNT_MANAGMENT = "RESET_ACCOUNT_MANAGMENT";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -387,10 +392,13 @@ export function grantAdminRights(nickname, token, callback = ()=>{}){
 				dispatch({ type: GRANT_RIGHTS_SUCESS, payload: res });
 				setTimeout(() => {
 					callback();
-				}, 0);
+				}, 2000);
 			})
 			.catch(err => {
 				dispatch({ type: GRANT_RIGHTS_FAILED, payload: err });
+				setTimeout(() => {
+					callback();
+				}, 2000);
 			});
 	};
 
@@ -403,16 +411,46 @@ export function removeAdminRights(nickname, token, callback = ()=>{}){
 	return dispatch => {
 		request
 			.then(res => {
-				dispatch({ type: GRANT_RIGHTS_SUCESS, payload: res });
+				dispatch({ type: REMOVE_RIGHTS_SUCESS, payload: res });
 				setTimeout(() => {
 					callback();
-				}, 0);
+				}, 2000);
 			})
 			.catch(err => {
-				dispatch({ type: GRANT_RIGHTS_FAILED, payload: err });
+				dispatch({ type: REMOVE_RIGHTS_FAILED, payload: err });
+				setTimeout(() => {
+					callback();
+				}, 2000);
 			});
 	};
 
+}
+
+export function deactivateAccount(nickname, token, callback = () => {}){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	const request = axiosInstance.post(`/admin/deactivate/${nickname}`)
+
+	return dispatch => {
+		request
+			.then(res => {
+				dispatch({ type: DEACTIVATE_ACCOUNT_SUCESS, payload: res });
+				setTimeout(() => {
+					callback();
+				}, 2000);
+			})
+			.catch(err => {
+				dispatch({ type: DEACTIVATE_ACCOUNT_FAILED, payload: err });
+				setTimeout(() => {
+					callback();
+				}, 2000);
+			});
+	};
+}
+
+export function resetManagnePlayersState(){
+	return{
+		type: RESET_ACCOUNT_MANAGMENT
+	}
 }
 
 export function createTeam(values, token, callback = ()=>{}){
