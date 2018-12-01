@@ -907,3 +907,26 @@ export function getSearchResults(expression, callback = () => {}){
 		});
 	}
 }
+
+export function removeTournament(token, tournamentId){
+	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
+	console.log(tournamentId)
+	const request = axiosInstance.delete(`/tournament/${tournamentId}`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: TOURNAMENT_DELETE_SUCESS, payload: res });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		})
+		.catch(err => {
+			dispatch({ type: TOURNAMENT_DELETE_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+
+}
