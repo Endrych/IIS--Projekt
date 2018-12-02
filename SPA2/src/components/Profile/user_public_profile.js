@@ -11,7 +11,7 @@ class UserPublicProfile extends Component {
 	fetchSucessfull = playerInfo => {
 		console.log(playerInfo);
 		return (
-			<div className="col col-sm-12" style={{marginTop: "15px", marginBottom: "15px"}}>
+			<div className="col col-sm-12">
 				<h3>Hráč: {playerInfo.nickname}</h3>
 				<div>Tým: {playerInfo.team ? playerInfo.team.Name : "Není členem žádného týmu"} </div>
 				<div>

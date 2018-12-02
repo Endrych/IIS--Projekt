@@ -114,8 +114,8 @@ class UserPrivateProfile extends Component {
 				console.log(userInformations);
 				toRender = (
 					<div className="row">
-						<div style={{marginTop: "15px"}}  className="col col-sm-12"><h2>Osobní profil</h2></div>
-						<div className="col col-sm-6" style={{marginBottom: "15px"}}  >
+						<div  className="col col-sm-12"><h2>Osobní profil</h2></div>
+						<div className="col col-sm-6">
 							<div>
 								<span>Přezdívka:</span> <span>{userInformations.nickname}</span>
 							</div>

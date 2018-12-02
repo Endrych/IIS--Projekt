@@ -74,15 +74,17 @@ class TeamCreateNew extends Component{
 		const { handleSubmit } = this.props;
 
 		return(
-			<div>
-				<h2>Založit nový tým</h2>
-				<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-					<Field name="Name" label="Jmeno týmu" component={this.renderInputField} />
-					<Field name="Description" label="Popis týmu" component={this.renderTextareaField} />
-					<Field name="Logo" label="Logo týmu" type="file" component={this.renderImageField} />
-					<button className="btn btn-primary">Vytvořit</button>
-					<Link to="/user"><button className="btn btn-danger">Zrušit</button></Link>
-				</form>
+			<div className="row row__box">
+				<div className="col col-sm-12">
+					<h2>Založit nový tým</h2>
+					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+						<Field name="Name" label="Jméno týmu" component={this.renderInputField} />
+						<Field name="Description" label="Popis týmu" component={this.renderTextareaField} />
+						{/* <Field name="Logo" label="Logo týmu" type="file" component={this.renderImageField} /> */}
+						<button className="btn btn-primary" style={{marginRight: "5px"}}>Vytvořit</button>
+						<Link to="/user"><button className="btn btn-danger">Zrušit</button></Link>
+					</form>
+				</div>
 			</div>
 		)
 	}

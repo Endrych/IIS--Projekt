@@ -16,7 +16,7 @@ class TeamShow extends Component {
 		const canKick = (this.props.loginStatus.nickname === this.props.teamInfo.Owner) && (player.Nickname !== this.props.teamInfo.Owner);
 		return (
 			<div key={player.Nickname}>
-				{player.Nickname} <span>{player.Nickname === this.props.teamInfo.Owner ? " (Zakladatel)" : " (Člen)"}</span> {canKick ? <span><button onClick={this.removeTeamMember.bind(this, player.Nickname)} className="btn btn-danger"> Kick </button> </span>: ""}
+				{player.Nickname} <span>{player.Nickname === this.props.teamInfo.Owner ? " (Zakladatel)" : " (Člen)"}</span> {canKick ? <span><button onClick={this.removeTeamMember.bind(this, player.Nickname)} className="btn btn-danger" style={{lineHeight: "1"}}> Vyhodit </button> </span>: ""}
 			</div>
 		);
 	};
@@ -28,12 +28,20 @@ class TeamShow extends Component {
 		let hasError = "";
 		let className = `form-group ${touched && error ? "has-danger" : ""}`;
 
+
+		const styleButton1 = { borderRadius: "0px", borderTopRightRadius: ".25em",  borderBottomRightRadius: ".25em", borderLeft: "none"}
+		const styleButton2 = { borderRadius: "0px", borderTopLeftRadius: ".25em",  borderBottomLeftRadius: ".25em"}
+
+
 		return (
-			<div className={className}>
-				<label>{field.label}</label>
-				<input className="form-control" type={field.type} {...field.input} />
-				{hasError}
-				<div className="text-help">{touched ? error : ""}</div>
+			<div style={{marginTop: "10px"}}className={className}>
+				<label><h4>{field.label}</h4></label>
+				<div style={{display: "flex", alignItems: "center"}}>
+					<input style={styleButton2} className="form-control" type={field.type} {...field.input} />
+					<button style={styleButton1}  className="btn btn-secondary">Poslat pozvánku</button>
+				</div>
+					{hasError}
+					<div className="text-help">{touched ? error : ""}</div>
 			</div>
 		);
 	}
@@ -64,12 +72,11 @@ class TeamShow extends Component {
 		const { sendInviteInfo } = this.props;
 		return(
 			<div>
-				<form onSubmit={this.props.handleSubmit(this.onSubmit.bind(this))}>
-					<Field name="player" label="Pozvat hráče do týmu:" component={this.renderInputField} />
-					<button className="btn btn-secondary">Poslat pozvanku</button>
+				<form onSubmit={this.props.handleSubmit(this.onSubmit.bind(this))} style={{display: "flex", alignItems: "center"}}>
+					<Field name="player" label="Pozvat hráče do týmu" component={this.renderInputField} />
 				</form>
-				{!sendInviteInfo.send ? "" : sendInviteInfo.sendSucess ? <div>Pozvánka odeslána</div> : <div>Odeslání pozvánky se nezdařilo</div>}
-				<Link to={`/team/edit/${this.props.id}`}><button className="btn btn-primary">Editovat informace</button></Link>
+				{!sendInviteInfo.send ? "" : sendInviteInfo.sendSucess ? <div className="text-success">Pozvánka odeslána</div> : <div className="text-danger">Odeslání pozvánky se nezdařilo</div>}
+				<Link to={`/team/edit/${this.props.id}`} style={{marginRight: "5px"}}><button className="btn btn-primary">Editovat informace</button></Link>
 				<button onClick={this.onDeleteTeam.bind(this)} className="btn btn-danger">Smazat tým</button>
 			</div>
 		)
@@ -99,14 +106,14 @@ class TeamShow extends Component {
 		const options = { year: "numeric", month: "long", day: "numeric" };
 		return (
 			<div>
-				<h2>{info.Name}</h2>
+				<h2>Tým {info.Name}</h2>
 				<div>Datum založení: {new Date(info.Created).toLocaleDateString("cs-CS", options)}</div>
 				<div>
 					Zakladatel: <Link to={`/players/${info.Owner}`}>{info.Owner}</Link>
 				</div>
-				<div>{info.Description}</div>
+				<div>Popis: {info.Description}</div>
 
-				<div>Seznam členů</div>
+				<div><h4>Seznam členů</h4></div>
 				<div>{this.generateListOfPlayers(info.Users)}</div>
 				{this.props.loginStatus.nickname === this.props.teamInfo.Owner ? this.renderOwnerButtons(this) : this.checkUser(info.Users)  ? this.renderMemberButton() : ""}
 			</div>
@@ -138,7 +145,7 @@ class TeamShow extends Component {
 			toRender = <div>Vyhledávám tým. Prosím počkejte.</div>;
 		}
 
-		return <div>{toRender}</div>;
+		return <div className="row row__box">{toRender}</div>;
 	}
 }
 

@@ -31,7 +31,7 @@ class TeamEdit extends Component{
 
 		return (
 			<div className={className}>
-				<label>{field.label}</label>
+				<label><b>{field.label}</b></label>
 				<input className="form-control" type={field.type} {...field.input} />
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -48,7 +48,7 @@ class TeamEdit extends Component{
 
 		return (
 			<div className={className}>
-				<label>{field.label}</label>
+				<label><b>{field.label}</b></label>
 				<textarea rows="10" className="form-control" type={field.type} {...field.input} />
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -83,15 +83,17 @@ class TeamEdit extends Component{
 	render(){
 		const { handleSubmit } = this.props;
 		return(
-			<div>
-				<h2>Úprava informací týmu</h2>
-				<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-					<Field name="Name" label="Jmeno týmu" component={this.renderInputField} />
-					<Field name="Description" label="Popis týmu" component={this.renderTextareaField} />
-					<Field name="Logo" label="Logo týmu" type="file" component={this.renderImageField} />
-					<button className="btn btn-primary">Uložit</button>
-					<Link to={`/team/${this.props.id}`}><button className="btn btn-danger">Zrušit</button></Link>
-				</form>
+			<div  className="row row__box">
+				<div className="col col-sm-12">
+					<h2>Úprava informací týmu</h2>
+					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+						<Field name="Name" label="Jmeno týmu" component={this.renderInputField} />
+						<Field name="Description" label="Popis týmu" component={this.renderTextareaField} />
+						{/* <Field name="Logo" label="Logo týmu" type="file" component={this.renderImageField} /> */}
+						<button className="btn btn-primary" style={{marginRight: "5px"}}>Uložit</button>
+						<Link to={`/team/${this.props.id}`}><button className="btn btn-danger">Zrušit</button></Link>
+					</form>
+				</div>
 			</div>
 		)
 	}
