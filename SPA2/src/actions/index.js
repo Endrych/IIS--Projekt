@@ -82,6 +82,8 @@ export const DEACTIVATE_ACCOUNT_SUCESS = "DEACTIVATE_ACCOUNT_SUCESS";
 export const DEACTIVATE_ACCOUNT_FAILED = "DEACTIVATE_ACCOUNT_FAILED";
 export const RESET_ACCOUNT_MANAGMENT = "RESET_ACCOUNT_MANAGMENT";
 export const RESET_PLAYER_FETCH = "RESET_PLAYER_FETCH";
+export const GET_GENRES_SUCESS = "GET_GENRES_SUCESS";
+export const GET_GENRES_FAILED = "GET_GENRES_FAILED";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -943,4 +945,27 @@ export function resetPlayerFetch(){
 	return{
 		type: RESET_PLAYER_FETCH,
 	}
+}
+
+export function getGenres(){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+
+	const request = axiosInstance.get(`/genres`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: GET_GENRES_SUCESS, payload: res });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		})
+		.catch(err => {
+			dispatch({ type: GET_GENRES_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+
 }
