@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
+import Cookies from "universal-cookie";
 
 import { loginUser, logOut } from "../../actions";
 
@@ -13,7 +14,7 @@ class HeaderLoginFields extends Component {
 			meta: { touched, error }
 		} = field;
 		let hasError = "";
-		let className = `form-group ${touched && error ? "has-danger" : ""}`;
+		let className = ` ${touched && error ? "has-danger" : ""}`;
 
 		// if (field.label === registrationFields.NICKNAME) {
 		// 	var getError = field.statusCode;
@@ -24,9 +25,11 @@ class HeaderLoginFields extends Component {
 		// }
 
 		return (
-			<div className={className}>
-				<label>{field.label}</label>
-				<input className="form-control" type={field.type} {...field.input} />
+			<div className={className} style={{ marginRight: "5px" }}>
+				<div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+					<label style={{ margin: "0px", marginRight: "2px" }}>{field.label}</label>
+					<input className="form-control" type={field.type} {...field.input} />
+				</div>
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
 			</div>
@@ -43,40 +46,52 @@ class HeaderLoginFields extends Component {
 		const loginFailed = statusCode === 401 || statusCode === 400 || statusCode === 500;
 
 		return (
-			<div className="col col-12">
-				<div className="row">
-					<div className="col col-8">
-						<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+			// <div className="col col-6">
+			<div className="row">
+				<div className="col col-sm-10">
+					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+						<div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
 							<Field name="Nickname" label="Přezdívka" component={this.renderField} />
 							<Field name="Password" label="Heslo" component={this.renderField} />
-							{loginFailed ? <div>Neplatné údaje</div> : ""}
 							<button type="submit" className="btn btn-primary">
 								Přihlásit
 							</button>
-						</form>
-					</div>
-					<div className="col col-4">
-						<Link to="/register">
-							<div>Registrace</div>
-						</Link>
-					</div>
+						</div>
+						{loginFailed ? <div className="text-help has-danger"> Neplatné údaje</div> : ""}
+					</form>
+				</div>
+				<div className="col col-sm-2">
+					<Link to="/register">
+						<div>Registrace</div>
+					</Link>
 				</div>
 			</div>
+			// </div>
 		);
 	}
 
 	logOutUser() {
+		const cookies = new Cookies();
+		cookies.remove("user");
+
 		this.props.logOut();
 	}
 
 	logedIn() {
+
+		const styleButton1 = { borderRadius: "0px", borderTopRightRadius: ".25em",  borderBottomRightRadius: ".25em", borderLeft: "none"}
+		const styleButton2 = { borderRadius: "0px", borderTopLeftRadius: ".25em",  borderBottomLeftRadius: ".25em", borderLeft: "none"}
+
+
 		return (
-			<div className="col col-12">
-				<div className="row">
-					<div>{this.props.nickname}</div>
-					<Link to="/user"> Profil </Link>
-					<button className="btn btn-danger" onClick={this.logOutUser.bind(this)}>
-						Odhlásit
+			<div className="row" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+				<div className="col col-sm-6">
+					<div><h5>{this.props.nickname}</h5></div>
+				</div>
+				<div className="col col-sm-6" style={{display: "flex", alignItems: "center", justifyContent: "flex-end"}}>
+					<Link to="/user"><button style={styleButton2}  className="btn btn-info"> Profil</button> </Link>
+					<button style={styleButton1} className="btn btn-danger" onClick={this.logOutUser.bind(this)}>
+						Odhlášení
 					</button>
 				</div>
 			</div>
@@ -92,7 +107,7 @@ class HeaderLoginFields extends Component {
 			toRender = this.loggedOut();
 		}
 		// if(this.)this.logedOut
-		return <div className="row">{toRender}</div>;
+		return <div className="col col-xs-12 col-sm-8">{toRender}</div>;
 	}
 }
 

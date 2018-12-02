@@ -15,11 +15,16 @@ class SearchBar extends Component{
 		let hasError = "";
 		let className = `form-group ${touched && error ? "has-danger" : ""}`;
 
+		const styleInput = { borderRadius: "0px", borderTopLeftRadius: ".25em",  borderBottomLeftRadius: ".25em"}
+
 		return (
-			<div className={className}>
-				<input className="form-control" type={field.type} {...field.input} />
+			<div className={className} style={{margin: "0px"}} >
+				<div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+					<input style={styleInput} className="form-control" type={field.type} {...field.input} />
+				</div>
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
+
 			</div>
 		);
 	}
@@ -32,13 +37,14 @@ class SearchBar extends Component{
 
 	render(){
 		console.log(this.props)
+		const styleButton = { borderRadius: "0px", borderTopRightRadius: ".25em",  borderBottomRightRadius: ".25em", borderLeft: "none"}
+
 		return (
-			<div>
-				<form onSubmit={this.props.handleSubmit(this.onSubmit.bind(this))}>
+			<div className="col col-xs-12 col-sm-4">
+				<form onSubmit={this.props.handleSubmit(this.onSubmit.bind(this))} style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
 					<Field name="Expression" component={this.renderInputField} />
-					<button className="btn btn-secondary">Hledat</button>
+					<button style={styleButton} className="btn btn-secondary">Hledat</button>
 				</form>
-				ASD
 			</div>
 		)
 	}

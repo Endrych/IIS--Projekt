@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from "universal-cookie/cjs";
+import Cookies from "universal-cookie";
 
 export const REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS";
 export const REGISTER_USER_FAILED = "REGISTER_USER_FAILED";
@@ -187,8 +187,7 @@ export function getUserInfoFromToken(token, callback = () => {}) {
 }
 
 export function logOut() {
-	const cookies = new Cookies();
-	cookies.remove("user");
+
 	return {
 		type: LOG_OUT,
 		payload: {}
