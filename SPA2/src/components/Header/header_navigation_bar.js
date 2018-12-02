@@ -7,7 +7,7 @@ class HeaderNavigationBar extends Component {
 
 		const styleCol = {height: "50px", display: "flex", justifyContent: "center", alignItems: "center", color: "white", padding: "0px"}
 		// const
-		// const hoverColColor = {backgroundColor: "#bf2621"}
+		const borderColor = {borderLeft: "1px solid white", borderRight: "1px solid white"}
 		return (
 			<div className="col col-sm-12" style={{marginTop: "25px"}}>
 				<div className="row">
@@ -18,7 +18,7 @@ class HeaderNavigationBar extends Component {
 					</div>
 					<div style={{padding: "0px"}} className="col col-sm-4 bg-danger">
 						<Link style={{textDecoration:"none"}} to="/games">
-							<div className="header__nav-bar--item"  style={styleCol}>Hry</div>
+							<div className="header__nav-bar--item"  style={{...styleCol, ...borderColor}}>Hry</div>
 						</Link>
 					</div>
 					<div style={{padding: "0px"}} className="col col-sm-4 bg-danger">

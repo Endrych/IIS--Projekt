@@ -81,6 +81,7 @@ export const REMOVE_RIGHTS_FAILED = "REMOVE_RIGHTS_FAILED";
 export const DEACTIVATE_ACCOUNT_SUCESS = "DEACTIVATE_ACCOUNT_SUCESS";
 export const DEACTIVATE_ACCOUNT_FAILED = "DEACTIVATE_ACCOUNT_FAILED";
 export const RESET_ACCOUNT_MANAGMENT = "RESET_ACCOUNT_MANAGMENT";
+export const RESET_PLAYER_FETCH = "RESET_PLAYER_FETCH";
 
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
@@ -280,15 +281,23 @@ export function updateArticle(id, data, token, callback){
 
 }
 
-export function fetchPlayer(nickname){
+export function fetchPlayer(nickname, callback = () =>{}){
 	const axiosInstance = axios.create({baseURL: baseUrl});
 	const request = axiosInstance.get(`/user/${nickname}`);
 
 	return dispatch => {
 		request.then(res => {
 			dispatch({type: PLAYER_FETCH_SUCESS, payload:res});
+			setTimeout(() => {
+				// console.log()
+				callback();
+			}, 0);
 		}).catch(err=>{
 			dispatch({type: PLAYER_FETCH_FAILED, payload:err});
+			setTimeout(() => {
+				// console.log()
+				callback();
+			}, 0);
 		})
 	}
 }
@@ -928,4 +937,10 @@ export function removeTournament(token, tournamentId){
 		});
 	}
 
+}
+
+export function resetPlayerFetch(){
+	return{
+		type: RESET_PLAYER_FETCH,
+	}
 }

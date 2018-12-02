@@ -9,3 +9,13 @@
 .header__nav-bar--item:active{
 	background-color: #960e09;
 }
+
+.row__box{
+	margin-top: 25px;
+	border: 1px solid black;
+}
+
+.user-private_buttons{
+	margin-bottom: 5px;
+	margin-right: 5px;
+}
