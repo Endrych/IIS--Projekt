@@ -9,18 +9,23 @@ class GameShow extends Component{
 		this.props.fetchGame(this.props.keyname);
 	}
 
+	getCzechDate = (date) =>{
+		const options = { year: "numeric", month: "long", day: "numeric" };
+
+		return (new Date(date).toLocaleDateString("cs-CS", options))
+	}
 
 	gameDom = (info) => {
 		// const video = (`https://${info.Video}`)
+		console.log(info)
 		return(
 			<div>
-				<h2>{info.Name}</h2>
-				{info.ReleaseDate ? <div> {info.ReleaseDate}</div> : ""}
-				{info.PublisherId ? <div> {info.PublisherId}</div> : ""}
-				{info.Genre ? <div> {info.Genre.toString()}</div> : ""}
-				<div>Image here</div>
-				{info.Description ? <div> {info.Description}</div> : ""}
-				{info.Video ? <div><iframe width="560" height="315" src={info.Video} frameBorder="0"  allowFullScreen></iframe></div> : ""}
+				<h2>Hra {info.Name}</h2>
+				{info.ReleaseDate ? <div> Datum vydaní: {this.getCzechDate(info.ReleaseDate)}</div> : ""}
+				{info.PublisherId ? <div> Vydavatel: {info.PublisherId}</div> : ""}
+				{info.Genres.length >  0 ? <div> Žánr: {info.Genres[0].Name.toString()}</div> : ""}
+				{info.Description ? <div> Popis: {info.Description}</div> : ""}
+				{info.Video ? <div><div>Video:</div><div><iframe width="560" height="315" src={info.Video} frameBorder="0"  allowFullScreen></iframe></div></div> : ""}
 				<Link to="/games"><button className="btn btn-primary">Zpět</button></Link>
 			</div>
 		)
@@ -39,8 +44,10 @@ class GameShow extends Component{
 			toRender = <div>Fetching game</div>
 		}
 		return(
-			<div>
+			<div className="row row__box">
+				<div className="col col-sm-12">
 				{toRender}
+				</div>
 			</div>
 		)
 	}
