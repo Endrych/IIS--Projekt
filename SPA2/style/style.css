@@ -1,3 +1,11 @@
 .has-danger{
 	color:red;
 }
+
+.header__nav-bar--item:hover{
+	background-color: #bf2621;
+}
+
+.header__nav-bar--item:active{
+	background-color: #960e09;
+}

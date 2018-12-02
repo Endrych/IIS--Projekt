@@ -4,22 +4,26 @@ import { Link } from "react-router-dom";
 
 class HeaderNavigationBar extends Component {
 	render() {
+
+		const styleCol = {height: "50px", display: "flex", justifyContent: "center", alignItems: "center", color: "white", padding: "0px"}
+		// const
+		// const hoverColColor = {backgroundColor: "#bf2621"}
 		return (
-			<div className="col col-sm-12">
+			<div className="col col-sm-12" style={{marginTop: "25px"}}>
 				<div className="row">
-					<div className="col col-sm-4">
-						<Link to="/articles">
-							<div>Novinky</div>
+					<div style={{padding: "0px"}} className="col col-sm-4 bg-danger">
+						<Link style={{textDecoration:"none"}} to="/articles">
+							<div  className="header__nav-bar--item" style={styleCol}>Novinky</div>
 						</Link>
 					</div>
-					<div className="col col-sm-4">
-						<Link to="/games">
-							<div>Hry</div>
+					<div style={{padding: "0px"}} className="col col-sm-4 bg-danger">
+						<Link style={{textDecoration:"none"}} to="/games">
+							<div className="header__nav-bar--item"  style={styleCol}>Hry</div>
 						</Link>
 					</div>
-					<div className="col col-sm-4">
-						<Link to="/tournaments">
-							<div>Turnaje</div>
+					<div style={{padding: "0px"}} className="col col-sm-4 bg-danger">
+						<Link style={{textDecoration:"none"}} to="/tournaments">
+							<div className="header__nav-bar--item"  style={styleCol}>Turnaje</div>
 						</Link>
 					</div>
 				</div>
