@@ -30,13 +30,11 @@ class SearchBar extends Component{
 	}
 
 	onSubmit = (values) => {
-		console.log(values)
 
 		this.props.getSearchResults(values.Expression, ()=>{this.props.history.push("/search/results")});
 	}
 
 	render(){
-		console.log(this.props)
 		const styleButton = { borderRadius: "0px", borderTopRightRadius: ".25em",  borderBottomRightRadius: ".25em", borderLeft: "none"}
 
 		return (

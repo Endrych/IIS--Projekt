@@ -4,7 +4,6 @@ export default function(state = { acquired: false }, action) {
 	switch (action.type) {
 		case GET_DATA_TOKEN:
 			const { data } = action.payload;
-			console.log(data)
 			const newState = {
 				admin: data.Admin,
 				nickname: data.Nickname,

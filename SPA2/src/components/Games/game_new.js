@@ -114,10 +114,9 @@ class GameNew extends Component{
 	onSubmit(data){
 		const cookie = new Cookies();
 		const token = cookie.get("user");
-		console.log(data);
+
 		data.Video = data.Video ? data.Video.replace("watch?v=", "embed/") : "" ;
 		data.Genres = data.Genres ? [Number(data.Genres)] : "";
-		console.log(data, "DATA", data.Video.replace("watch?v=", "embed/") );
 
 		this.props.createNewGame(data, token, ()=>{this.props.history.push("/admin/games")}); //pridat landing page game sucess
 	}
@@ -164,7 +163,6 @@ function validate(values) {
 }
 
 function mapStateToProps({genres, publishers}){
-	console.log(publishers)
 	return { genres, publishers };
 }
 

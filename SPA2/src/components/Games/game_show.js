@@ -17,7 +17,6 @@ class GameShow extends Component{
 
 	gameDom = (info) => {
 		// const video = (`https://${info.Video}`)
-		console.log(info)
 		return(
 			<div>
 				<h2>Hra {info.Name}</h2>
@@ -38,7 +37,6 @@ class GameShow extends Component{
 
 		if(gameInfo.fetched){
 			if(gameInfo.fetchSucess){
-				console.log(gameInfo)
 				toRender = this.gameDom(gameInfo);
 			}else{
 				toRender = <div>Hra nenalezena</div>

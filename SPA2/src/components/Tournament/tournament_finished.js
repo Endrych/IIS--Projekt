@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 class TournamentFinished extends Component {
 	createMatch = match => {
 		// const matchFinished = !!match.Score1 && !!match.Score2;
-		console.log("ASDASD", this.props, match);
 		return (
 			<div key={Number(match.Id + match.Score1 + match.Score2)+Math.random()*1000}>
 				{" "}
@@ -30,10 +29,8 @@ class TournamentFinished extends Component {
 
 	getRounds = (matches, round) => {
 		let roundsArr = [];
-		console.log(matches);
 		const _this = this;
 		Object.keys(matches).forEach(function(key) {
-			console.log(key, matches[key]);
 			roundsArr.push(_this.generateRound(matches[key], key));
 		}); // for(){
 		// 	if(i === round){
@@ -48,7 +45,6 @@ class TournamentFinished extends Component {
 	render() {
 		const { tournamentInfo } = this.props;
 		const { loginStatus } = this.props;
-		console.log(tournamentInfo);
 		return (
 			<div className="col col-sm-12">
 				<div className="row">

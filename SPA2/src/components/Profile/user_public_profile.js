@@ -9,7 +9,6 @@ class UserPublicProfile extends Component {
 	}
 
 	fetchSucessfull = playerInfo => {
-		console.log(playerInfo);
 		return (
 			<div className="col col-sm-12">
 				<h3>Hráč: {playerInfo.nickname}</h3>
