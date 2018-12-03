@@ -55,14 +55,14 @@ class UserPrivateProfile extends Component {
 
 	generateInvite = invite => {
 		return (
-			<div key={invite.Id}>
+			<div style={{marginTop: "5px"}} key={invite.Id}>
 				<div>
 					<Link to={`/team/${invite.Team.Id}`}>{invite.Team.Name}</Link>{" "}
-					<button className="btn btn-primary" onClick={this.handleAcceptInvite.bind(this, invite.Id)}>
+					<button style={{lineHeight: "1", marginLeft: "25px", marginRight: "5px"}} className="btn btn-primary" onClick={this.handleAcceptInvite.bind(this, invite.Id)}>
 						{" "}
 						Přijmout
 					</button>
-					<button onClick={this.handleDeclineInvite.bind(this, invite.Id)} className="btn btn-danger">
+					<button style={{lineHeight: "1"}}onClick={this.handleDeclineInvite.bind(this, invite.Id)} className="btn btn-danger">
 						Odmítnout
 					</button>
 				</div>
@@ -151,8 +151,10 @@ class UserPrivateProfile extends Component {
 									? " Administrátor"
 									: " Uživatel"}
 							</div>
+							<br/>
 
 							{!userInformations.team ? this.handleInvites() : ""}
+							<br/>
 							{userInformations.tournaments.length > 0 ? (
 								<div>
 									<h4>Vyhrané turnaje</h4>

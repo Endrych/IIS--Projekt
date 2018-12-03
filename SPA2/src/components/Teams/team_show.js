@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { getTeamInfo, kickTeamMember, leaveTeam, deleteTeam, sendInvite, resetInviteStatus } from "../../actions";
+import { getTeamInfo, kickTeamMember, leaveTeam, deleteTeam, sendInvite, resetInviteStatus, insertModal } from "../../actions";
 import Cookies from 'universal-cookie';
 // var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+import Modal from './../Modal/modal';
 //
 import { Field, reduxForm , reset} from 'redux-form';
 
@@ -15,8 +16,10 @@ class TeamShow extends Component {
 	getPlayerDom = player => {
 		const canKick = (this.props.loginStatus.nickname === this.props.teamInfo.Owner) && (player.Nickname !== this.props.teamInfo.Owner);
 		return (
-			<div key={player.Nickname}>
-				{player.Nickname} <span>{player.Nickname === this.props.teamInfo.Owner ? " (Zakladatel)" : " (Člen)"}</span> {canKick ? <span><button onClick={this.removeTeamMember.bind(this, player.Nickname)} className="btn btn-danger" style={{lineHeight: "1"}}> Vyhodit </button> </span>: ""}
+			<div style={{marginBottom: "5px"}}key={player.Nickname}>
+				{player.Nickname} <span>{player.Nickname === this.props.teamInfo.Owner ? " (Zakladatel)" : " (Člen)"}</span> {canKick ? <span><button onClick={this.handleInsertModal.bind(this, player.Nickname)} className="btn btn-danger" style={{lineHeight: "1", marginLeft: "25px"}}> Vyhodit </button> </span>: ""}
+				{this.props.modal.show ? this.props.modal.value === player.Nickname ? <Modal displayText={`Vyhodit hráče ${player.Nickname}`} callback={this.removeTeamMember.bind(this, player.Nickname)} /> : "" : "" }
+
 			</div>
 		);
 	};
@@ -77,7 +80,9 @@ class TeamShow extends Component {
 				</form>
 				{!sendInviteInfo.send ? "" : sendInviteInfo.sendSucess ? <div className="text-success">Pozvánka odeslána</div> : <div className="text-danger">Odeslání pozvánky se nezdařilo</div>}
 				<Link to={`/team/edit/${this.props.id}`} style={{marginRight: "5px"}}><button className="btn btn-primary">Editovat informace</button></Link>
-				<button onClick={this.onDeleteTeam.bind(this)} className="btn btn-danger">Smazat tým</button>
+				<button onClick={this.handleInsertModal.bind(this, this.props.id)} className="btn btn-danger">Zrušit tým</button>
+				{this.props.modal.show ? this.props.modal.value === this.props.id ? <Modal displayText={`Zrušit tým ${this.props.teamInfo.Name}`} callback={this.onDeleteTeam.bind(this)} /> : "" : "" }
+
 			</div>
 		)
 	}
@@ -91,7 +96,8 @@ class TeamShow extends Component {
 	renderMemberButton = () =>{
 		return(
 			<div>
-				<button className="btn btn-primary" onClick={this.leaveTeam.bind(this)}>Opustit tým</button>
+				{this.props.modal.show ? this.props.modal.value === this.props.id ? <Modal displayText={`Opustit tým ${this.props.teamInfo.Name}`} callback={this.leaveTeam.bind(this)} /> : "" : "" }
+				<button className="btn btn-danger" onClick={this.handleInsertModal.bind(this, this.props.id)}>Opustit tým</button>
 			</div>
 		)
 	}
@@ -112,9 +118,10 @@ class TeamShow extends Component {
 					Zakladatel: <Link to={`/players/${info.Owner}`}>{info.Owner}</Link>
 				</div>
 				<div>Popis: {info.Description}</div>
-
+				<br />
 				<div><h4>Seznam členů</h4></div>
 				<div>{this.generateListOfPlayers(info.Users)}</div>
+				<br />
 				{this.props.loginStatus.nickname === this.props.teamInfo.Owner ? this.renderOwnerButtons(this) : this.checkUser(info.Users)  ? this.renderMemberButton() : ""}
 			</div>
 		);
@@ -130,6 +137,10 @@ class TeamShow extends Component {
 		}
 
 		return false;
+	}
+
+	handleInsertModal = (id) => {
+		this.props.insertModal(id)
 	}
 
 	render() {
@@ -149,13 +160,13 @@ class TeamShow extends Component {
 	}
 }
 
-function mapStateToProps({ teamInfo, loginStatus, sendInviteInfo }) {
-	return { teamInfo, loginStatus, sendInviteInfo };
+function mapStateToProps({ teamInfo, loginStatus, sendInviteInfo, modal }) {
+	return { teamInfo, loginStatus, sendInviteInfo, modal };
 }
 
 export default reduxForm({
 	form: "invitedPlayer"
 }) (connect(
 	mapStateToProps,
-	{ getTeamInfo, kickTeamMember, leaveTeam, deleteTeam, sendInvite, resetInviteStatus }
+	{ getTeamInfo, kickTeamMember, leaveTeam, deleteTeam, sendInvite, resetInviteStatus, insertModal }
 )(TeamShow));

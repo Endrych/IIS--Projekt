@@ -38,6 +38,7 @@ class GameShow extends Component{
 
 		if(gameInfo.fetched){
 			if(gameInfo.fetchSucess){
+				console.log(gameInfo)
 				toRender = this.gameDom(gameInfo);
 			}else{
 				toRender = <div>Hra nenalezena</div>

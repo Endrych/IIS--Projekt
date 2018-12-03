@@ -6,20 +6,18 @@ class Modal extends Component {
 
 	handleConfirm = () => {
 		console.log(this, this.props.callback, "CALL")
-		console.log("ASDASD2")
 		this.props.removeModal();
 		this.props.callback();
 	}
 
 	handleReject = () => {
-		console.log("ASDASD")
 		this.props.removeModal()
 	}
 
 	render() {
 		return (
 			<div className="modal__wrapper">
-				<div style={{width: "350px", height:"150px", display: "flex", alignItems:"center", justifyContent: "center"}} className="modal__inner">
+				<div style={{width: "450px", height:"150px", display: "flex", alignItems:"center", justifyContent: "center"}} className="modal__inner">
 					<div>
 						<div style={{width: "100%",  display: "flex", alignItems:"center", justifyContent: "center", marginBottom:"15px"}}><h5>{this.props.displayText}</h5></div>
 						<button onClick={this.handleConfirm.bind(this)} style={{width: "150px",height: "60px", marginRight: "25px"}} className="btn btn-primary">Potvrdit</button>

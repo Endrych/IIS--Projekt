@@ -24,7 +24,7 @@ class Header extends Component {
 			<div className="row" style={{backgroundColor: "yellow"}}>
 				<div className="col col-xs-12">
 					<div className="row">
-						<HeaderLoginFields />
+						<HeaderLoginFields history={this.props.history} />
 						<SearchBar history={this.props.history}/>
 					</div>
 					<div className="row">

@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchAllArticles } from "../../actions";
+import { fetchAllArticles, insertModal, removeArticle } from "../../actions";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
-import { removeArticle } from "../../actions";
 import Cookies from "universal-cookie";
-import ReactDOM from "react-dom";
+import Modal from './../Modal/modal';
 
 class ArticlesListAdmin extends Component {
 	componentDidMount() {
@@ -18,11 +17,16 @@ class ArticlesListAdmin extends Component {
 		return (new Date(date).toLocaleDateString("cs-CS", options))
 	}
 
+	handleInsertModal = (id) => {
+		this.props.insertModal(id)
+	}
 
 	articleListItem = (header, id, author, created) => {
 		//pak se to prestyluje idealne nasekat na divy
 		return (
 			<div className="row" id={`article_${id}`} key={id} style={{marginBottom: "5px", display: "flex", alignItems:"center"}}>
+				{this.props.modal.show ? this.props.modal.value === id ? <Modal displayText={`Smazat článek ${header}`} callback={this.deleteArticle.bind(this, id)} /> : "" : "" }
+
 				<div className="col col-sm-3">
 					<b><Link to={`/articles/${id}`}>{header}</Link></b>
 				</div>
@@ -37,7 +41,7 @@ class ArticlesListAdmin extends Component {
 					<Link to={`/admin/articles/edit/${id}`}><button style={{lineHeight: "1", marginRight: "5px"}} className="btn btn-info">Edit</button></Link>
 					<button className="btn btn-danger" style={{lineHeight: "1"}}
 						onClick={() => {
-							this.deleteArticle(id);
+							this.handleInsertModal(id);
 						}}
 					>
 						Smazat
@@ -52,7 +56,7 @@ class ArticlesListAdmin extends Component {
 
 		var token = cookies.get("user");
 		// console.log(ReactDOM.unmountComponentAtNode(document.getElementById(`article_${id}`)))
-		this.props.removeArticle(id, token);
+		this.props.removeArticle(id, token, this.props.fetchAllArticles);
 	};
 
 	generateArticleList = items => {
@@ -107,11 +111,11 @@ class ArticlesListAdmin extends Component {
 	}
 }
 
-function mapStateToProps({ articlesAll, loginStatus }) {
-	return { articlesAll, loginStatus };
+function mapStateToProps({ articlesAll, loginStatus, modal }) {
+	return { articlesAll, loginStatus, modal };
 }
 
 export default connect(
 	mapStateToProps,
-	{ fetchAllArticles, removeArticle }
+	{ fetchAllArticles, removeArticle, insertModal }
 )(ArticlesListAdmin);

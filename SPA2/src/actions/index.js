@@ -190,12 +190,12 @@ export function getUserInfoFromToken(token, callback = () => {}) {
 	};
 }
 
-export function logOut() {
+export function logOut(callback = ()=>{}) {
 	const cookies = new Cookies();
 	cookies.remove("user");
-	return {
-		type: LOG_OUT,
-		payload: {}
+	return dispatch => {
+		dispatch({type: LOG_OUT,payload: {}});
+		callback();
 	};
 }
 
@@ -231,13 +231,16 @@ export function fetchAllArticles(){
 }
 
 
-export function removeArticle(id, token){
+export function removeArticle(id, token, callback = () => {}){
 	const axiosInstance = axios.create({baseURL: baseUrl , headers: { "x-access-token": token } });
 	const request = axiosInstance.delete(`/article/${id}`)
 
 	return dispatch => {
 		request.then(res => {
 			dispatch({ type: ARTICLE_REMOV_SUCCES, payload:res});
+			setTimeout(() => {
+				callback();
+			}, 0);
 		})
 	}
 }
@@ -920,7 +923,7 @@ export function getSearchResults(expression, callback = () => {}){
 	}
 }
 
-export function removeTournament(token, tournamentId){
+export function removeTournament(token, tournamentId, callback = () => {}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 	console.log(tournamentId)
 	const request = axiosInstance.delete(`/tournament/${tournamentId}`);
@@ -929,9 +932,9 @@ export function removeTournament(token, tournamentId){
 		request
 		.then(res => {
 			dispatch({ type: TOURNAMENT_DELETE_SUCESS, payload: res });
-			// setTimeout(() => {
-			// 	callback();
-			// }, 0);
+			setTimeout(() => {
+				callback();
+			}, 0);
 		})
 		.catch(err => {
 			dispatch({ type: TOURNAMENT_DELETE_FAILED, payload: err });

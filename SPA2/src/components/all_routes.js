@@ -153,7 +153,7 @@ const AllRoutes = () => {
 
 			<Route
 				path="/tournament/:id"
-				render={({ match }) => {
+				render={({ match, history }) => {
 					return <TournamentShow history={history} id={match.params.id} />;
 				}}
 				exact

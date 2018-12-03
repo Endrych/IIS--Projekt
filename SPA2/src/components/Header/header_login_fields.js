@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import Cookies from "universal-cookie";
+import { withRouter } from "react-router";
 
 import { loginUser, logOut } from "../../actions";
 
@@ -73,14 +74,13 @@ class HeaderLoginFields extends Component {
 	logOutUser() {
 		const cookies = new Cookies();
 		cookies.remove("user");
-		console.log("COOKIES " , cookies.get("user"))
-		this.props.logOut();
+		this.props.logOut(()=>{this.props.history.push("/")});
 	}
 
 	logedIn() {
 
-		const styleButton1 = { borderRadius: "0px", borderTopRightRadius: ".25em",  borderBottomRightRadius: ".25em", borderLeft: "none"}
-		const styleButton2 = { borderRadius: "0px", borderTopLeftRadius: ".25em",  borderBottomLeftRadius: ".25em", borderLeft: "none"}
+		// const styleButton1 = { borderRadius: "0px", borderTopRightRadius: ".25em",  borderBottomRightRadius: ".25em", borderLeft: "none"}
+		// const styleButton2 = { borderRadius: "0px", borderTopLeftRadius: ".25em",  borderBottomLeftRadius: ".25em", borderLeft: "none"}
 
 
 		return (
@@ -89,8 +89,8 @@ class HeaderLoginFields extends Component {
 					<div><h5>{this.props.nickname}</h5></div>
 				</div>
 				<div className="col col-sm-6" style={{display: "flex", alignItems: "center", justifyContent: "flex-end"}}>
-					<Link to="/user"><button style={styleButton2}  className="btn btn-info"> Profil</button> </Link>
-					<button style={styleButton1} className="btn btn-danger" onClick={this.logOutUser.bind(this)}>
+					<Link to="/user"><button style={{marginRight: "5px"}}  className="btn btn-info"> Profil</button> </Link>
+					<button  className="btn btn-danger" onClick={this.logOutUser.bind(this)}>
 						Odhlášení
 					</button>
 				</div>
@@ -146,10 +146,10 @@ export default reduxForm({
 	validate,
 	form: "LoginForm"
 })(
-	connect(
+	withRouter(connect(
 		mapStateToProps,
 		{ loginUser, logOut }
 	)(HeaderLoginFields)
-);
+));
 //{ loginUser }
 // export default connect(null)(HeaderLoginFields);
