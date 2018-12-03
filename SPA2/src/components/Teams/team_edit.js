@@ -31,7 +31,7 @@ class TeamEdit extends Component{
 
 		return (
 			<div className={className}>
-				<label><b>{field.label}</b></label>
+				<label className={field.require ? "require-fill" : ""}><b>{field.label}</b></label>
 				<input className="form-control" type={field.type} {...field.input} />
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -56,23 +56,6 @@ class TeamEdit extends Component{
 		);
 	}
 
-	renderImageField(field) {
-		const {
-			meta: { touched, error }
-		} = field;
-		let hasError = "";
-		let className = `form-group ${touched && error ? "has-danger" : ""}`;
-
-		return (
-			<div className={className}>
-				<label>{field.label}</label>
-				<input accept=".jpg, .png, .jpeg" className="form-control" type={field.type} onDrop={field.onDrop} />
-				{hasError}
-				<div className="text-help">{touched ? error : ""}</div>
-			</div>
-		);
-	}
-
 	onSubmit = (values)=>{
 		const cookie = new Cookies();
 		const token = cookie.get("user");
@@ -87,9 +70,8 @@ class TeamEdit extends Component{
 				<div className="col col-sm-12">
 					<h2>Úprava informací týmu</h2>
 					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-						<Field name="Name" label="Jmeno týmu" component={this.renderInputField} />
+						<Field name="Name" label="Jmeno týmu" component={this.renderInputField} require={true}/>
 						<Field name="Description" label="Popis týmu" component={this.renderTextareaField} />
-						{/* <Field name="Logo" label="Logo týmu" type="file" component={this.renderImageField} /> */}
 						<button className="btn btn-primary" style={{marginRight: "5px"}}>Uložit</button>
 						<Link to={`/team/${this.props.id}`}><button className="btn btn-danger">Zrušit</button></Link>
 					</form>
@@ -100,11 +82,23 @@ class TeamEdit extends Component{
 }
 
 
+function validate(values){
+	const errors = {};
+	// validate inputs here
+	if (!values.Name) {
+		errors.Name = "Zadejte název týmu";
+	}
+
+
+	//if errors is empty form is fine to submit
+	return errors;
+}
+
 function mapStateToProps({teamInfo}){
 	return {teamInfo};
 }
 
 export default reduxForm({
-	// validate,
+	validate,
 	form:"editTeamForm"
 })(connect(mapStateToProps, {getTeamInfo, updateTeamInfo})(TeamEdit));

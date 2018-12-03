@@ -4,11 +4,12 @@ import { Field, reduxForm } from 'redux-form';
 import  { Link } from 'react-router-dom';
 // import GeneralValidators from "../../validators/general_validators";
 import Cookies from "universal-cookie";
-import {fetchGame, updateGame, getGenres} from '../../actions';
+import {fetchGame, updateGame, getGenres, getPublishers} from '../../actions';
 
 class GameEdit extends Component{
 	componentDidMount(){
 		this.props.getGenres();
+		this.props.getPublishers();
 		this.props.fetchGame(this.props.keyname, this.handleInitialize.bind(this))
 	}
 
@@ -20,12 +21,14 @@ class GameEdit extends Component{
 			Name: gameInfo.Name,
 			ReleaseDate: gameInfo.ReleaseDate,
 			Description: gameInfo.Description,
-			Publisher: gameInfo.PublisherId,
+			Publisher: gameInfo.Publisher ? gameInfo.Publisher.Name : "",
 			Genres: gameInfo.Genres.length > 0 ? gameInfo.Genres[0].Id : [],
 			Icon: gameInfo.Icon,
 			Image: gameInfo.Image,
 			Video: gameInfo.Video
 		}
+
+		console.log(initData)
 
 		this.props.initialize(initData);
 	}
@@ -47,23 +50,6 @@ class GameEdit extends Component{
 		);
 	}
 
-	// renderImageField(field) {
-	// 	const {
-	// 		meta: { touched, error }
-	// 	} = field;
-	// 	let hasError = "";
-	// 	let className = `form-group ${touched && error ? "has-danger" : ""}`;
-
-	// 	return (
-	// 		<div className={className}>
-	// 			<label>{field.label}</label>
-	// 			<input accept=".jpg, .png, .jpeg" className="form-control" type={field.type} onDrop={field.onDrop} />
-	// 			{hasError}
-	// 			<div className="text-help">{touched ? error : ""}</div>
-	// 		</div>
-	// 	);
-	// }
-
 
 	renderInputField(field) {
 		const {
@@ -74,7 +60,7 @@ class GameEdit extends Component{
 
 		return (
 			<div className={className}>
-				<label><b>{field.label}</b></label>
+				<label className={field.require ? "require-fill" : ""}><b>{field.label}</b></label>
 				<input className="form-control" {...field.input}  />
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -123,6 +109,28 @@ class GameEdit extends Component{
 		);
 	}
 
+	renderSelectField2(field) {
+		const {
+			meta: { touched, error }
+		} = field;
+		let hasError = "";
+		let className = `form-group ${touched && error ? "has-danger" : ""}`;
+
+		return (
+			<div className={className}>
+				<label><b>{field.label}</b></label>
+				<select  className="form-control" {...field.input} >
+					<option></option>
+					{field.selectOptions.map(option => {
+						return <option key={option.Id} value={option.Name}>{option.Name}</option>
+					})}
+				</select>
+				{hasError}
+				<div className="text-help">{touched ? error : ""}</div>
+			</div>
+		);
+	}
+
 
 	onSubmit(data){
 		const cookie = new Cookies();
@@ -130,6 +138,7 @@ class GameEdit extends Component{
 		console.log(data);
 
 		data.Genres = data.Genres ? [Number(data.Genres)] : "";
+		// data.Publisher = data.Publisher.Name ? [Number(data.Publisher)] : "";
 		console.log(data);
 		this.props.updateGame(this.props.keyname, data, token, ()=>{this.props.history.push("/admin/games")}); //pridat landing page game sucess
 	}
@@ -143,13 +152,11 @@ class GameEdit extends Component{
 				</div>
 				<div className="col col-sm-12">
 					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-						<Field name="Name" label="Název" component={this.renderInputField} />
+						<Field name="Name" label="Název" component={this.renderInputField} require={true}/>
 						<Field name="ReleaseDate" label="Datum vydání" component={this.renderInputFieldDate} />
 						<Field name="Description" label="Popis hry" component={this.renderGameDescriptionField} />
-						<Field name="Publisher" label="Vydavatel" component={this.renderInputField} />
+						<Field name="Publisher" label="Vydavatel" component={this.renderSelectField2} selectOptions={this.props.publishers.publishersArray} />
 						<Field name="Genres" label="Žánr" component={this.renderSelectField} selectOptions={this.props.genres.genresArray}  />
-						{/* <Field name="Icon" label="Ikona" type="file" component={this.renderImageField} /> */}
-						{/* <Field name="Image" label="Obrázek" type="file" component={this.renderImageField} /> */}
 						<Field name="Video" label="Odkaz na video" component={this.renderInputField} />
 						<button className="btn btn-primary" style={{marginRight: "5px"}}>Uložit</button>
 						<Link to="/admin/games"><button  className="btn btn-danger">Zrušit</button></Link>
@@ -173,11 +180,11 @@ function validate(values) {
 	return errors;
 }
 
-function mapStateToProps({ gameInfo, genres }){
-	return{gameInfo, genres};
+function mapStateToProps({ gameInfo, genres, publishers }){
+	return{gameInfo, genres, publishers};
 }
 
 export default reduxForm({
 	validate,
 	form: "EditGame"
-})(connect(mapStateToProps, {updateGame, fetchGame, getGenres})(GameEdit));
+})(connect(mapStateToProps, {updateGame, fetchGame, getGenres, getPublishers})(GameEdit));

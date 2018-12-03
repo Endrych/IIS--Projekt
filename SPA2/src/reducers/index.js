@@ -20,6 +20,7 @@ import ReducerSearchResults from './reducer_search_results';
 import ReducerPlayerManagment from './reducer_manage_players';
 import ReducerGenres from './reducer_genres';
 import ReducerModal from './reducer_modal';
+import ReducerPublishers from './reducer_publishers';
 
 const rootReducer = combineReducers({
 	registrationResultCode: RegisterReducer,
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
 	managePlayers: ReducerPlayerManagment,
 	genres: ReducerGenres,
 	modal:ReducerModal,
+	publishers: ReducerPublishers,
 	form: formReducer
 });
 

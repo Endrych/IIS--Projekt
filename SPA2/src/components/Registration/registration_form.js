@@ -26,7 +26,7 @@ class RegistrationForm extends Component {
 
 		return (
 			<div className={className}>
-				<label><b>{field.label}</b></label>
+				<label className={field.require ? "require-fill" : ""}><b>{field.label}</b></label>
 				<input className="form-control" type={field.type} {...field.input}/>
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -65,20 +65,23 @@ class RegistrationForm extends Component {
 							label={registrationFields.NICKNAME}
 							component={this.renderField}
 							props={this.props}
+							require={true}
 						/>
 						<Field
 							name="Firstname"
 							type="text"
 							label={registrationFields.FIRSTNAME}
 							component={this.renderField}
+							require={true}
 						/>
 						<Field
 							name="Lastname"
 							type="text"
 							label={registrationFields.LASTNAME}
 							component={this.renderField}
+							require={true}
 						/>
-						<Field name="Email" type="text" label={registrationFields.EMAIL} component={this.renderField} />
+						<Field name="Email" type="text" label={registrationFields.EMAIL} component={this.renderField} require={true} />
 						<Field
 							name="Phone"
 							type="text"
@@ -90,12 +93,14 @@ class RegistrationForm extends Component {
 							type="password"
 							label={registrationFields.PASSWORD}
 							component={this.renderField}
+							require={true}
 						/>
 						<Field
 							name="PasswordConfirm"
 							type="password"
 							label={registrationFields.REPEATED_PASSWORD}
 							component={this.renderField}
+							require={true}
 						/>
 						<button type="submit" style={{marginRight: "5px"}} className="btn btn-primary">
 							{registrationFields.SUBMIT}

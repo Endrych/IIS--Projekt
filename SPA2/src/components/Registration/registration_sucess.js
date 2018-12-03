@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 class RegistrationSucess extends Component {
 	render() {
 		return (
-			<div className="row">
+			<div className="row row__box">
 				<div className="col col-12">Registrace proběhla úspěsně!</div>
 				<Link to="/">
-					<div>Zpět na úvodní stránku</div>
+					<button className="btn btn-primary">Zpět na úvodní stránku</button>
 				</Link>
 			</div>
 		);

@@ -120,7 +120,7 @@ class UserPrivateProfile extends Component {
 								<span>Přezdívka:</span> <span>{userInformations.nickname}</span>
 							</div>
 							<div>
-								<span>Tým:</span>
+								<span>Tým: </span>
 								<span>
 									{userInformations.team ? (
 										<Link to={`/team/${userInformations.team.Id}`}>

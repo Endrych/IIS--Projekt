@@ -84,6 +84,8 @@ export const RESET_ACCOUNT_MANAGMENT = "RESET_ACCOUNT_MANAGMENT";
 export const RESET_PLAYER_FETCH = "RESET_PLAYER_FETCH";
 export const GET_GENRES_SUCESS = "GET_GENRES_SUCESS";
 export const GET_GENRES_FAILED = "GET_GENRES_FAILED";
+export const GET_PUBLISHERS_SUCESS = "GET_PUBLISHERS_SUCESS";
+export const GET_PUBLISHERS_FAILED = "GET_PUBLISHERS_FAILED";
 export const MODAL_INSERT  = "MODAL_INSERT";
 export const MODAL_REMOVE  = "MODAL_REMOVE";
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
@@ -991,4 +993,28 @@ export function removeModal(callback = () => {}) {
 			callback();
 		}, 0);
 	};
+}
+
+
+export function getPublishers(){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+	console.log("PUBISHE")
+	const request = axiosInstance.get(`/publishers`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: GET_PUBLISHERS_SUCESS, payload: res });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		})
+		.catch(err => {
+			dispatch({ type: GET_PUBLISHERS_SUCESS, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+
 }

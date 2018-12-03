@@ -4,7 +4,7 @@ import { fetchGameList, deleteGame, insertModal } from "../../actions";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
 import Cookies from "universal-cookie";
-import Modal from './../Modal/modal';
+import Modal from "./../Modal/modal";
 
 class GameAdminList extends Component {
 	componentDidMount() {
@@ -12,31 +12,52 @@ class GameAdminList extends Component {
 	}
 
 	generateListItem = gameInfo => {
-		console.log(this)
+		console.log(this);
 
 		return (
-			<div key={gameInfo.Keyname} className="row" style={{marginBottom: "5px"}} >
+			<div key={gameInfo.Keyname} className="row" style={{ marginBottom: "5px" }}>
 				<div className="col col-sm-4">
 					<Link to={`/games/${gameInfo.Keyname}`}>{gameInfo.Name}</Link>
 				</div>
 				<div className="col col-sm-8">
-					{this.props.modal.show ? this.props.modal.value === gameInfo.Keyname ? <Modal displayText={`Smazat hru ${gameInfo.Name}`} callback={this.deleteOnClick.bind(this, gameInfo.Keyname)} /> : "" : "" }
-					<Link to={`/admin/game/edit/${gameInfo.Keyname}`}><button  style={{lineHeight: "1", marginRight: "5px"}} className="btn btn-info">Upravit</button></Link>
-					<button style={{lineHeight: "1"}} className="btn btn-danger" onClick={this.handleInsertModal.bind(this, gameInfo.Keyname)}>Smazat</button>
+					{this.props.modal.show ? (
+						this.props.modal.value === gameInfo.Keyname ? (
+							<Modal
+								displayText={`Smazat hru ${gameInfo.Name}`}
+								callback={this.deleteOnClick.bind(this, gameInfo.Keyname)}
+							/>
+						) : (
+							""
+						)
+					) : (
+						""
+					)}
+					<Link to={`/admin/game/edit/${gameInfo.Keyname}`}>
+						<button style={{ lineHeight: "1", marginRight: "5px" }} className="btn btn-info">
+							Upravit
+						</button>
+					</Link>
+					<button
+						style={{ lineHeight: "1" }}
+						className="btn btn-danger"
+						onClick={this.handleInsertModal.bind(this, gameInfo.Keyname)}
+					>
+						Smazat
+					</button>
 				</div>
 			</div>
 		);
 	};
 
-	handleInsertModal = (keyname) => {
-		console.log("ASDASDASD", keyname)
-		this.props.insertModal(keyname)
-	}
+	handleInsertModal = keyname => {
+		console.log("ASDASDASD", keyname);
+		this.props.insertModal(keyname);
+	};
 
-	deleteOnClick = (keyname) => {
+	deleteOnClick = keyname => {
 		const cookie = new Cookies();
 		const token = cookie.get("user");
-		console.log(keyname, token, "<<ASD<ASD<AS<D")
+		console.log(keyname, token, "<<ASD<ASD<AS<D");
 		this.props.deleteGame(keyname, token, this.props.fetchGameList); //zajitit reloady, to bude v pohode az to vyvedu mimi delte bude na vlastni strance muset se potvrdit
 	};
 
@@ -65,8 +86,10 @@ class GameAdminList extends Component {
 				</div>
 				<div className="col col-sm-12">
 					{toRender.length > 0 ? (
-						<div className="col col-sm-12">
-							<h4>Hry</h4>
+						<div className="row">
+							<div className="col col-sm-12">
+								<h4>Hry</h4>
+							</div>
 						</div>
 					) : (
 						""

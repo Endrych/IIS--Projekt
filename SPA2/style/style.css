@@ -43,3 +43,9 @@
 	width: 480px;
 	height: 280px;
 }
+
+.require-fill:after{
+	content: "*";
+	position: absolute;
+	/* top: 0px; */
+}

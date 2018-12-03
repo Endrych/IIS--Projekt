@@ -41,7 +41,7 @@ class UserPrivateEditInformations extends Component{
 
 		return (
 			<div  className={className}>
-				<label ><b>{field.label}</b></label>
+				<label className={field.require ? "require-fill" : ""}><b>{field.label}</b></label>
 				<input className="form-control" type={field.type} {...field.input} />
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -66,9 +66,9 @@ class UserPrivateEditInformations extends Component{
 				<div style={{marginBottom: "15px",marginTop: "15px"}} className="col col-sm-12">
 					<h2>Upravit uživatelské informace</h2>
 					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-						<Field name="Firstname" label="Jméno"  component={this.renderField} />
-						<Field name="Lastname" label="Příjmení" component={this.renderField} />
-						<Field name="Email" label="Email" component={this.renderField} />
+						<Field name="Firstname" label="Jméno"  component={this.renderField} require={true}/>
+						<Field name="Lastname" label="Příjmení" component={this.renderField} require={true}/>
+						<Field name="Email" label="Email" component={this.renderField} require={true} />
 						<Field name="Phone" label="Telefon" component={this.renderField} />
 						<button style={{marginRight: "5px"}} type="submit" className="btn btn-primary">
 									Uložit

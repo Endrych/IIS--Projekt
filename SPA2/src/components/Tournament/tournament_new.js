@@ -29,7 +29,7 @@ class TournamentNew extends Component {
 
 		return (
 			<div className={className}>
-				<label><b>{field.label}</b></label>
+				<label  className={field.require ? "require-fill" : ""}><b>{field.label}</b></label>
 				<input className="form-control" type={field.type} {...field.input} />
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -46,7 +46,7 @@ class TournamentNew extends Component {
 		console.log(field.selectOptions);
 		return (
 			<div className={className}>
-				<label>
+				<label  className={field.require ? "require-fill" : ""}>
 					<b>{field.label}</b>
 				</label>
 				<select className="form-control" {...field.input}>
@@ -75,13 +75,14 @@ class TournamentNew extends Component {
 				</div>
 				<div className="col col-sm-12">
 					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-						<Field name="Name" label="Jméno turnaje" component={this.renderInputField} />
-						<Field name="Description" label="Popis turnaje" component={this.renderInputField} />
+						<Field name="Name" label="Jméno turnaje" component={this.renderInputField}require={true} />
+						<Field name="Description" label="Popis turnaje" component={this.renderInputField} require={true} />
 						<Field
 							name="Game"
 							label="Hra"
 							component={this.renderSelectField}
 							selectOptions={this.props.gameList.data}
+							require={true}
 						/>
 						<button className="btn btn-primary" style={{marginRight: "5px"}}>Založit</button>
 						<Link to="/tournaments">
