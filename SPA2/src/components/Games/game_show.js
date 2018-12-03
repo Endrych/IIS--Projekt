@@ -24,7 +24,9 @@ class GameShow extends Component{
 				{info.ReleaseDate ? <div> Datum vydaní: {this.getCzechDate(info.ReleaseDate)}</div> : ""}
 				{info.PublisherId ? <div> Vydavatel: {info.PublisherId}</div> : ""}
 				{info.Genres.length >  0 ? <div> Žánr: {info.Genres[0].Name.toString()}</div> : ""}
+				{info.Description ? <br/> : ""}
 				{info.Description ? <div> Popis: {info.Description}</div> : ""}
+				{info.Video ? <br/> : ""}
 				{info.Video ? <div><div>Video:</div><div><iframe width="560" height="315" src={info.Video} frameBorder="0"  allowFullScreen></iframe></div></div> : ""}
 				<Link to="/games"><button className="btn btn-primary">Zpět</button></Link>
 			</div>
