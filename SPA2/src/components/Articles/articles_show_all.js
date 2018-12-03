@@ -43,9 +43,14 @@ class ArticlesShowAll extends Component{
 		const items = this.generateArticleItems(this.props.articlesAll);
 		return(
 			<div className="row row__box">
-				<div className="col col-12">
-					{items}
-				</div>
+					<div className="row">
+						<div className="col col-sm-12">
+							<h3>Publikované články</h3>
+						</div>
+						<div className="col col-sm-12">
+							{items}
+						</div>
+					</div>
 			</div>
 		)
 	}
