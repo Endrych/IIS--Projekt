@@ -149,7 +149,7 @@ CREATE TABLE `tournament` (
   `Id` int(11) NOT NULL,
   `Name` tinytext COLLATE utf8_czech_ci NOT NULL,
   `Description` text COLLATE utf8_czech_ci NOT NULL,
-  `Game` int(11) NOT NULL,
+  `Game` int(11) DEFAULT NULL,
   `State` int(11) NOT NULL,
   `Created` datetime NOT NULL,
   `CreatedBy` varchar(45) COLLATE utf8_czech_ci NOT NULL,
