@@ -16,7 +16,6 @@ class GameEdit extends Component{
 
 	handleInitialize() {
 		const { gameInfo } = this.props;
-		console.log(gameInfo)
 		const initData  = {
 			Name: gameInfo.Name,
 			ReleaseDate: gameInfo.ReleaseDate,
@@ -28,7 +27,6 @@ class GameEdit extends Component{
 			Video: gameInfo.Video
 		}
 
-		console.log(initData)
 
 		this.props.initialize(initData);
 	}
@@ -135,12 +133,10 @@ class GameEdit extends Component{
 	onSubmit(data){
 		const cookie = new Cookies();
 		const token = cookie.get("user");
-		console.log(data);
 
 		data.Video = data.Video ? data.Video.replace("watch?v=", "embed/") : "" ;
 		data.Genres = data.Genres ? [Number(data.Genres)] : "";
 		// data.Publisher = data.Publisher.Name ? [Number(data.Publisher)] : "";
-		console.log(data);
 		this.props.updateGame(this.props.keyname, data, token, ()=>{this.props.history.push("/admin/games")}); //pridat landing page game sucess
 	}
 

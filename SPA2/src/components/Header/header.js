@@ -19,7 +19,6 @@ class Header extends Component {
 	}
 
 	render() {
-		console.log("//////", this)
 		return (
 			<div className="row" style={{backgroundColor: "yellow"}}>
 				<div className="col col-xs-12">

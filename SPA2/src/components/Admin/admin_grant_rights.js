@@ -18,7 +18,7 @@ class AdminGrantRights extends Component{
 		let toRender = "";
 		const { managePlayers } = field;
 		const { grantRights } = field;
-		console.log(managePlayers.try, managePlayers.type, ">SAD>ASD>S>AD")
+
 		if(!grantRights.waiting || managePlayers.try){
 			if(grantRights.status === 403){
 				hasError = <div className="text-danger">Práva tohoto uživatele nelze manipulovat!</div>;
@@ -78,7 +78,6 @@ class AdminGrantRights extends Component{
 	handleDeactivateAccount = (nickname) =>{
 		const cookie = new Cookies();
 		const token = cookie.get("user");
-		console.log(nickname, `""SAD"A"SD"SAD"`)
 		this.props.deactivateAccount( nickname, token, this.props.resetManagnePlayersState)
 	}
 

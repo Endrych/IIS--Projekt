@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 class SearchResult extends Component {
 	render() {
 		let toRender;
-		console.log(this.props.searchResults);
 		const { searchResults } = this.props;
 
 		if (searchResults.fetched) {

@@ -21,7 +21,6 @@ class TournamentShow extends Component {
 		var cookies = new Cookies();
 
 		var token = cookies.get("user");
-		console.log(this.props.id, "SAD<<<<<<>>>>", this.props);
 		this.props.removeTournament(token, this.props.id, ()=>{this.props.history.push('/tournaments')});
 	};
 
@@ -32,7 +31,6 @@ class TournamentShow extends Component {
 
 	render() {
 		const { tournamentInfo } = this.props;
-		console.log(this.props.loginStatus);
 		let toRender;
 		let toRenderRemove = "";
 		if (tournamentInfo.fetched) {
@@ -87,7 +85,6 @@ class TournamentShow extends Component {
 			toRender = <div className="col col-sm-12"> Získávám informace o turnaji, prosím čekejete.</div>;
 		}
 
-		console.log(toRenderRemove);
 
 		return (
 			<div className="row row__box">

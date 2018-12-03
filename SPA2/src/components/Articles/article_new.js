@@ -104,7 +104,7 @@ class ArticleNew extends Component {
 		} = field;
 		let hasError = "";
 		let className = `form-group ${touched && error ? "has-danger" : ""}`;
-		console.log(field.selectOptions)
+
 		return (
 			<div className={className}>
 				<label><b>{field.label}</b></label>

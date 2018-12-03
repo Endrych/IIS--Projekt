@@ -27,7 +27,6 @@ class ArticleEdit extends Component {
 		const cookie = new Cookies();
 		const token = cookie.get("user");
 
-		console.log(values);
 		values.Game = values.Game ? [Number(values.Game)] : null;
 
 		this.props.updateArticle(this.props.articleid, values, token, () => {
@@ -96,7 +95,6 @@ class ArticleEdit extends Component {
 		} = field;
 		let hasError = "";
 		let className = `form-group ${touched && error ? "has-danger" : ""}`;
-		console.log(field.selectOptions);
 		return (
 			<div className={className}>
 				<label>
@@ -120,7 +118,6 @@ class ArticleEdit extends Component {
 
 	render() {
 		const { handleSubmit } = this.props;
-		console.log(this.props.gameList);
 		const { articleInfo } = this.props;
 		if (articleInfo.articleFetched) {
 			if (articleInfo.fetchSucess) {

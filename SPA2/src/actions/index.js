@@ -693,7 +693,6 @@ export function declineInvite(token, id, callback = () => {}){
 
 export function createTournament(values, token, callback = ()=>{}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
-	console.log("ASDASD")
 	const request = axiosInstance.post(`/tournament`, values);
 	return dispatch => {
 		request
@@ -745,7 +744,6 @@ export function getTournamentDetails(id){
 		.then(res => {
 			dispatch({ type: TOURNAMENT_GET_DETAILS_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res)
 				// callback();
 			}, 0);
 		})
@@ -870,7 +868,6 @@ export function setMatchResult(token, values, callback = () => {}){
 
 export function startNextRound(token, id, callback = () => {}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
-	console.log(id)
 	const request = axiosInstance.post(`/tournament/${id}/continue`);
 
 	return dispatch => {
@@ -878,7 +875,6 @@ export function startNextRound(token, id, callback = () => {}){
 		.then(res => {
 			dispatch({ type: TOURNAMENT_CONTINUE_SUCESS, payload: res });
 			setTimeout(() => {
-				console.log(res)
 				callback(id);
 			}, 0);
 		})
@@ -928,7 +924,6 @@ export function getSearchResults(expression, callback = () => {}){
 
 export function removeTournament(token, tournamentId, callback = () => {}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
-	console.log(tournamentId)
 	const request = axiosInstance.delete(`/tournament/${tournamentId}`);
 
 	return dispatch => {
@@ -980,7 +975,6 @@ export function getGenres(){
 
 
 export function insertModal(value) {
-	console.log(value, "VALEU")
 	return {
 		type: MODAL_INSERT,
 		payload: value
@@ -999,7 +993,6 @@ export function removeModal(callback = () => {}) {
 
 export function getPublishers(){
 	const axiosInstance = axios.create({ baseURL: baseUrl });
-	console.log("PUBISHE")
 	const request = axiosInstance.get(`/publishers`);
 
 	return dispatch => {

@@ -111,7 +111,6 @@ class UserPrivateProfile extends Component {
 			const { userInformations } = this.props;
 			if (userInformations.acquired) {
 				// const team = this.props.team || {Name: "", Id: ""};
-				console.log(userInformations);
 				toRender = (
 					<div className="row">
 						<div  className="col col-sm-12"><h2>Osobní profil</h2></div>
@@ -213,7 +212,6 @@ class UserPrivateProfile extends Component {
 
 function mapStateToProps(state) {
 	// const newState = state.userInformations;
-	console.log(state)
 
 	return { ...state };
 }
