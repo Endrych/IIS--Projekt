@@ -43,7 +43,7 @@ class GameList extends Component{
 
 		return(
 			<div className="row row__box">
-				<div className="col col-sm">
+				<div className="col col-sm-12">
 					<h3> Seznam her </h3>
 				</div>
 				<div className="col col-sm-12">
