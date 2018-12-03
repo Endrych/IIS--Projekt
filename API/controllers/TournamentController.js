@@ -164,9 +164,9 @@ module.exports = app => {
 
         db.promiseBeginTransaction()
             .then(() => {
-                db.promiseQuery('Delete from tournament_user Where TournamentId = ? AND State = 0', id)
+                db.promiseQuery('Delete from tournament_user Where TournamentId = ?', id)
                     .then(() => {
-                        db.promiseQuery('Delete from Tournament Where Id = ?', id)
+                        db.promiseQuery('Delete from Tournament Where Id = ? AND State = 0', id)
                             .then(() => {
                                 db.commit();
                                 res.sendStatus(ResultCodes.OK);
