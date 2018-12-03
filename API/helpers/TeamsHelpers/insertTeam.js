@@ -5,9 +5,9 @@ module.exports = (team, user, db) => {
     return new Promise((resolve, reject) => {
         db.promiseBeginTransaction()
             .then(() => {
-                db.promiseQuery('INSERT INTO TEAM SET ?', team)
+                db.promiseQuery('INSERT INTO team SET ?', team)
                     .then(res => {
-                        db.promiseQuery('UPDATE User SET ? WHERE Nickname = ?', [{ Team: res.insertId }, user.Nickname])
+                        db.promiseQuery('UPDATE user SET ? WHERE Nickname = ?', [{ Team: res.insertId }, user.Nickname])
                             .then(() => {
                                 db.commit(err => {
                                     if (err) {

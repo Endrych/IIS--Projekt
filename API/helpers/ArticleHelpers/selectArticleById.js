@@ -3,7 +3,7 @@ const RejectError = require('../../models/RejectError');
 
 module.exports = (id, db) => {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('SELECT * FROM ARTICLE WHERE Id = ? AND Deleted = 0', id)
+        db.promiseQuery('SELECT * FROM article WHERE Id = ? AND Deleted = 0', id)
             .then(res => {
                 if (res.length > 0) {
                     resolve(res[0]);

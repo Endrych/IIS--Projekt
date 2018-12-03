@@ -1,6 +1,6 @@
 module.exports = (id, db) => {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('SELECT GameId FROM GAME_GENRE_GAMES WHERE GameGenreId = ?', id)
+        db.promiseQuery('SELECT GameId FROM game_genre_games WHERE GameGenreId = ?', id)
             .then(gamesId => {
                 resolve(gamesId);
             })

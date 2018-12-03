@@ -48,7 +48,7 @@ module.exports = (game, db) => {
 function saveGame(game, genres, db) {
     return new Promise((resolve, reject) => {
         game.Deleted = 0;
-        db.promiseQuery('INSERT INTO GAME SET ?', game)
+        db.promiseQuery('INSERT INTO game SET ?', game)
             .then(result => {
                 saveGameGenres(result.insertId, genres, db)
                     .then(() => {

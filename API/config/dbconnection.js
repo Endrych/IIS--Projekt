@@ -3,14 +3,17 @@ const RejectError = require('../models/RejectError');
 const ResultCodes = require('../enums/ResultCodes');
 
 var options = {
-    host: 'us-cdbr-iron-east-01.cleardb.net',
-    user: 'b5f6f95fcf7287',
-    password: '1dee8b36',
-    database: 'heroku_fdebcce623f7019',
+    host: 'store4.rosti.cz',
+    user: 'davidend_1474',
+    database: 'davidend_1474',
     dateStrings: true
 };
 
-var connection;
+if (process.platform === 'win32') {
+    options.password = '';
+} else {
+    options.password = '1dee8b36';
+}
 
 function handleDisconnect() {
     connection = mysql.createConnection(options); // Recreate the connection, since

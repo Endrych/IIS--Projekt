@@ -16,7 +16,7 @@ class ArticleShow extends Component {
 
 	render() {
 		const { articleInfo } = this.props;
-		console.log(articleInfo);
+
 		if (articleInfo.articleFetched) {
 			if (articleInfo.fetchSucess) {
 				return (

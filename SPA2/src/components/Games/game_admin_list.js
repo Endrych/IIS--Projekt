@@ -12,7 +12,6 @@ class GameAdminList extends Component {
 	}
 
 	generateListItem = gameInfo => {
-		console.log(this);
 
 		return (
 			<div key={gameInfo.Keyname} className="row" style={{ marginBottom: "5px" }}>
@@ -50,14 +49,13 @@ class GameAdminList extends Component {
 	};
 
 	handleInsertModal = keyname => {
-		console.log("ASDASDASD", keyname);
 		this.props.insertModal(keyname);
 	};
 
 	deleteOnClick = keyname => {
 		const cookie = new Cookies();
 		const token = cookie.get("user");
-		console.log(keyname, token, "<<ASD<ASD<AS<D");
+
 		this.props.deleteGame(keyname, token, this.props.fetchGameList); //zajitit reloady, to bude v pohode az to vyvedu mimi delte bude na vlastni strance muset se potvrdit
 	};
 

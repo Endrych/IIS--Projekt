@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const db = require('./config/dbconnection');
 
-const port = process.env.PORT || 5050
+const port = process.env.port || 8080
 const middlewares = require('./middlewares/Middlewares')
 const controllers = require('./controllers/Controllers');
 

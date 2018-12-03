@@ -172,8 +172,8 @@ module.exports = app => {
 				updateGame(keyname, { Deleted: 1 }, db)
 					.then(() => {
 						Promise.all([
-							db.promiseQuery("UPDATE Article SET ? WHERE Game = ?", [{ Game: null }, game[0].Id]),
-							db.promiseQuery("UPDATE Tournament SET ? Where Game = ?", [{ Game: null }, game[0].Id])
+							db.promiseQuery("UPDATE article SET ? WHERE Game = ?", [{ Game: null }, game[0].Id]),
+							db.promiseQuery("UPDATE tournament SET ? Where Game = ?", [{ Game: null }, game[0].Id])
 						])
 							.then(() => {
 								res.sendStatus(ResultCodes.OK);

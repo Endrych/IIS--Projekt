@@ -3,7 +3,7 @@ const ResultCodes = require('../../enums/ResultCodes');
 
 module.exports = (user, db) => {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('Select Owner FROM Team WHERE Id = ?', user.Team)
+        db.promiseQuery('Select Owner FROM team WHERE Id = ?', user.Team)
             .then(team => {
                 if (team.length === 0) {
                     reject(new RejectError(ResultCodes.NO_CONTENT));
@@ -17,7 +17,7 @@ module.exports = (user, db) => {
                     return;
                 }
 
-                db.promiseQuery('UPDATE User SET ? WHERE Nickname = ?', [{ Team: null }, user.Nickname])
+                db.promiseQuery('UPDATE user SET ? WHERE Nickname = ?', [{ Team: null }, user.Nickname])
                     .then(() => {
                         resolve(null);
                     })

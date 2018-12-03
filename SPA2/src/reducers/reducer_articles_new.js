@@ -5,7 +5,6 @@ export default function(state={fetched: false}, action){
 		case NEWEST_ARTICLES_FETCH_SUCESS:
 			const newState={fetched: true, articles: action.payload.data};
 
-			console.log("NEW STATE", newState)
 			return newState;
 		default:
 			return state;

@@ -5,7 +5,6 @@ export default function(state = {fetched: false, fetchSucess: false}, action){
 	switch(action.type){
 		case PLAYER_FETCH_SUCESS:
 			const { data } = action.payload;
-			console.log(data, "DATA")
 			const playerDataState = {
 				nickname: data.Nickname,
 				firstname: data.Firstname,
@@ -24,7 +23,6 @@ export default function(state = {fetched: false, fetchSucess: false}, action){
 				fetched: true
 			}
 		case RESET_PLAYER_FETCH:
-		console.log("ASDASD")
 			return {...state, fetch: false}
 		default:
 			return state;

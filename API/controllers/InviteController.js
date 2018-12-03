@@ -15,11 +15,11 @@ module.exports = app => {
             .then(() => {
                 var dataObj = { Team: req.user.Team, User: user };
 
-                var checkInvitePromise = db.promiseQuery('SELECT Id FROM Invite Where Team = ? AND User = ? ', [
+                var checkInvitePromise = db.promiseQuery('SELECT Id FROM invite Where Team = ? AND User = ? ', [
                     req.user.Team,
                     user
                 ]);
-                var checkUserPromise = db.promiseQuery('SELECT Nickname FROM User WHERE Nickname = ?', user);
+                var checkUserPromise = db.promiseQuery('SELECT Nickname FROM user WHERE Nickname = ?', user);
 
                 Promise.all([checkInvitePromise, checkUserPromise])
                     .then(results => {
@@ -58,11 +58,11 @@ module.exports = app => {
             return;
         }
 
-        db.promiseQuery('SELECT Id, Team FROM INVITE WHERE User = ?', req.user.Nickname)
+        db.promiseQuery('SELECT Id, Team FROM invite WHERE User = ?', req.user.Nickname)
             .then(invites => {
                 if (invites.length > 0) {
                     db.promiseQuery(
-                        'SELECT Id, Name, Logo FROM Team WHERE Deleted = 0 AND Id IN (' +
+                        'SELECT Id, Name, Logo FROM team WHERE Deleted = 0 AND Id IN (' +
                             Array(invites.length + 1)
                                 .join('?')
                                 .split('')
@@ -113,14 +113,14 @@ module.exports = app => {
 
         db.promiseBeginTransaction()
             .then(() => {
-                db.promiseQuery('SELECT * From Invite Where User = ? AND Id = ?', [req.user.Nickname, id])
+                db.promiseQuery('SELECT * From invite Where User = ? AND Id = ?', [req.user.Nickname, id])
                     .then(invite => {
                         if (invite.length === 0) {
                             res.sendStatus(ResultCodes.NO_CONTENT);
                             return;
                         }
 
-                        db.promiseQuery('UPDATE User SET ? WHERE Nickname = ?', [
+                        db.promiseQuery('UPDATE user SET ? WHERE Nickname = ?', [
                             { Team: invite[0].Team },
                             req.user.Nickname
                         ])

@@ -8,7 +8,6 @@ import { setTournamentModalValues, startNextRound, getTournamentDetails } from "
 class TournamentActive extends Component {
 	createMatch = match => {
 		const matchFinished = match.Score1 !== null && match.Score2 !== null;
-		console.log("ASDASD", this.props, match, matchFinished);
 		if (matchFinished) {
 			return (
 				<div key={match.Id + Math.random() * 1000}>
@@ -51,7 +50,6 @@ class TournamentActive extends Component {
 	};
 
 	popModal = match => {
-		console.log("ASDASDDS");
 		// const values = {valueSet: true };
 		this.props.setTournamentModalValues(match.Id);
 	};
@@ -71,10 +69,8 @@ class TournamentActive extends Component {
 
 	getRounds = (matches, round) => {
 		let roundsArr = [];
-		console.log(matches);
 		const _this = this;
 		Object.keys(matches).forEach(function(key) {
-			console.log(key, matches[key]);
 			roundsArr.push(_this.generateRound(matches[key], key));
 		}); // for(){
 		// 	if(i === round){

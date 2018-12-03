@@ -33,7 +33,6 @@ class TournamentModal extends Component {
 		values["tournamentId"] = this.props.tournamentId;
 		this.props.setMatchResult(token, values, this.props.getTournamentDetails);
 		this.props.unsetTournamentModalValues();
-		console.log(token, values, this.props.tournamentId);
 	};
 
 	unsetModal = e => {
@@ -43,7 +42,6 @@ class TournamentModal extends Component {
 
 	render() {
 		const { handleSubmit } = this.props;
-		console.log(this.props.matchInfo);
 		return (
 			<div className="modal__wrapper">
 				<div className="modal__inner" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -69,7 +67,6 @@ class TournamentModal extends Component {
 }
 
 function mapStateToProps({ tournamentModal }) {
-	console.log(tournamentModal);
 	return { tournamentModal };
 }
 

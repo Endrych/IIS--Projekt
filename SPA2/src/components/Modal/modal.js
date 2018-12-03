@@ -5,7 +5,6 @@ import { removeModal } from './../../actions';
 class Modal extends Component {
 
 	handleConfirm = () => {
-		console.log(this, this.props.callback, "CALL")
 		this.props.removeModal();
 		this.props.callback();
 	}

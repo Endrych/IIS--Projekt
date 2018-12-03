@@ -43,7 +43,6 @@ class TournamentNew extends Component {
 		} = field;
 		let hasError = "";
 		let className = `form-group ${touched && error ? "has-danger" : ""}`;
-		console.log(field.selectOptions);
 		return (
 			<div className={className}>
 				<label  className={field.require ? "require-fill" : ""}>
@@ -101,7 +100,6 @@ function mapSateToProps({ gameList }) {
 
 function validate(values){
 	const errors = {};
-	console.log("values")
 	if(!values.Name){
 		errors.Name = "Zadejte jméno turnaje.";
 	}
