@@ -41,7 +41,7 @@ class GameNew extends Component{
 
 		return (
 			<div className={className}>
-				<label className={field.require ? "require-fill" : ""}><b>{field.label}</b></label>
+				<label className={field.require ? "require-fill" : ""}><b>{field.label}</b><i>{field.description}</i></label>
 				<input className="form-control" {...field.input}  />
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -115,9 +115,9 @@ class GameNew extends Component{
 		const cookie = new Cookies();
 		const token = cookie.get("user");
 		console.log(data);
-
+		data.Video = data.Video ? data.Video.replace("watch?v=", "embed/") : "" ;
 		data.Genres = data.Genres ? [Number(data.Genres)] : "";
-		console.log(data);
+		console.log(data, "DATA", data.Video.replace("watch?v=", "embed/") );
 
 		this.props.createNewGame(data, token, ()=>{this.props.history.push("/admin/games")}); //pridat landing page game sucess
 	}
@@ -137,7 +137,7 @@ class GameNew extends Component{
 						<Field name="Description" label="Popis hry" component={this.renderGameDescriptionField} />
 						<Field name="Publisher" label="Vydavatel" component={this.renderSelectField2} selectOptions={this.props.publishers.publishersArray}/>
 						<Field name="Genres" label="Žánr" component={this.renderSelectField} selectOptions={this.props.genres.genresArray} />
-						<Field name="Video" label="Odkaz na video" component={this.renderInputField} />
+						<Field name="Video" description={` (Povolena pouze youtube videa. Příklad: https://www.youtube.com/watch?v=c0mX-5q3mrYz )`} label="Odkaz na video" component={this.renderInputField} />
 						<button style={{marginRight: "5px"}} className="btn btn-primary">Vytvořit</button>
 						<Link to="/admin/games"><button  className="btn btn-danger">Zrušit</button></Link>
 					</form>
