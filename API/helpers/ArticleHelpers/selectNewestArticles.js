@@ -7,7 +7,7 @@ module.exports = (count, offset, db) => {
             count + offset
         )
             .then(res => {
-                res = res.slice(offset)
+				res = res.slice(offset)
                 solveArticlesGames(res, db)
                     .then(result => {
                         resolve(result);

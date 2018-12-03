@@ -1,25 +1,25 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchPlayer } from "../../actions";
+import { fetchPlayer, resetPlayerFetch } from "../../actions";
 import { Link } from "react-router-dom";
 
 class UserPublicProfile extends Component {
 	componentDidMount() {
-		this.props.fetchPlayer(this.props.playername);
+		this.props.fetchPlayer(this.props.playername, () => {this.props.resetPlayerFetch()});
 	}
 
 	fetchSucessfull = playerInfo => {
 		console.log(playerInfo);
 		return (
-			<div>
-				<h2>{playerInfo.nickname}</h2>
+			<div className="col col-sm-12">
+				<h3>Hráč: {playerInfo.nickname}</h3>
 				<div>Tým: {playerInfo.team ? playerInfo.team.Name : "Není členem žádného týmu"} </div>
 				<div>
 					Jméno: {playerInfo.firstname} {playerInfo.lastname}
 				</div>
 				{playerInfo.tournaments.length > 0 ? (
-					<div>
-						<h3>Vyhrané turnaje</h3>
+					<div style={{marginTop: "10px"}}>
+						<h4>Vyhrané turnaje</h4>
 						<div>
 							{playerInfo.tournaments.map(tournament => {
 								return (
@@ -42,16 +42,16 @@ class UserPublicProfile extends Component {
 
 		let toRender;
 		if (playerInfo.fetched) {
-			if (playerInfo.fetchSucess) {
+			if (playerInfo.fetchSucess && playerInfo.status === 200) {
 				toRender = this.fetchSucessfull(playerInfo);
 			} else {
-				toRender = <div>Hráč nenalezen</div>;
+			toRender = <div style={{margin:"20px"}}>Hráč nenalezen</div>;
 			}
 		} else {
 			toRender = <div>Loading data...</div>;
 		}
 
-		return <div>{toRender}</div>;
+		return <div className="row row__box">{toRender}</div>;
 	}
 }
 
@@ -61,5 +61,5 @@ function mapStateToProps({ playerInfo }) {
 
 export default connect(
 	mapStateToProps,
-	{ fetchPlayer }
+	{ fetchPlayer, resetPlayerFetch }
 )(UserPublicProfile);

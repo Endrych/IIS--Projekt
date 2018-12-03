@@ -11,10 +11,9 @@ class GameList extends Component{
 
 	generateListItem = gameInfo => {
 		return (
-			<div key={gameInfo.Keyname}>
-				<div>
-					Icon here   |
-					<Link to={`/games/${gameInfo.Keyname}`}>{gameInfo.Name}</Link>   |
+			<div className="row" key={gameInfo.Keyname}>
+				<div className="col col-sm-12">
+					<h5><Link to={`/games/${gameInfo.Keyname}`}>{gameInfo.Name}</Link></h5>
 				</div>
 			</div>
 		);
@@ -43,8 +42,14 @@ class GameList extends Component{
 		}
 
 		return(
-			<div>
-				{toRender}
+			<div className="row row__box">
+				<div className="col col-sm-12">
+					<h3> Seznam her </h3>
+				</div>
+				<div className="col col-sm-12">
+
+					{toRender}
+				</div>
 			</div>
 		)
 	}

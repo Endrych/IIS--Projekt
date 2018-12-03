@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from "universal-cookie/cjs";
+import Cookies from "universal-cookie";
 
 export const REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS";
 export const REGISTER_USER_FAILED = "REGISTER_USER_FAILED";
@@ -81,8 +81,15 @@ export const REMOVE_RIGHTS_FAILED = "REMOVE_RIGHTS_FAILED";
 export const DEACTIVATE_ACCOUNT_SUCESS = "DEACTIVATE_ACCOUNT_SUCESS";
 export const DEACTIVATE_ACCOUNT_FAILED = "DEACTIVATE_ACCOUNT_FAILED";
 export const RESET_ACCOUNT_MANAGMENT = "RESET_ACCOUNT_MANAGMENT";
-
+export const RESET_PLAYER_FETCH = "RESET_PLAYER_FETCH";
+export const GET_GENRES_SUCESS = "GET_GENRES_SUCESS";
+export const GET_GENRES_FAILED = "GET_GENRES_FAILED";
+export const GET_PUBLISHERS_SUCESS = "GET_PUBLISHERS_SUCESS";
+export const GET_PUBLISHERS_FAILED = "GET_PUBLISHERS_FAILED";
+export const MODAL_INSERT  = "MODAL_INSERT";
+export const MODAL_REMOVE  = "MODAL_REMOVE";
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
+export const NEWEST_ARTICLES_FETCH_SUCESS = "NEWEST_ARTICLES_FETCH_SUCESS";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -186,12 +193,12 @@ export function getUserInfoFromToken(token, callback = () => {}) {
 	};
 }
 
-export function logOut() {
+export function logOut(callback = ()=>{}) {
 	const cookies = new Cookies();
 	cookies.remove("user");
-	return {
-		type: LOG_OUT,
-		payload: {}
+	return dispatch => {
+		dispatch({type: LOG_OUT,payload: {}});
+		callback();
 	};
 }
 
@@ -227,13 +234,16 @@ export function fetchAllArticles(){
 }
 
 
-export function removeArticle(id, token){
+export function removeArticle(id, token, callback = () => {}){
 	const axiosInstance = axios.create({baseURL: baseUrl , headers: { "x-access-token": token } });
 	const request = axiosInstance.delete(`/article/${id}`)
 
 	return dispatch => {
 		request.then(res => {
 			dispatch({ type: ARTICLE_REMOV_SUCCES, payload:res});
+			setTimeout(() => {
+				callback();
+			}, 0);
 		})
 	}
 }
@@ -281,15 +291,23 @@ export function updateArticle(id, data, token, callback){
 
 }
 
-export function fetchPlayer(nickname){
+export function fetchPlayer(nickname, callback = () =>{}){
 	const axiosInstance = axios.create({baseURL: baseUrl});
 	const request = axiosInstance.get(`/user/${nickname}`);
 
 	return dispatch => {
 		request.then(res => {
 			dispatch({type: PLAYER_FETCH_SUCESS, payload:res});
+			setTimeout(() => {
+				// console.log()
+				callback();
+			}, 0);
 		}).catch(err=>{
 			dispatch({type: PLAYER_FETCH_FAILED, payload:err});
+			setTimeout(() => {
+				// console.log()
+				callback();
+			}, 0);
 		})
 	}
 }
@@ -908,7 +926,7 @@ export function getSearchResults(expression, callback = () => {}){
 	}
 }
 
-export function removeTournament(token, tournamentId){
+export function removeTournament(token, tournamentId, callback = () => {}){
 	const axiosInstance = axios.create({ baseURL: baseUrl, headers: { "x-access-token": token } });
 	console.log(tournamentId)
 	const request = axiosInstance.delete(`/tournament/${tournamentId}`);
@@ -917,9 +935,9 @@ export function removeTournament(token, tournamentId){
 		request
 		.then(res => {
 			dispatch({ type: TOURNAMENT_DELETE_SUCESS, payload: res });
-			// setTimeout(() => {
-			// 	callback();
-			// }, 0);
+			setTimeout(() => {
+				callback();
+			}, 0);
 		})
 		.catch(err => {
 			dispatch({ type: TOURNAMENT_DELETE_FAILED, payload: err });
@@ -930,3 +948,87 @@ export function removeTournament(token, tournamentId){
 	}
 
 }
+
+export function resetPlayerFetch(){
+	return{
+		type: RESET_PLAYER_FETCH,
+	}
+}
+
+export function getGenres(){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+
+	const request = axiosInstance.get(`/genres`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: GET_GENRES_SUCESS, payload: res });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		})
+		.catch(err => {
+			dispatch({ type: GET_GENRES_FAILED, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+
+}
+
+
+export function insertModal(value) {
+	console.log(value, "VALEU")
+	return {
+		type: MODAL_INSERT,
+		payload: value
+	};
+}
+
+export function removeModal(callback = () => {}) {
+	return dispatch => {
+		dispatch({ type: MODAL_REMOVE });
+		setTimeout(() => {
+			callback();
+		}, 0);
+	};
+}
+
+
+export function getPublishers(){
+	const axiosInstance = axios.create({ baseURL: baseUrl });
+	console.log("PUBISHE")
+	const request = axiosInstance.get(`/publishers`);
+
+	return dispatch => {
+		request
+		.then(res => {
+			dispatch({ type: GET_PUBLISHERS_SUCESS, payload: res });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		})
+		.catch(err => {
+			dispatch({ type: GET_PUBLISHERS_SUCESS, payload: err });
+			// setTimeout(() => {
+			// 	callback();
+			// }, 0);
+		});
+	}
+}
+
+
+
+export function fetchNewArticles(){
+	const axiosInstance = axios.create({baseURL: baseUrl});
+	const request = axiosInstance.get("/articles?count=3")
+
+	return dispatch => {
+		request.then(res => {
+			dispatch({ type: NEWEST_ARTICLES_FETCH_SUCESS, payload:res});
+		})
+	}
+}
+

@@ -1,38 +1,41 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-class TournamentFinished extends Component{
-
-
-
-	createMatch = (match) => {
+class TournamentFinished extends Component {
+	createMatch = match => {
 		// const matchFinished = !!match.Score1 && !!match.Score2;
-		console.log("ASDASD", this.props, match)
-		return <div key={match.Id + match.Score1}> {match.User1} {match.Score1} - {match.Score2} {match.User2}</div>
+		console.log("ASDASD", this.props, match);
+		return (
+			<div key={Number(match.Id + match.Score1 + match.Score2)+Math.random()*1000}>
+				{" "}
+				{match.User1} <b> {match.Score1} - {match.Score2} </b> {match.User2}
+			</div>
+		);
+	};
 
-	}
-
-
-	generateRound= (round, key) => {
-		const roundArr = [<div key={key}><h4>{key}. Kolo</h4></div>];
-		for(let i = 0; i < round.length; i++){
-			roundArr.push(this.createMatch(round[i]))
+	generateRound = (round, key) => {
+		const roundArr = [
+			<div key={key}>
+				<h5>{key}. Kolo</h5>
+			</div>
+		];
+		for (let i = 0; i < round.length; i++) {
+			roundArr.push(this.createMatch(round[i]));
 		}
-
+		roundArr.push(<br key={Math.random() * 1000}/>)
 		return roundArr;
-	}
+	};
 
 	getRounds = (matches, round) => {
 		let roundsArr = [];
-		console.log(matches)
+		console.log(matches);
 		const _this = this;
 		Object.keys(matches).forEach(function(key) {
 			console.log(key, matches[key]);
-			roundsArr.push(_this.generateRound(matches[key], key))
-
-		  });		// for(){
+			roundsArr.push(_this.generateRound(matches[key], key));
+		}); // for(){
 		// 	if(i === round){
 		// 		roudnsArr.push(this.generateRound(matches[i]), true)
 		// 	}else{
@@ -40,30 +43,50 @@ class TournamentFinished extends Component{
 		// 	}
 		// }
 		return roundsArr;
-	}
+	};
 
-	render(){
-		const {tournamentInfo} = this.props;
+	render() {
+		const { tournamentInfo } = this.props;
 		const { loginStatus } = this.props;
-console.log(tournamentInfo)
-		return(
-			<div>
-				<div><h2>{tournamentInfo.Name}</h2></div>
-				<div>{tournamentInfo.Description}</div>
-				<div><Link to={`/games/${tournamentInfo.Game.Keyname}`}>Hra: {tournamentInfo.Game.Name}</Link></div>
-				<div> Vítěz: <Link to={`/players/${tournamentInfo.Winner}`}>{tournamentInfo.Winner}</Link></div>
-				<div><h3>Historie turnaje</h3></div>
-				<div>{this.getRounds(tournamentInfo.Matches, tournamentInfo.Round)}</div>
-				<div><h3>Seznam hračů</h3></div>
-				{tournamentInfo.Users.map(user => <div key={user}><Link to={`/players/${user}`}>{user}</Link></div>)}
+		console.log(tournamentInfo);
+		return (
+			<div className="col col-sm-12">
+				<div className="row">
+					<div className="col col-sm-12">
+						<h3>Turnaj: {tournamentInfo.Name}</h3>
+					</div>
+					<div className="col col-sm-12">
+						Vítěz: <Link to={`/players/${tournamentInfo.Winner}`}>{tournamentInfo.Winner}</Link>
+					</div>
+					<div className="col col-sm-12">
+						Hra: <Link to={`/games/${tournamentInfo.Game.Keyname}`}> {tournamentInfo.Game.Name}</Link>
+					</div>
+					<div className="col col-sm-12">{tournamentInfo.Description}</div>
+				</div>
+				<br/>
+				<div className="row">
+					<div className="col col-sm-12">
+						<h4>Historie turnaje</h4>
+					</div>
+					<div className="col col-sm-12">{this.getRounds(tournamentInfo.Matches, tournamentInfo.Round)}</div>
+				</div>
+				<div className="row">
+					<div className="col col-sm-12">
+						<h4>Seznam hračů</h4>
+					</div>
+					{tournamentInfo.Users.map(user => (
+						<div  className="col col-sm-12" key={user}>
+							<Link to={`/players/${user}`}>{user}</Link>
+						</div>
+					))}
+				</div>
 			</div>
-		)
+		);
 	}
 }
-
 
 // function mapStateToProps(state){
 // 	return state;
 // }
 
-export default connect(null)(TournamentFinished)
+export default connect(null)(TournamentFinished);
