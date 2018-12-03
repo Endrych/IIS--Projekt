@@ -16,7 +16,7 @@ const createStoreWithMiddleware = applyMiddleware(promise, thunk)(createStore);
 ReactDOM.render(
 	<Provider store={createStoreWithMiddleware(reducers)}>
 		<div className="row">
-			<BrowserRouter>
+			<BrowserRouter basename="/~xendry02/IIS/">
 				<div  className="col col-sm-12">
 					<Header history={history}/>
 					<AllRoutes />

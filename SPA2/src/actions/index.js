@@ -91,7 +91,7 @@ export const MODAL_REMOVE  = "MODAL_REMOVE";
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 export const NEWEST_ARTICLES_FETCH_SUCESS = "NEWEST_ARTICLES_FETCH_SUCESS";
 
-const baseUrl = `https://obscure-shelf-42241.herokuapp.com`;
+const baseUrl = `http://iis-3255.rostiapp.cz`;
 
 export function registerUser(values, callback) {
 	const axiosInstance = axios.create({ baseURL: baseUrl });

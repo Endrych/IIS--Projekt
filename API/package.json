@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "node app.js",
     "test": "nyc mocha --recursive tests"
   },
   "author": "David Endrych, Marek Kukučka",
