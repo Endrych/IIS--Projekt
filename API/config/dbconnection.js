@@ -4,9 +4,9 @@ const ResultCodes = require('../enums/ResultCodes');
 
 var options = {
     host: 'us-cdbr-iron-east-01.cleardb.net',
-    user: 'b24006ab000d01',
-    password: 'f7fe8d95',
-    database: 'heroku_81ced608b5b3877',
+    user: 'b5f6f95fcf7287',
+    password: '1dee8b36',
+    database: 'heroku_fdebcce623f7019',
     dateStrings: true
 };
 
