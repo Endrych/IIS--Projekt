@@ -21,6 +21,7 @@ import ReducerPlayerManagment from './reducer_manage_players';
 import ReducerGenres from './reducer_genres';
 import ReducerModal from './reducer_modal';
 import ReducerPublishers from './reducer_publishers';
+import ReducerArticlesNew from './reducer_articles_new';
 
 const rootReducer = combineReducers({
 	registrationResultCode: RegisterReducer,
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
 	genres: ReducerGenres,
 	modal:ReducerModal,
 	publishers: ReducerPublishers,
+	articlesNew: ReducerArticlesNew,
 	form: formReducer
 });
 

@@ -89,6 +89,7 @@ export const GET_PUBLISHERS_FAILED = "GET_PUBLISHERS_FAILED";
 export const MODAL_INSERT  = "MODAL_INSERT";
 export const MODAL_REMOVE  = "MODAL_REMOVE";
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
+export const NEWEST_ARTICLES_FETCH_SUCESS = "NEWEST_ARTICLES_FETCH_SUCESS";
 
 const baseUrl = `http://localhost:5050`;
 
@@ -1016,5 +1017,18 @@ export function getPublishers(){
 			// }, 0);
 		});
 	}
-
 }
+
+
+
+export function fetchNewArticles(){
+	const axiosInstance = axios.create({baseURL: baseUrl});
+	const request = axiosInstance.get("/articles?count=3")
+
+	return dispatch => {
+		request.then(res => {
+			dispatch({ type: NEWEST_ARTICLES_FETCH_SUCESS, payload:res});
+		})
+	}
+}
+

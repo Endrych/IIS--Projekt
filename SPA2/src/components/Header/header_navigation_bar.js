@@ -13,7 +13,7 @@ class HeaderNavigationBar extends Component {
 				<div className="row">
 					<div style={{padding: "0px"}} className="col col-sm-4 bg-danger">
 						<Link style={{textDecoration:"none"}} to="/articles">
-							<div  className="header__nav-bar--item" style={styleCol}>Novinky</div>
+							<div  className="header__nav-bar--item" style={styleCol}>Články</div>
 						</Link>
 					</div>
 					<div style={{padding: "0px"}} className="col col-sm-4 bg-danger">

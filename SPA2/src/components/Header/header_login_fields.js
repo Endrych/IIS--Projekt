@@ -116,20 +116,20 @@ function validate(values) {
 	const validator = new GeneralValidators();
 	// validate inputs here
 	if (!values.Nickname) {
-		errors.Nickname = "Enter a nickname";
+		errors.Nickname = "Zadejte přezdívku";
 	} else if (!validator.AlphaNumericCharacters(values.Nickname)) {
-		errors.Nickname = "Povoleny pouze alfanumericke znaky";
+		errors.Nickname = "Povoleny pouze alfanumerické znaky";
 	} else if (!validator.Range(values.Nickname, { min: 4, max: 45 })) {
-		errors.Nickname = "Povolena delka je 4-45 znaku";
+		errors.Nickname = "Povolená délka je 4-45 znaku";
 	}
 
 	if (!values.Password) {
 		errors.Password = "Zadejte heslo";
 		// errors.Password_repeat = "Zadejte heslo";
 	} else if (!validator.AlphaNumericCharacters(values.Password)) {
-		errors.Password = "Povoleny pouze alfanumericke znaky";
+		errors.Password = "Povoleny pouze alfanumerické znaky";
 	} else if (!validator.Min(values.Password, { min: 6 })) {
-		errors.Password = "Heslo musi mit aspon 6 znaku.";
+		errors.Password = "Heslo musí mít aspoň 6 znaku.";
 	}
 
 	//if errors is empty form is fine to submit
