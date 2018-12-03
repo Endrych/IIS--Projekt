@@ -7,7 +7,7 @@ module.exports = (id, db) => {
         db.promiseBeginTransaction()
             .then(() => {
                 Promise.all([
-                    db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id),
+                    db.promiseQuery('SELECT * FROM tournament WHERE Id = ?', id),
                     db.promiseQuery('SELECT UserId FROM tournament_user WHERE TournamentId = ?', id)
                 ])
                     .then(results => {

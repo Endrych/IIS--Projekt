@@ -3,16 +3,16 @@ const RejectError = require('../models/RejectError');
 const ResultCodes = require('../enums/ResultCodes');
 
 var options = {
-    host: 'localhost',
-    user: 'root',
-    database: 'iis-db',
+    host: 'store4.rosti.cz',
+    user: 'davidend_1474',
+    database: 'davidend_1474',
     dateStrings: true
 };
 
 if (process.platform === 'win32') {
     options.password = '';
 } else {
-    (options.password = 'root'), (options.socketPath = '/Applications/MAMP/tmp/mysql/mysql.sock');
+    options.password = '1dee8b36';
 }
 
 var connection = mysql.createConnection(options);

@@ -24,7 +24,7 @@ module.exports = app => {
             return;
         }
 
-        db.promiseQuery('Select * FROM TMatch WHERE Id = ?', id)
+        db.promiseQuery('Select * FROM tmatch WHERE Id = ?', id)
             .then(match => {
                 if (match.length === 0) {
                     res.sendStatus(ResultCodes.NO_CONTENT);
@@ -35,7 +35,7 @@ module.exports = app => {
                     res.sendStatus(ResultCodes.FORBIDDEN);
                     return;
                 }
-                db.promiseQuery('Update TMatch SET ? Where Id = ?', [{ Score1: score1, Score2: score2 }, id])
+                db.promiseQuery('Update tmatch SET ? Where Id = ?', [{ Score1: score1, Score2: score2 }, id])
                     .then(() => {
                         res.sendStatus(ResultCodes.OK);
                     })

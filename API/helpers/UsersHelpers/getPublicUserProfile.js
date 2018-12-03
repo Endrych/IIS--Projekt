@@ -4,7 +4,7 @@ const getUserInfo = require('./getUserInfo');
 
 module.exports = (db, nickname) => {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('SELECT Nickname, Firstname, Lastname, Team, Image FROM USER WHERE ?', { Nickname: nickname })
+        db.promiseQuery('SELECT Nickname, Firstname, Lastname, Team, Image FROM user WHERE ?', { Nickname: nickname })
             .then(user => {
                 if (user.length === 1) {
                     var userData = user[0];

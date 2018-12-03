@@ -4,7 +4,7 @@ module.exports = (user, hash, salt, db) => {
         user.Salt = salt;
         user.Admin = 0;
 
-        db.promiseQuery('INSERT INTO USER SET ?', user)
+        db.promiseQuery('INSERT INTO user SET ?', user)
             .then(user => {
                 resolve(user);
             })

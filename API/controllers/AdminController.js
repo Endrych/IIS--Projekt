@@ -48,7 +48,7 @@ module.exports = app => {
 
         checkAdminEditPermission(req.user, nickname, db)
             .then(() => {
-                db.promiseQuery('UPDATE User SET ? WHERE Nickname = ?', [{ Deactivated: true }, nickname]).then(()=>{
+                db.promiseQuery('UPDATE user SET ? WHERE Nickname = ?', [{ Deactivated: true }, nickname]).then(()=>{
                     res.sendStatus(ResultCodes.OK);
                 }).catch(err => {
                     processError(res, err);

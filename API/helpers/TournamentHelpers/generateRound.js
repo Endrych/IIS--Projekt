@@ -26,7 +26,7 @@ module.exports = (users, round, id, db) => {
                     tour_match.push([id, firstId + i, round]);
                 }
                 Promise.all([
-                    db.promiseQuery('UPDATE Tournament SET ? Where Id = ?', [{ State: 1, Round: round }, id]),
+                    db.promiseQuery('UPDATE tournament SET ? Where Id = ?', [{ State: 1, Round: round }, id]),
                     db.promiseQuery('Insert INTO tournament_match (Tournament, TMatch, Round) VALUES ?', [tour_match])
                 ])
                     .then(() => {

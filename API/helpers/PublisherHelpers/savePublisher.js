@@ -3,12 +3,12 @@ module.exports = (name, db) => {
         if (!name) {
             resolve();
         } else {
-            db.promiseQuery('SELECT Id FROM Publisher WHERE Name = ?', name)
+            db.promiseQuery('SELECT Id FROM publisher WHERE Name = ?', name)
                 .then(publisher => {
                     if (publisher.length !== 0) {
                         resolve(publisher[0].Id);
                     } else {
-                        db.promiseQuery('INSERT INTO Publisher SET ?', { Name: name })
+                        db.promiseQuery('INSERT INTO publisher SET ?', { Name: name })
                             .then(res => {
                                 resolve(res.insertId);
                             })

@@ -3,7 +3,7 @@ module.exports = (body, db) => {
         body.Created = new Date();
         body.Round = 0;
 
-        db.promiseQuery('INSERT INTO Tournament SET ?', body)
+        db.promiseQuery('INSERT INTO tournament SET ?', body)
             .then(tournament => {
                 resolve(tournament.insertId);
             })

@@ -142,7 +142,7 @@ module.exports = app => {
 
         checkTeamEditPermission(req.user, req.user.Team, db)
             .then(() => {
-                db.promiseQuery('Select Team FROM USER WHERE Nickname = ? ', user)
+                db.promiseQuery('Select Team FROM user WHERE Nickname = ? ', user)
                     .then(retUser => {
                         if (retUser.length === 0) {
                             res.sendStatus(ResultCodes.NO_CONTENT);
@@ -152,7 +152,7 @@ module.exports = app => {
                             res.sendStatus(ResultCodes.FORBIDDEN);
                             return;
                         }
-                        db.promiseQuery('UPDATE User SET ? WHERE Nickname = ? ', [{ Team: null }, user])
+                        db.promiseQuery('UPDATE user SET ? WHERE Nickname = ? ', [{ Team: null }, user])
                             .then(() => {
                                 res.sendStatus(ResultCodes.OK);
                             })

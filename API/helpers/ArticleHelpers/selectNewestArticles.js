@@ -3,7 +3,7 @@ const solveArticlesGames = require('./solveArticlesGames');
 module.exports = (count, offset, db) => {
     return new Promise((resolve, reject) => {
         db.promiseQuery(
-            'SELECT Id, Author, Header, Image, Game, Created FROM ARTICLE WHERE Deleted = 0 order by Created DESC limit ?',
+            'SELECT Id, Author, Header, Image, Game, Created FROM article WHERE Deleted = 0 order by Created DESC limit ?',
             count + offset
         )
             .then(res => {

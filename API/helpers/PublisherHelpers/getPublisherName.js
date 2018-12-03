@@ -4,7 +4,7 @@ module.exports = (id, db) => {
             resolve(null);
             return;
         }
-        db.promiseQuery('SELECT Name FROM PUBLISHER WHERE Id = ?',id)
+        db.promiseQuery('SELECT Name FROM publisher WHERE Id = ?',id)
             .then(res => {
                 if (res.length > 0) {
                     resolve(res[0].Name);

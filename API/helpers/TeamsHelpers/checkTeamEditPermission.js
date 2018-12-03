@@ -7,7 +7,7 @@ module.exports = (user, id, db) => {
             reject(new RejectError(ResultCodes.FORBIDDEN));
             return;
         }
-        db.promiseQuery('Select Owner FROM TEAM WHERE Id = ? AND Deleted = 0', id)
+        db.promiseQuery('Select Owner FROM team WHERE Id = ? AND Deleted = 0', id)
             .then(team => {
                 if (team.length === 0) {
                     reject(new RejectError(ResultCodes.NO_CONTENT));

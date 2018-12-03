@@ -4,7 +4,7 @@ const generateRound = require('./generateRound');
 
 module.exports = (id, db) => {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('SELECT * FROM Tournament WHere Id = ?', id)
+        db.promiseQuery('SELECT * FROM tournament WHere Id = ?', id)
             .then(tournament => {
                 if (tournament.length === 0) {
                     reject(new RejectError(ResultCodes.NO_CONTENT));
@@ -63,7 +63,7 @@ module.exports = (id, db) => {
                             if (match.Score2 > match.Score1) {
                                 winner = match.User2;
                             }
-                            db.promiseQuery('UPDATE Tournament SET ? Where Id = ?', [{ Winner: winner, State: 2 }, id])
+                            db.promiseQuery('UPDATE tournament SET ? Where Id = ?', [{ Winner: winner, State: 2 }, id])
                                 .then(() => {
                                     resolve('Tournament completed');
                                 })

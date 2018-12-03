@@ -23,7 +23,7 @@ module.exports = (teamId, db) => {
 
 function getTeam(teamId, db) {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('SELECT * FROM TEAM WHERE Deleted = 0 AND Id = ?', teamId)
+        db.promiseQuery('SELECT * FROM team WHERE Deleted = 0 AND Id = ?', teamId)
             .then(team => {
                 if (team.length > 0) {
                     resolve(team[0]);
@@ -39,7 +39,7 @@ function getTeam(teamId, db) {
 
 function getTeamUsers(teamId, db) {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('SELECT Nickname FROM User WHERE Team = ?', teamId)
+        db.promiseQuery('SELECT Nickname FROM user WHERE Team = ?', teamId)
             .then(users => {
                 resolve(users);
             })

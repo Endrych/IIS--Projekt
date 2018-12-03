@@ -10,7 +10,7 @@ module.exports = app => {
 
     app.get('/tournaments', (req, res) => {
         db.promiseQuery(
-            'SELECT tournament.Id, tournament.Name, State, tournament.Game, game.Name as GameName, game.Keyname as GameKeyname, Created FROM tournament LEFT JOIN Game ON tournament.game = game.id order by Created DESC'
+            'SELECT tournament.Id, tournament.Name, State, tournament.Game, game.Name as GameName, game.Keyname as GameKeyname, Created FROM tournament LEFT JOIN game ON tournament.game = game.id order by Created DESC'
         )
             .then(tournaments => {
                 tournaments.forEach(element => {
@@ -36,7 +36,7 @@ module.exports = app => {
 
         Promise.all([
             db.promiseQuery(
-                'SELECT tournament.Id, tournament.Name, tournament.Description, State, Created, CreatedBy,Round, Winner, tournament.Game,game.Keyname as GameKeyname, game.Name as GameName FROM Tournament LEFT JOIN Game ON tournament.game = game.id WHERE tournament.Id = ?',
+                'SELECT tournament.Id, tournament.Name, tournament.Description, State, Created, CreatedBy,Round, Winner, tournament.Game,game.Keyname as GameKeyname, game.Name as GameName FROM tournament LEFT JOIN game ON tournament.game = game.id WHERE tournament.Id = ?',
                 id
             ),
             db.promiseQuery('Select UserId FROM tournament_user WHERE TournamentId = ?', id),
@@ -166,7 +166,7 @@ module.exports = app => {
             .then(() => {
                 db.promiseQuery('Delete from tournament_user Where TournamentId = ?', id)
                     .then(() => {
-                        db.promiseQuery('Delete from Tournament Where Id = ? AND State = 0', id)
+                        db.promiseQuery('Delete from tournament Where Id = ? AND State = 0', id)
                             .then(() => {
                                 db.commit();
                                 res.sendStatus(ResultCodes.OK);
@@ -207,7 +207,7 @@ module.exports = app => {
 
         body.CreatedBy = req.user.Nickname;
 
-        db.promiseQuery('Select Id From Game Where Id = ?', body.Game)
+        db.promiseQuery('Select Id From game Where Id = ?', body.Game)
             .then(game => {
                 if (game.length === 0) {
                     res.sendStatus(ResultCodes.BAD_REQUEST);
@@ -240,7 +240,7 @@ module.exports = app => {
             return;
         }
 
-        db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id)
+        db.promiseQuery('SELECT * FROM tournament WHERE Id = ?', id)
             .then(tournament => {
                 if (tournament.length === 0) {
                     res.sendStatus(ResultCodes.NO_CONTENT);
@@ -281,7 +281,7 @@ module.exports = app => {
             return;
         }
 
-        db.promiseQuery('SELECT * FROM Tournament WHERE Id = ?', id)
+        db.promiseQuery('SELECT * FROM tournament WHERE Id = ?', id)
             .then(tournament => {
                 if (tournament.length === 0) {
                     res.sendStatus(ResultCodes.NO_CONTENT);

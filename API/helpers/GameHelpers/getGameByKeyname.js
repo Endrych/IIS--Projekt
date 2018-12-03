@@ -1,6 +1,6 @@
 module.exports = (keyname, db) => {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('SELECT * FROM GAME WHERE Keyname = ? AND Deleted = 0', keyname)
+        db.promiseQuery('SELECT * FROM game WHERE Keyname = ? AND Deleted = 0', keyname)
             .then(game => {
                 if (game.length === 0) {
                     resolve(null);

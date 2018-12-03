@@ -4,7 +4,7 @@ module.exports = (article, author, db) => {
         article.Created = new Date();
         article.Author = author;
 
-        db.promiseQuery('INSERT INTO ARTICLE SET ?', article)
+        db.promiseQuery('INSERT INTO article SET ?', article)
             .then(res => resolve(res['insertId'].toString()))
             .catch(err => {
                 reject(err);

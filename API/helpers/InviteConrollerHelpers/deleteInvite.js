@@ -3,10 +3,10 @@ const ResultCodes = require('../../enums/ResultCodes');
 
 module.exports = (user, id, db) => {
     return new Promise((resolve, reject) => {
-        db.promiseQuery('Select * FROM Invite WHERE Id = ? ', id)
+        db.promiseQuery('Select * FROM invite WHERE Id = ? ', id)
             .then(invite => {
                 if (invite.length > 0 && invite[0].User === user) {
-                    db.promiseQuery('DELETE FROM Invite WHERE Id = ? ', id)
+                    db.promiseQuery('DELETE FROM invite WHERE Id = ? ', id)
                         .then(() => {
                             resolve();
                         })
