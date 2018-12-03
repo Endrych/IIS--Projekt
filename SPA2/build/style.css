@@ -1,0 +1,51 @@
+.has-danger {
+	color: red;
+}
+
+.header__nav-bar--item:hover {
+	background-color: #bf2621;
+}
+
+.header__nav-bar--item:active {
+	background-color: #960e09;
+}
+
+.row__box {
+	margin-top: 25px;
+	margin-bottom: 25px;
+	border: 1px solid black;
+	padding: 15px;
+}
+
+.user-private_buttons {
+	margin-bottom: 5px;
+	margin-right: 5px;
+}
+
+.modal__wrapper {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(78, 78, 78, 0.25);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	z-index: 1000;
+}
+
+.modal__inner {
+	position: absolute;
+	left: 50%;
+	top:50%;
+	background-color: white;
+	border: 1px solid gray;
+	border-radius: .5rem;
+	transform: translate(-50%, -50%) ;
+	width: 480px;
+	height: 280px;
+}
+
+.require-fill:after{
+	content: "*";
+	position: absolute;
+	/* top: 0px; */
+}
