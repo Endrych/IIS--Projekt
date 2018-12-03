@@ -35,7 +35,7 @@ class TournamentShow extends Component{
 			if(tournamentInfo.fetchSucess){
 				if(tournamentInfo.State ===0){
 					toRender = <TournamentOpen tournamentInfo={tournamentInfo} loginStatus={this.props.loginStatus} tournamentID={this.props.id} />;
-					toRenderRemove = (this.props.loginStatus.admin > 0 ? <div><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Zrušit turnaj</button></div> : "")
+					toRenderRemove = (this.props.loginStatus.admin > 0 ? <div className="col col-sm-12"><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Zrušit turnaj</button></div> : "")
 				}else if(tournamentInfo.State === 1){
 					toRender = <TournamentActive tournamentInfo={tournamentInfo} loginStatus={this.props.loginStatus} tournamentId={this.props.id} />;
 					// toRenderRemove = (this.props.loginStatus.admin > 0 ? <div><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Zrušit turnaj</button></div> : "")
@@ -45,21 +45,21 @@ class TournamentShow extends Component{
 					// toRenderRemove = (this.props.loginStatus.admin > 0 ? <div><button className="btn btn-danger" onClick={this.handleRemoveTournament.bind(this)}>Odstranit turnaj z historie</button></div> : "")
 
 				}else{
-					toRender = <div>Získané informace jsou poškozeny. Kontaktujte správce.</div>;
+					toRender = <div className="col col-sm-12">Získané informace jsou poškozeny. Kontaktujte správce.</div>;
 
 				}
 			}else{
-				toRender = <div>Nezdařilo se získat informace o turnaji</div>
+				toRender = <div className="col col-sm-12">Nezdařilo se získat informace o turnaji</div>
 			}
 
 		}else{
-			toRender = <div>Získávám informace o turnaji, prosím čekejete.</div>
+			toRender = <div className="col col-sm-12"> Získávám informace o turnaji, prosím čekejete.</div>
 		}
 
 		console.log(toRenderRemove)
 
 		return(
-			<div>
+			<div className="row row__box">
 				{toRender}
 				{toRenderRemove}
 			</div>
