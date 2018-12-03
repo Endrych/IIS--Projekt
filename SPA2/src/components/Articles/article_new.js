@@ -2,13 +2,16 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm } from "redux-form";
 import { Link } from "react-router-dom";
-import { postNewArticle } from "../../actions";
+import { postNewArticle, fetchGameList } from "../../actions";
 import GeneralValidators from "../../validators/general_validators";
 import Cookies from "universal-cookie";
 import { Redirect } from "react-router";
 
 class ArticleNew extends Component {
 	//je potreba udelat select her -> fetchnout data o hrach
+	componentDidMount(){
+		this.props.fetchGameList();
+	}
 
 	onSubmit(values) {
 		//Select transform number from string to number
@@ -118,22 +121,45 @@ class ArticleNew extends Component {
 		);
 	}
 
+
+	renderSelectField(field) {
+		const {
+			meta: { touched, error }
+		} = field;
+		let hasError = "";
+		let className = `form-group ${touched && error ? "has-danger" : ""}`;
+		console.log(field.selectOptions)
+		return (
+			<div className={className}>
+				<label><b>{field.label}</b></label>
+				<select  className="form-control" {...field.input} >
+					<option></option>
+					{field.selectOptions.map(option => {
+						return <option key={option.Id} value={option.Id}>{option.Name}</option>
+					})}
+				</select>
+				{hasError}
+				<div className="text-help">{touched ? error : ""}</div>
+			</div>
+		);
+	}
+
 	renderForAdmin(handleSubmit) {
 		return (
-			<div>
+			<div className="col col-sm-12">
 				<h2>Nový článek</h2>
 				<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
 					<Field name="Header" label="Nadpis" component={this.renderArticleHeaderField} />
 					<Field name="Content" label="Obsah" component={this.renderArticleContentField} />
-					<Field
+					{/* <Field
 						name="Image"
 						label="Obrázek"
 						component={this.renderArticleImageField}
 						type="file"
-						value={null}
-					/>
-					<Field name="Game" label="Hra" component={this.renderArticleGameSelectField} />
-					<button type="submit" className="btn btn-primary">
+						value={null} */}
+					{/* /> */}
+					<Field name="Game" label="Hra" component={this.renderSelectField} selectOptions={this.props.gameList.data}/>
+					<button style={{marginRight: "5px"}} type="submit" className="btn btn-primary">
 						Publikovat
 					</button>
 					<Link to="/admin/articles"><button className="btn btn-danger">Zrušit</button></Link>
@@ -141,6 +167,7 @@ class ArticleNew extends Component {
 			</div>
 		);
 	}
+
 
 	render() {
 		const { handleSubmit } = this.props;
@@ -153,7 +180,7 @@ class ArticleNew extends Component {
 		// if(me.props.user)
 
 		return (
-			<div>
+			<div className="row row__box">
 				{toRender}
 			</div>
 		);
@@ -188,6 +215,6 @@ export default reduxForm({
 })(
 	connect(
 		mapStateToProps,
-		{ postNewArticle }
+		{ postNewArticle,fetchGameList  }
 	)(ArticleNew)
 );

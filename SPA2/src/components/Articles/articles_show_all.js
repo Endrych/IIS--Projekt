@@ -9,18 +9,20 @@ class ArticlesShowAll extends Component{
 		this.props.fetchAllArticles();
 	}
 
+	getCzechDate = (date) =>{
+		const options = { year: "numeric", month: "long", day: "numeric" };
+
+		return (new Date(date).toLocaleDateString("cs-CS", options))
+	}
+
 	articleItem = (img, header, content, id, created, author) => {
 		return (
-			<div className="row" key={id}>
-				<div className="col col-4">
-					<div>Image Here</div>
-				</div>
-				<div className="col col-8">
+			<div className="row row__box" style={{marginRight: "20px", marginLeft: "20px", borderRadius: ".25rem" }} key={id} >
+				<div className="col col-12">
 					<div className="form-group">
 						<Link to={`articles/${id}`}><h3>{header}</h3></Link>
-						<div>{created}	</div>
-						<div>By:{author}</div>
-						<div>{content}</div>
+						<div>Autor: <Link to={`/players/${author}`}>{author}</Link></div>
+						<div>Datum vydání: {this.getCzechDate(created)}	</div>
 					</div>
 				</div>
 			</div>
@@ -40,11 +42,10 @@ class ArticlesShowAll extends Component{
 	render(){
 		const items = this.generateArticleItems(this.props.articlesAll);
 		return(
-			<div className="row">
+			<div className="row row__box">
 				<div className="col col-12">
 					{items}
 				</div>
-				Ahojda
 			</div>
 		)
 	}
