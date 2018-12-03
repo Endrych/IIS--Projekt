@@ -34,7 +34,10 @@ class ArticleShow extends Component {
 								""
 							)}
 						</div>
+						<br/>
 						<div>{articleInfo.Content}</div>
+						<br/>
+
 						<button className="btn btn-primary" onClick={() => this.props.history.push("/articles")}>
 							Zpět
 						</button>
