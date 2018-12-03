@@ -25,10 +25,11 @@
 .modal__wrapper {
 	width: 100%;
 	height: 100%;
-	background-color: rgba(78, 78, 78, 0.507);
+	background-color: rgba(78, 78, 78, 0.25);
 	position: fixed;
 	top: 0px;
 	left: 0px;
+	z-index: 1000;
 }
 
 .modal__inner {

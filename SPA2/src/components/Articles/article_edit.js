@@ -17,7 +17,7 @@ class ArticleEdit extends Component{
 		  "Header": this.props.articleInfo.Header,
 		  "Content": this.props.articleInfo.Content,
 		//   "Image": this.props.articleInfo.Image,
-		  "Game": this.props.articleInfo.Game.Id
+		  "Game": this.props.articleInfo.Game ? this.props.articleInfo.Game.Id : ""
 		};
 
 		this.props.initialize(initData);

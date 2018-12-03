@@ -24,7 +24,7 @@ class TournamentFinished extends Component {
 		for (let i = 0; i < round.length; i++) {
 			roundArr.push(this.createMatch(round[i]));
 		}
-		roundArr.push(<br/>)
+		roundArr.push(<br key={Math.random() * 1000}/>)
 		return roundArr;
 	};
 

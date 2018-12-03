@@ -84,7 +84,8 @@ export const RESET_ACCOUNT_MANAGMENT = "RESET_ACCOUNT_MANAGMENT";
 export const RESET_PLAYER_FETCH = "RESET_PLAYER_FETCH";
 export const GET_GENRES_SUCESS = "GET_GENRES_SUCESS";
 export const GET_GENRES_FAILED = "GET_GENRES_FAILED";
-
+export const MODAL_INSERT  = "MODAL_INSERT";
+export const MODAL_REMOVE  = "MODAL_REMOVE";
 export const RESET_INVITE_REDUCER_VALUES = "RESET_INVITE_REDUCER_VALUES"
 
 const baseUrl = `http://localhost:5050`;
@@ -969,4 +970,22 @@ export function getGenres(){
 		});
 	}
 
+}
+
+
+export function insertModal(value) {
+	console.log(value, "VALEU")
+	return {
+		type: MODAL_INSERT,
+		payload: value
+	};
+}
+
+export function removeModal(callback = () => {}) {
+	return dispatch => {
+		dispatch({ type: MODAL_REMOVE });
+		setTimeout(() => {
+			callback();
+		}, 0);
+	};
 }

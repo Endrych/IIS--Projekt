@@ -19,6 +19,7 @@ import ReducerTournamentStart from './reducer_tournament_start';
 import ReducerSearchResults from './reducer_search_results';
 import ReducerPlayerManagment from './reducer_manage_players';
 import ReducerGenres from './reducer_genres';
+import ReducerModal from './reducer_modal';
 
 const rootReducer = combineReducers({
 	registrationResultCode: RegisterReducer,
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
 	searchResults: ReducerSearchResults,
 	managePlayers: ReducerPlayerManagment,
 	genres: ReducerGenres,
+	modal:ReducerModal,
 	form: formReducer
 });
 
