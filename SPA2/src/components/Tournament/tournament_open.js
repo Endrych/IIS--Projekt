@@ -92,7 +92,7 @@ class TournamentOpen extends Component {
 						)}
 						{this.props.tournamentStart.try ? (
 							!this.props.tournamentStart.failed ? (
-								<div className="error">V turnaji musí být alespoň 2 hráči!</div>
+								<div className="text-danger">V turnaji musí být alespoň 2 hráči!</div>
 							) : (
 								""
 							)

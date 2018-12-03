@@ -190,7 +190,8 @@ export function getUserInfoFromToken(token, callback = () => {}) {
 }
 
 export function logOut() {
-
+	const cookies = new Cookies();
+	cookies.remove("user");
 	return {
 		type: LOG_OUT,
 		payload: {}

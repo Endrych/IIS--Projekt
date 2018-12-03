@@ -11,14 +11,18 @@ class TournamentActive extends Component {
 		console.log("ASDASD", this.props, match, matchFinished);
 		if (matchFinished) {
 			return (
-				<div key={match.Id + Math.random()*1000}>
+				<div key={match.Id + Math.random() * 1000}>
 					{" "}
-					{match.User1} <b>{match.Score1} - {match.Score2}</b> {match.User2}
+					{match.User1}{" "}
+					<b>
+						{match.Score1} - {match.Score2}
+					</b>{" "}
+					{match.User2}
 				</div>
 			);
 		} else {
 			return (
-				<div style={{marginBottom: "5px"}} key={match.Id + Math.random()*1000}>
+				<div style={{ marginBottom: "5px" }} key={match.Id + Math.random() * 1000}>
 					{" "}
 					{match.User1} <b>vs.</b> {match.User2}
 					{this.props.tournamentModal.valueSet ? (
@@ -30,9 +34,17 @@ class TournamentActive extends Component {
 					) : (
 						""
 					)}
-					<button   style={{lineHeight: "1", marginLeft: "30px"}}  className="btn btn-secondary" onClick={this.popModal.bind(this, match)}>
-						Zadejte výsledek
-					</button>{" "}
+					{this.props.loginStatus.admin > 0 ? (
+						<button
+							style={{ lineHeight: "1", marginLeft: "30px" }}
+							className="btn btn-secondary"
+							onClick={this.popModal.bind(this, match)}
+						>
+							Zadejte výsledek
+						</button>
+					) : (
+						""
+					)}
 				</div>
 			);
 		}
@@ -46,14 +58,14 @@ class TournamentActive extends Component {
 
 	generateRound = (round, key) => {
 		const roundArr = [
-			<div key={key + Math.random()*1000}>
+			<div key={key + Math.random() * 1000}>
 				<h4>{key}. Kolo</h4>
 			</div>
 		];
 		for (let i = 0; i < round.length; i++) {
 			roundArr.push(this.createMatch(round[i]));
 		}
-		roundArr.push(<br key={Math.random()*1000} />)
+		roundArr.push(<br key={Math.random() * 1000} />);
 		return roundArr;
 	};
 
@@ -97,14 +109,18 @@ class TournamentActive extends Component {
 					<div className="col col-sm-12">{tournamentInfo.Description}</div>
 				</div>
 				<br />
-				<div className="row">
-					<div className="col col-sm-12">
-						<button className="btn btn-secondary" onClick={this.nextRound}>
-							Další kolo
-						</button>
+				{this.props.loginStatus.admin > 0 ? (
+					<div className="row">
+						<div className="col col-sm-12">
+							<button className="btn btn-secondary" onClick={this.nextRound}>
+								Další kolo
+							</button>
+						</div>
 					</div>
-				</div>
-				<br />
+				) : (
+					""
+				)}
+				{this.props.loginStatus.admin > 0 ? <br /> : ""}
 				<div className="row">
 					<div className="col col-sm-12">{this.getRounds(tournamentInfo.Matches, tournamentInfo.Round)}</div>
 				</div>
@@ -113,8 +129,8 @@ class TournamentActive extends Component {
 	}
 }
 
-function mapStateToProps({ tournamentModal }) {
-	return { tournamentModal };
+function mapStateToProps({ tournamentModal, loginStatus }) {
+	return { tournamentModal, loginStatus };
 }
 
 export default connect(

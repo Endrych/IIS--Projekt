@@ -43,7 +43,7 @@ class HeaderLoginFields extends Component {
 	loggedOut() {
 		const { handleSubmit } = this.props;
 		const { statusCode } = this.props;
-		const loginFailed = statusCode === 401 || statusCode === 400 || statusCode === 500;
+		const loginFailed = statusCode === 401 || statusCode === 400 || statusCode === 500 || statusCode === 405;
 
 		return (
 			// <div className="col col-6">
@@ -57,7 +57,7 @@ class HeaderLoginFields extends Component {
 								Přihlásit
 							</button>
 						</div>
-						{loginFailed ? <div className="text-help has-danger"> Neplatné údaje</div> : ""}
+						{loginFailed ? <div className="text-help has-danger">{statusCode === 405? "Tento účet byl deaktivován" : "Neplatné údaje"}</div> : ""}
 					</form>
 				</div>
 				<div className="col col-sm-2">
@@ -73,7 +73,7 @@ class HeaderLoginFields extends Component {
 	logOutUser() {
 		const cookies = new Cookies();
 		cookies.remove("user");
-
+		console.log("COOKIES " , cookies.get("user"))
 		this.props.logOut();
 	}
 
