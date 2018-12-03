@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { grantAdminRights, removeAdminRights, deactivateAccount, resetManagnePlayersState } from '../../actions';
+import { grantAdminRights, removeAdminRights, deactivateAccount, resetManagnePlayersState, insertModal } from '../../actions';
 import Cookies from 'universal-cookie';
 import { Field, reduxForm } from 'redux-form';
+import Modal from '../Modal/modal';
 
 class AdminGrantRights extends Component{
 
@@ -69,12 +70,17 @@ class AdminGrantRights extends Component{
 		}else if(action === "grant"){
 			this.props.grantAdminRights(data.Nickname, token, this.props.resetManagnePlayersState); //pridat landing page game sucess
 		}else if(action === "deactivate"){
-			this.props.deactivateAccount(data.Nickname, token, this.props.resetManagnePlayersState); //pridat landing page game sucess
+			this.props.insertModal(data.Nickname); //pridat landing page game sucess
 
 		}
 	}
 
-
+	handleDeactivateAccount = (nickname) =>{
+		const cookie = new Cookies();
+		const token = cookie.get("user");
+		console.log(nickname, `""SAD"A"SD"SAD"`)
+		this.props.deactivateAccount( nickname, token, this.props.resetManagnePlayersState)
+	}
 
 	render(){
 		const {handleSubmit, managePlayers} = this.props;
@@ -90,6 +96,8 @@ class AdminGrantRights extends Component{
 							<button style={{marginRight: "5px"}} onClick={handleSubmit(this.onSubmit.bind(this, "grant"))} className="btn btn-primary">Přidat práva</button>
 							<button style={{marginRight: "5px"}} onClick={handleSubmit(this.onSubmit.bind(this, "remove"))} className="btn btn-primary">Odebrat práva</button>
 							<button onClick={handleSubmit(this.onSubmit.bind(this, "deactivate"))} className="btn btn-danger">Deaktivovat účet</button>
+							{this.props.modal.show  ? <Modal displayText={`Potvrďte deaktivaci účtu`} callback={this.handleDeactivateAccount.bind(this, this.props.modal.value)} /> : "" }
+
 						</div>
 					</form>
 					<div className="col col-sm-12">
@@ -101,11 +109,10 @@ class AdminGrantRights extends Component{
 	}
 }
 
-function mapStatetoProps( {grantRights, managePlayers} ){
-	console.log("MANAGE PLAYERS" , managePlayers);
-	return {grantRights, managePlayers};
+function mapStatetoProps( {grantRights, managePlayers, modal} ){
+	return {grantRights, managePlayers, modal};
 }
 
 export default reduxForm({
 	form: "adminGrantRights"
-})(connect(mapStatetoProps, { grantAdminRights, removeAdminRights, deactivateAccount, resetManagnePlayersState })(AdminGrantRights))
+})(connect(mapStatetoProps, { grantAdminRights, removeAdminRights, deactivateAccount, resetManagnePlayersState, insertModal })(AdminGrantRights))

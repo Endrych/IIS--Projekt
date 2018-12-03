@@ -29,7 +29,7 @@ class HeaderLoginFields extends Component {
 			<div className={className} style={{ marginRight: "5px" }}>
 				<div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
 					<label style={{ margin: "0px", marginRight: "2px" }}>{field.label}</label>
-					<input className="form-control" type={field.type} {...field.input} />
+					<input className="form-control" type={field.type} {...field.input} type={field.type}/>
 				</div>
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
@@ -52,8 +52,8 @@ class HeaderLoginFields extends Component {
 				<div className="col col-sm-10">
 					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
 						<div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-							<Field name="Nickname" label="Přezdívka" component={this.renderField} />
-							<Field name="Password" label="Heslo" component={this.renderField} />
+							<Field name="Nickname" type="text" label="Přezdívka" component={this.renderField} />
+							<Field name="Password" type="password" label="Heslo" component={this.renderField} />
 							<button type="submit" className="btn btn-primary">
 								Přihlásit
 							</button>
