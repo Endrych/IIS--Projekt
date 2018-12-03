@@ -16,7 +16,7 @@ module.exports = (res, db) => {
             }
         });
 
-        if (promises !== []) {
+		if (promises !== []) {
             Promise.all(promises)
                 .then(results => {
                     res.forEach(element => {
