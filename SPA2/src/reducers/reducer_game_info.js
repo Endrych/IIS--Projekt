@@ -5,9 +5,12 @@ export default function(state = {fetched:false, fetchSucess: false}, action){
 	switch(action.type){
 		case GAME_FETCH_SUCESS:
 			const newState = {...action.payload.data, fetched:true, fetchSucess: true}
+			if(action.payload.status !== 200){
+				return {fetched:true, fetchSucess: false};
+			}
 			return newState;
 		case GAME_FETCH_FAILED:
-		const failedState = {fetched:true, fetchSucess: false}
+			const failedState = {fetched:true, fetchSucess: false}
 			return failedState;
 		default:
 			return state;

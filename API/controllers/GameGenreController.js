@@ -31,7 +31,6 @@ module.exports = app => {
 
                         getGamesByIds(ids, db)
                             .then(games => {
-                                console.log('games', games);
                                 res.send(games);
                             })
                             .catch(err => {

@@ -4,16 +4,22 @@ module.exports = (gameId, genres, db) => {
             var items = [];
 
             genres.forEach(element => {
-                items.push([gameId, element]);
+                if (element > 0) {
+                    items.push([gameId, element]);
+                }
             });
 
-            db.promiseQuery('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [items])
-                .then(() => {
-                    resolve();
-                })
-                .catch(err => {
-                    reject(err);
-                });
+            if (items.length > 0) {
+                db.promiseQuery('INSERT INTO game_genre_games (GameId,GameGenreId) VALUES ?', [items])
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch(err => {
+                        reject(err);
+                    });
+            } else {
+                resolve();
+            }
         } else {
             resolve();
         }

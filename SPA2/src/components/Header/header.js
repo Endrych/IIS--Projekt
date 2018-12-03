@@ -21,11 +21,15 @@ class Header extends Component {
 	render() {
 		console.log("//////", this)
 		return (
-			<div className="row">
-				<div className="col col-12">
-					<HeaderLoginFields />
-					<SearchBar history={this.props.history}/>
-					<HeaderNavigationBar />
+			<div className="row" style={{backgroundColor: "yellow"}}>
+				<div className="col col-xs-12">
+					<div className="row">
+						<HeaderLoginFields history={this.props.history} />
+						<SearchBar history={this.props.history}/>
+					</div>
+					<div className="row">
+						<HeaderNavigationBar />
+					</div>
 				</div>
 			</div>
 		);

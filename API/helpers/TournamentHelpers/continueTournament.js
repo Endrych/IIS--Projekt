@@ -24,10 +24,8 @@ module.exports = (id, db) => {
                     if (matches.length > 1) {
                         var users = [];
                         var correct = true;
-						console.log("____________________\n\n MATCHES", matches);
                         matches.forEach(element => {
                             if (correct) {
-								console.log("USERS", users)
 								if (element.Score1 !== null) {
                                     if (element.Score1 > element.Score2) {
                                         users.push(element.User1);
