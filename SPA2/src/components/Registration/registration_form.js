@@ -26,8 +26,8 @@ class RegistrationForm extends Component {
 
 		return (
 			<div className={className}>
-				<label>{field.label}</label>
-				<input className="form-control" type={field.type} {...field.input} />
+				<label><b>{field.label}</b></label>
+				<input className="form-control" type={field.type} {...field.input}/>
 				{hasError}
 				<div className="text-help">{touched ? error : ""}</div>
 			</div>
@@ -47,7 +47,7 @@ class RegistrationForm extends Component {
 		const { statusCode } = this.props;
 
 		return (
-			<div>
+			<div className="row row__box">
 				{statusCode === 500 ? (
 					<div className="text-help has-danger">{registerCodes.code_500}</div>
 				) : statusCode === 400 ? (
@@ -55,51 +55,56 @@ class RegistrationForm extends Component {
 				) : (
 					""
 				)}
-				<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-					<Field
-						name="Nickname"
-						label={registrationFields.NICKNAME}
-						component={this.renderField}
-						props={this.props}
-					/>
-					<Field
-						name="Firstname"
-						type="text"
-						label={registrationFields.FIRSTNAME}
-						component={this.renderField}
-					/>
-					<Field
-						name="Lastname"
-						type="text"
-						label={registrationFields.LASTNAME}
-						component={this.renderField}
-					/>
-					<Field name="Email" type="text" label={registrationFields.EMAIL} component={this.renderField} />
-					<Field
-						name="Phone"
-						type="text"
-						label={registrationFields.PHONE_NUMBER}
-						component={this.renderField}
-					/>
-					<Field
-						name="Password"
-						type="password"
-						label={registrationFields.PASSWORD}
-						component={this.renderField}
-					/>
-					<Field
-						name="PasswordConfirm"
-						type="password"
-						label={registrationFields.REPEATED_PASSWORD}
-						component={this.renderField}
-					/>
-					<button type="submit" className="btn btn-primary">
-						{registrationFields.SUBMIT}
-					</button>
-					<Link to="/" className="btn btn-danger">
-						{registrationFields.CANCEL}
-					</Link>
-				</form>
+				<div className="col col-sm-12">
+					<h3>Registrační formulář</h3>
+				</div>
+				<div className="col col-sm-12">
+					<form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+						<Field
+							name="Nickname"
+							label={registrationFields.NICKNAME}
+							component={this.renderField}
+							props={this.props}
+						/>
+						<Field
+							name="Firstname"
+							type="text"
+							label={registrationFields.FIRSTNAME}
+							component={this.renderField}
+						/>
+						<Field
+							name="Lastname"
+							type="text"
+							label={registrationFields.LASTNAME}
+							component={this.renderField}
+						/>
+						<Field name="Email" type="text" label={registrationFields.EMAIL} component={this.renderField} />
+						<Field
+							name="Phone"
+							type="text"
+							label={registrationFields.PHONE_NUMBER}
+							component={this.renderField}
+						/>
+						<Field
+							name="Password"
+							type="password"
+							label={registrationFields.PASSWORD}
+							component={this.renderField}
+						/>
+						<Field
+							name="PasswordConfirm"
+							type="password"
+							label={registrationFields.REPEATED_PASSWORD}
+							component={this.renderField}
+						/>
+						<button type="submit" style={{marginRight: "5px"}} className="btn btn-primary">
+							{registrationFields.SUBMIT}
+						</button>
+						<Link to="/" className="btn btn-danger">
+							{registrationFields.CANCEL}
+						</Link>
+					</form>
+				</div>
 			</div>
 		);
 	}
